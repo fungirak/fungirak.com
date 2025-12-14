@@ -776,3 +776,118 @@ textarea.materialize-textarea.neomorph-input-field { min-height: 80px; line-heig
     height: 100%;
     object-fit: contain;
 }
+
+/* ================================================= */
+/* === RESPONSIVE - SOLO MOBILE                  === */
+/* ================================================= */
+
+@media (max-width: 768px) {
+    /* MODALES EN PANTALLA COMPLETA */
+    .ReactModal__Content {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        margin: 0 !important;
+        padding: 2rem 1.5rem !important;
+        border-radius: 0 !important;
+        transform: none !important;
+        overflow-y: auto !important;
+    }
+
+    /* FOOTER - ITEMS CENTRADOS */
+    footer .row > div {
+        text-align: center !important;
+    }
+
+    /* ICONOS GITHUB Y LINKEDIN CENTRADOS */
+    footer .d-flex.justify-content-start {
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    footer .d-flex {
+        justify-content: center !important;
+    }
+
+    /* Contenido de modales en columna */
+    .ReactModal__Content .row {
+        flex-direction: column !important;
+    }
+
+    .ReactModal__Content .col-md-4,
+    .ReactModal__Content .col-md-5,
+    .ReactModal__Content .col-md-6 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* OCULTAR VIDEO EN MÓVIL */
+    .video-background-container {
+        display: none !important;
+    }
+
+    /* Cards en columna, centradas */
+    .d-flex.justify-content-center.gap-3.mt-5 {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    /* OCULTAR cards 2, 3, 4 y 5 en móvil */
+    .d-flex.justify-content-center.gap-3.mt-5 > div:nth-child(2),
+    .d-flex.justify-content-center.gap-3.mt-5 > div:nth-child(3),
+    .d-flex.justify-content-center.gap-3.mt-5 > div:nth-child(4),
+    .d-flex.justify-content-center.gap-3.mt-5 > div:nth-child(5) {
+        display: none !important;
+    }
+
+    /* Primera card abajo de datos personales */
+    .d-flex.justify-content-center.gap-3.mt-5 {
+        margin-top: 2rem !important;
+    }
+
+    /* TÍTULO TEAM JOY EN DOS LÍNEAS */
+    .team-joy-title {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .team-joy-subtitle::before {
+        content: '\A';
+        white-space: pre;
+    }
+
+    .team-joy-subtitle {
+        display: block !important;
+        margin-top: 0.1rem !important;
+    }
+
+    /* DESCRIPCIÓN DEV EN DOS LÍNEAS */
+    .dev-description {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .dev-subtitle {
+        display: block !important;
+        margin-top: 0.3rem !important;
+    }
+
+    /* BOTÓN CERRAR A LA ALTURA DEL TÍTULO */
+    .ReactModal__Content button[style*="position: absolute"] {
+        top: 1.5rem !important;
+    }
+
+    /* TEAM JOY APENAS MÁS GRANDE */
+    .team-joy-main {
+        font-size: 1.45rem !important;
+    }
+
+}

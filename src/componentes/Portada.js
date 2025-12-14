@@ -361,16 +361,27 @@ const Portada = () => {
                             👋 ¡Hola! Soy FUNGIRAK
                         </h2>
                         
-                        <p style={{ fontSize: '1.1rem', marginBottom: '1.5rem', marginTop: '1.5rem', color: '#555', paddingBottom: '0.8rem', borderBottom: '1px solid #E0E0E0' }}>
-                            💻 Desarrollador Full-Stack apasionado por la innovación.
+                        <p className="dev-description" style={{ fontSize: '1.1rem', marginBottom: '1.5rem', marginTop: '1.5rem', color: '#555', paddingBottom: '0.8rem', borderBottom: '1px solid #E0E0E0' }}>
+                            <span className="dev-main">💻 Desarrollador Full-Stack</span>
+                            <span className="dev-subtitle">apasionado por la innovación.</span>
                         </p>
 
                         <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', marginTop: '1.5rem', color: '#000' }}>
                             🚀 Proyectos Destacados
                         </h3>
 
-                        <h4 style={{ fontSize: '1.3rem', marginBottom: '1rem', marginTop: '1.5rem', color: '#2C3E50', fontWeight: 'bold', paddingBottom: '0.8rem', borderBottom: '1px solid #E0E0E0' }}>
-                            🌟 Team Joy – La Experiencia Lúdica para la Oficina
+                        <h4 className="team-joy-title" style={{ fontSize: '1.3rem', marginBottom: '1rem', marginTop: '1.5rem', color: '#2C3E50', fontWeight: 'bold', paddingBottom: '0.8rem', borderBottom: '1px solid #E0E0E0' }}>
+                            <div style={{ width: '130px', height: '130px', borderRadius: '50%', overflow: 'hidden', marginBottom: '-15px' }}>
+                                <Image 
+                                    src={teamjoyLogo} 
+                                    alt="Team Joy Logo" 
+                                    width={260} 
+                                    height={260}
+                                    quality={100}
+                                    style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+                                />
+                            </div>
+                            <span className="team-joy-subtitle" style={{ marginTop: '0' }}>La Experiencia Lúdica para la Oficina</span>
                         </h4>
 
                         <p style={{ fontSize: '1rem', lineHeight: '1.8', marginBottom: '1rem', color: '#444', textAlign: 'left' }}>
