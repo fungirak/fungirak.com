@@ -4,9 +4,6 @@ import Modal from 'react-modal';
 
 
 import Portada from './Portada'; 
-import AboutMe from './sections/AboutMe';
-import MyJourney from './sections/MyJourney';
-import Portfolio from './sections/Portfolio';
 import ContactAndPolicies from './sections/ContactAndPolicies'; 
 
 
@@ -32,21 +29,8 @@ export default function App() {
         <div id="main-app-container">
           
             <Portada />
-            
-            <AboutMe 
-                posicionar={posicionar} 
-                policyModalHandler={policyModalHandler} 
-            />
-            <div className="espacio spacing-lg"></div> 
-            
-            <MyJourney />
-            <div className="espacio spacing-lg"></div> 
 
-           
-
-            <Portfolio />
-            <div className="espacio spacing-lg"></div> 
-
+            {/* Solo Footer con modales y políticas */}
             <ContactAndPolicies 
                 posicionar={posicionar} 
                 policyModalIsOpen={policyModalIsOpen} 

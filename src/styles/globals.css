@@ -36,6 +36,21 @@ body::-webkit-scrollbar-thumb {
     border: 2px solid var(--contrast-electric-green);
 }
 
+/* --- OCULTAR SCROLLBAR EN MODALES --- */
+.modal-sin-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.ReactModal__Content.modal-sin-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- MODAL BLANCO TEAM JOY --- */
+.ReactModal__Content.modal-team-joy {
+    background: #FFFFFF !important;
+    background-color: #FFFFFF !important;
+}
+
 /* --- GENERAL LINK RESET --- */
 a,
 a:link,
