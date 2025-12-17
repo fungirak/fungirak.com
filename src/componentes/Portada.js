@@ -119,6 +119,9 @@ const Portada = () => {
                         <h5 className="text-center fst-normal animate__animated animate__bounceInRight animate__delay-1s portada-text-normal">
                             Desarrollador de Software Full Stack
                         </h5>
+                        <h6 className="text-center fw-light animate__animated animate__fadeIn animate__delay-1s portada-text-normal" style={{ marginTop: '0.2rem' }}>
+                            EGRESADO
+                        </h6>
                         <h5 className="text-center fw-normal animate__animated animate__fadeIn animate__delay-2s portada-text-normal">
                             Tecnicatura en Tecnologías de la Información
                         </h5>
@@ -145,7 +148,8 @@ const Portada = () => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             padding: '1rem',
-                            transition: 'transform 0.2s ease'
+                            transition: 'transform 0.2s ease',
+                            position: 'relative'
                         }}
                     >
                         <Image 
@@ -155,6 +159,21 @@ const Portada = () => {
                             height={120}
                             style={{ objectFit: 'contain' }}
                         />
+                        {/* Pill "¡Ya Disponible!" */}
+                        <div style={{
+                            position: 'absolute',
+                            top: '-8px',
+                            right: '10px',
+                            backgroundColor: '#00FF9D',
+                            color: '#FFFFFF',
+                            fontSize: '0.65rem',
+                            fontWeight: '600',
+                            padding: '3px 10px',
+                            borderRadius: '12px',
+                            whiteSpace: 'nowrap'
+                        }}>
+                            ¡Ya Disponible!
+                        </div>
                     </div>
 
                     {/* Card 2 - Iconos de gestión inmobiliaria */}
@@ -370,7 +389,7 @@ const Portada = () => {
                             🚀 Proyectos Destacados
                         </h3>
 
-                        <h4 className="team-joy-title" style={{ fontSize: '1.3rem', marginBottom: '1rem', marginTop: '1.5rem', color: '#2C3E50', fontWeight: 'bold', paddingBottom: '0.8rem', borderBottom: '1px solid #E0E0E0' }}>
+                        <h4 className="team-joy-title" style={{ fontSize: '1.3rem', marginBottom: '1rem', marginTop: '1.5rem', color: '#2C3E50', fontWeight: 'bold', paddingBottom: '0.8rem', borderBottom: '1px solid #E0E0E0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <div style={{ width: '130px', height: '130px', borderRadius: '50%', overflow: 'hidden', marginBottom: '-15px' }}>
                                 <Image 
                                     src={teamjoyLogo} 
