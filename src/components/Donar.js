@@ -4,9 +4,9 @@ import { useLang } from "@/lib/i18n";
 import { LINKS } from "@/data/perfil";
 
 const TIERS = [
-  { id: "cafe", ico: "☕", es: ["Un café para el estudio", "Una noche más de código para la próxima guía de Santa Fe."], en: ["A coffee for the studio", "One more night of code for the next Santa Fe guide."] },
+  { id: "cafe", ico: "☕", es: ["Un café para el Studio", "Una noche más de código para la próxima guía de Santa Fe."], en: ["A coffee for the studio", "One more night of code for the next Santa Fe guide."] },
   { id: "server", ico: "🖥️", es: ["Un mes de servidor", "Que MiTour, ECOS y Atlas sigan gratis y sin publicidad."], en: ["A month of servers", "Keeping MiTour, ECOS and Atlas free and ad-free."] },
-  { id: "idea", ico: "🚀", es: ["Una idea nueva al mundo", "El empujón para lanzar el próximo producto del estudio."], en: ["A new idea into the world", "The push to launch the studio's next product."] },
+  { id: "idea", ico: "🚀", es: ["Una idea nueva al mundo", "El empujón para lanzar el próximo producto del Studio."], en: ["A new idea into the world", "The push to launch the studio's next product."] },
 ];
 
 export default function Donar({ stats, abrir }) {
@@ -17,7 +17,7 @@ export default function Donar({ stats, abrir }) {
     <section className="band" id="donar" aria-labelledby="donar-t">
       <div className="wrap donar">
         <div>
-          <div className="eyebrow">{es ? "Bancá el estudio" : "Back the studio"} 💚</div>
+          <div className="eyebrow">{es ? "Bancá el Studio" : "Back the studio"} 💚</div>
           <h2 className="display" id="donar-t">
             {es ? <>Todo lo que hago es <span className="grad-text">gratis</span>. Ayudame a que siga así.</> : <>Everything I build is <span className="grad-text">free</span>. Help me keep it that way.</>}
           </h2>

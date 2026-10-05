@@ -17,6 +17,7 @@ function Arte({ p }) {
     );
   if (p.tipo === "libro") return <div className="book" aria-hidden="true">{p.id === "libro-1" ? "I" : "II"}</div>;
   if (p.tipo === "ep") return <div className="vinyl" aria-hidden="true" />;
+  if (p.logo) return <img className="logo-real" src={p.logo} alt="" width={76} height={76} loading="lazy" />;
   const iniciales = { mitour: "✈", ecos: "📡", atlas: "💪", gourmet: "☕", schools: "🏫", telos: "🌙", negro: "🌲" }[p.id];
   return <div className="monogram" aria-hidden="true">{iniciales}</div>;
 }
@@ -25,7 +26,7 @@ function Card({ p, onOpen, sellado, dim, lit, onHover, idx }) {
   const { lang } = useLang();
   return (
     <button
-      className={`card${p.id === "teamjoy" ? " teamjoy" : ""}${dim ? " dim" : ""}${lit ? " lit" : ""}`}
+      className={`card${p.fila === 2 ? " con-pills" : ""}${p.id === "teamjoy" ? " teamjoy" : ""}${dim ? " dim" : ""}${lit ? " lit" : ""}`}
       style={{ "--c": p.color, animationDelay: `${0.25 + idx * 0.07}s` }}
       data-card={p.id}
       onClick={() => onOpen(p.id)}
@@ -40,7 +41,7 @@ function Card({ p, onOpen, sellado, dim, lit, onHover, idx }) {
       <div className="art">
         <Arte p={p} />
       </div>
-      <div className="name">{tx(p.nombre, lang)}</div>
+      <div className="name">{tx(p.nombreCard || p.nombre, lang)}</div>
       <div className="tag">{tx(p.tagline, lang)}</div>
       {p.fila === 2 && (
         <div className="pills">
@@ -83,7 +84,9 @@ export default function Escenario({ onOpen, sellos, onSound }) {
         <div className="fila" key={n}>
           <div className="fila-head">
             <h2 className="display">{n === 1 ? ui.fila1 : ui.fila2}</h2>
-            <span className="count">{fila(n).filter((p) => sellos.includes(p.id)).length}/{fila(n).length} 🍄</span>
+            <span className="count" title={lang === "es" ? "Cada card que abrís te da un sello en tu Pasaporte FUNGIRAK" : "Every card you open gives you a stamp in your FUNGIRAK Passport"}>
+              {lang === "es" ? "Abriste" : "Opened"} {fila(n).filter((p) => sellos.includes(p.id)).length} {lang === "es" ? "de" : "of"} {fila(n).length} 🛂
+            </span>
           </div>
           <div className="cards">
             {fila(n).map((p, idx) => (

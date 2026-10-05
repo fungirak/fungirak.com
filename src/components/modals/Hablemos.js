@@ -5,6 +5,7 @@ import { useLang } from "@/lib/i18n";
 import { LINKS } from "@/data/perfil";
 import { Socials } from "../Hero";
 import { Whatsapp, Mail } from "../Iconos";
+import { useFiltro, AvisoFiltro, claseFiltro } from "../Filtro";
 
 const INTERESES = [
   { id: "contratar", ico: "💼", es: ["Contratarte", "Tengo una propuesta laboral"], en: ["Hire you", "I have a job offer"] },
@@ -24,6 +25,7 @@ export default function Hablemos({ onClose, visitante, setVisitante, previo, onC
   const [canal, setCanal] = useState(null);
   const [form, setForm] = useState({ email: "", telefono: "", mensaje: previo?.mensaje || "", _hp: "" });
   const [estado, setEstado] = useState(null);
+  const malas = useFiltro(nombre, form.mensaje);
 
   const it = INTERESES.find((x) => x.id === interes);
   const textoWa = () =>
@@ -33,6 +35,7 @@ export default function Hablemos({ onClose, visitante, setVisitante, previo, onC
 
   const enviar = async (e) => {
     e.preventDefault();
+    if (malas.length || estado === "enviando") return;
     setEstado("enviando");
     try {
       const r = await fetch("/api/contacto", {
@@ -45,7 +48,7 @@ export default function Hablemos({ onClose, visitante, setVisitante, previo, onC
         setEstado("ok");
         setPaso(4);
         onConfetti?.();
-      } else setEstado(j.error === "limite" ? "limite" : j.error === "email" ? "email" : "error");
+      } else setEstado(["limite", "email", "lenguaje"].includes(j.error) ? j.error : "error");
     } catch {
       setEstado("error");
     }
@@ -53,7 +56,7 @@ export default function Hablemos({ onClose, visitante, setVisitante, previo, onC
 
   const siguienteNombre = (e) => {
     e.preventDefault();
-    if (!nombre.trim()) return;
+    if (!nombre.trim() || malas.length) return;
     setVisitante((v) => ({ ...(v || {}), nombre: nombre.trim().slice(0, 40) }));
     setPaso(1);
   };
@@ -77,9 +80,10 @@ export default function Hablemos({ onClose, visitante, setVisitante, previo, onC
           <form onSubmit={siguienteNombre}>
             <div className="campo">
               <label htmlFor="h-nombre">{es ? "Tu nombre (o como te guste que te digan)" : "Your name (or what you like to be called)"}</label>
-              <input id="h-nombre" className="big-input" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={es ? "Ej: Ana" : "e.g. Ana"} autoFocus maxLength={40} autoComplete="given-name" />
+              <input id="h-nombre" className={`big-input ${claseFiltro(nombre) || ""}`} value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={es ? "Ej: Ana" : "e.g. Ana"} autoFocus maxLength={40} autoComplete="given-name" />
             </div>
-            <button className="btn" disabled={!nombre.trim()}>{es ? "¡Un gusto! Seguimos →" : "Nice to meet you! Next →"}</button>
+            <AvisoFiltro palabras={malas} />
+            <button className="btn" disabled={!nombre.trim() || malas.length > 0}>{es ? "¡Un gusto! Seguimos →" : "Nice to meet you! Next →"}</button>
           </form>
         )}
 
@@ -116,12 +120,17 @@ export default function Hablemos({ onClose, visitante, setVisitante, previo, onC
           <>
             <div className="campo">
               <label htmlFor="h-wa">{es ? "Si querés, contame algo más (opcional)" : "Tell me a bit more if you like (optional)"}</label>
-              <textarea id="h-wa" value={form.mensaje} onChange={(e) => setForm({ ...form, mensaje: e.target.value })} maxLength={1000} />
+              <textarea id="h-wa" className={claseFiltro(form.mensaje)} value={form.mensaje} onChange={(e) => setForm({ ...form, mensaje: e.target.value })} maxLength={1000} />
             </div>
+            <AvisoFiltro palabras={malas} />
             <div className="acciones">
-              <a className="btn wa" href={`https://wa.me/${LINKS.whatsapp}?text=${encodeURIComponent(textoWa())}`} target="_blank" rel="noopener noreferrer" onClick={() => { setPaso(4); onConfetti?.(); }}>
-                <Whatsapp width={16} height={16} /> {es ? "Abrir WhatsApp" : "Open WhatsApp"}
-              </a>
+              {malas.length ? (
+                <button className="btn wa" disabled><Whatsapp width={16} height={16} /> {es ? "Abrir WhatsApp" : "Open WhatsApp"}</button>
+              ) : (
+                <a className="btn wa" href={`https://wa.me/${LINKS.whatsapp}?text=${encodeURIComponent(textoWa())}`} target="_blank" rel="noopener noreferrer" onClick={() => { setPaso(4); onConfetti?.(); }}>
+                  <Whatsapp width={16} height={16} /> {es ? "Abrir WhatsApp" : "Open WhatsApp"}
+                </a>
+              )}
               <button className="btn ghost small" onClick={() => setCanal(null)}>← {es ? "Otro canal" : "Another channel"}</button>
             </div>
           </>
@@ -143,13 +152,15 @@ export default function Hablemos({ onClose, visitante, setVisitante, previo, onC
             )}
             <div className="campo">
               <label htmlFor="h-msg">{canal === "llamada" ? (es ? "¿Sobre qué y en qué horario te queda mejor?" : "About what, and what time works best?") : es ? "Tu mensaje" : "Your message"}</label>
-              <textarea id="h-msg" value={form.mensaje} onChange={(e) => setForm({ ...form, mensaje: e.target.value })} maxLength={2000} required={canal === "email"} />
+              <textarea id="h-msg" className={claseFiltro(form.mensaje)} value={form.mensaje} onChange={(e) => setForm({ ...form, mensaje: e.target.value })} maxLength={2000} required={canal === "email"} />
             </div>
             {estado === "error" && <p className="aviso err">{es ? "Uy, no se pudo enviar. Probá por WhatsApp o escribime a " : "Oops, it didn't go through. Try WhatsApp or write to "}{LINKS.email}</p>}
             {estado === "limite" && <p className="aviso err">{es ? "Ya me mandaste varios mensajes. ¡Te respondo pronto!" : "You've sent several messages already. I'll reply soon!"}</p>}
+            <AvisoFiltro palabras={malas} />
+            {estado === "lenguaje" && !malas.length && <p className="aviso err">{es ? "Revisá el mensaje: tiene lenguaje que no va en este espacio 🙏" : "Check your message: it has language that doesn't belong here 🙏"}</p>}
             {estado === "email" && <p className="aviso err">{es ? "Revisá el email, parece que tiene un error." : "Check your email, it looks wrong."}</p>}
             <div className="acciones">
-              <button className="btn" disabled={estado === "enviando"}>{estado === "enviando" ? (es ? "Enviando…" : "Sending…") : es ? "Enviar 🚀" : "Send 🚀"}</button>
+              <button className="btn" disabled={estado === "enviando" || malas.length > 0}>{estado === "enviando" ? (es ? "Enviando…" : "Sending…") : es ? "Enviar 🚀" : "Send 🚀"}</button>
               <button type="button" className="btn ghost small" onClick={() => setCanal(null)}>← {es ? "Otro canal" : "Another channel"}</button>
             </div>
           </form>

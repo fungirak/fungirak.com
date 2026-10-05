@@ -204,6 +204,7 @@ export default function ProyectoModal({ id, onClose, abrir, stats, onAplauso }) 
   return (
     <Modal onClose={onClose} color={p.color} eyebrow={eyebrow} titulo={tx(p.nombre, lang)} bajada={tx(p.tagline, lang)}>
       <div className="modal-body">
+        {p.logo && <img src={p.logo} alt={`Logo de ${tx(p.nombre, lang)}`} width={64} height={64} className="logo-real" style={{ marginBottom: 12 }} />}
         <div className="stack" style={{ marginBottom: 14 }}>
           {p.pills.map((x) => <span key={x} className={`pill${x === "+18" ? " adult" : ""}`}>{x}</span>)}
         </div>

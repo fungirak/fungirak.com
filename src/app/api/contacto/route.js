@@ -1,5 +1,7 @@
 import { guardarMensaje, mensajesRecientes, hashIp, mismoOrigen, sumar, leerJSON, limpio } from "@/lib/db";
 import { LINKS } from "@/data/perfil";
+import { ofensivas } from "@/lib/filtro";
+import { segundaOpinion } from "@/lib/moderacion";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -40,6 +42,10 @@ export async function POST(req) {
   if (!m.nombre) return Response.json({ ok: false, error: "nombre" }, { status: 400 });
   if (!m.email && !m.telefono) return Response.json({ ok: false, error: "contacto" }, { status: 400 });
   if (m.email && !EMAIL.test(m.email)) return Response.json({ ok: false, error: "email" }, { status: 400 });
+
+  // Lenguaje ofensivo: se revisa todo lo que escribió la persona (también el brief)
+  const textos = [m.nombre, m.mensaje, ...(m.brief ? Object.values(m.brief).filter((v) => typeof v === "string") : [])].join(" · ");
+  if (ofensivas(textos).length || (await segundaOpinion(`${m.nombre} ${m.mensaje}`))) return Response.json({ ok: false, error: "lenguaje" }, { status: 400 });
 
   let id = null;
   try {

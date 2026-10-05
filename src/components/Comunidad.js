@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { EMOJIS } from "@/lib/moderacion";
+import { useFiltro, AvisoFiltro, claseFiltro } from "./Filtro";
 
 const ERRORES = {
   es: { links: "Sin links ni @usuarios, porfa 🙏", lenguaje: "Mantengámoslo family friendly 💚", gritos: "No hace falta gritar 😅", spam: "Eso parece spam 🤖", corto: "Escribí un poquito más", limite: "Ya dejaste varias, ¡gracias! Volvé en un rato", error: "No se pudo publicar, probá de nuevo" },
@@ -26,9 +27,11 @@ function Formulario({ tipo, onPublicado, placeholder, max, boton, onSello }) {
   const [anonimo, setAnonimo] = useState(false);
   const [hp, setHp] = useState("");
   const [estado, setEstado] = useState(null);
+  const malas = useFiltro(texto, anonimo ? "" : nombre);
 
   const enviar = async (e) => {
     e.preventDefault();
+    if (malas.length || estado === "enviando") return;
     setEstado("enviando");
     try {
       const r = await fetch("/api/muro", {
@@ -60,20 +63,49 @@ function Formulario({ tipo, onPublicado, placeholder, max, boton, onSello }) {
         ))}
       </div>
       <div className="campo">
-        <textarea value={texto} onChange={(e) => setTexto(e.target.value)} maxLength={max} placeholder={placeholder} required aria-label={placeholder} />
+        <textarea className={claseFiltro(texto)} value={texto} onChange={(e) => setTexto(e.target.value)} maxLength={max} placeholder={placeholder} required aria-label={placeholder} aria-invalid={malas.length > 0} />
         <small style={{ textAlign: "right", color: "var(--text-3)" }}>{texto.length}/{max}</small>
       </div>
       <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-        {!anonimo && <input className="firma" value={nombre} onChange={(e) => setNombre(e.target.value)} maxLength={30} placeholder={es ? "Tu firma" : "Your signature"} aria-label={es ? "Tu firma" : "Your signature"} />}
+        {!anonimo && <input className={`firma ${claseFiltro(nombre) || ""}`} value={nombre} onChange={(e) => setNombre(e.target.value)} maxLength={30} placeholder={es ? "Tu firma" : "Your signature"} aria-label={es ? "Tu firma" : "Your signature"} />}
         <label className="anonimo">
           <input type="checkbox" checked={anonimo} onChange={(e) => setAnonimo(e.target.checked)} /> {es ? "Anónimo 🕶️" : "Anonymous 🕶️"}
         </label>
-        <button className="btn" disabled={estado === "enviando" || texto.trim().length < 3} style={{ marginLeft: "auto" }}>
+        <button className="btn" disabled={estado === "enviando" || texto.trim().length < 3 || malas.length > 0} style={{ marginLeft: "auto" }}>
           {emoji} {estado === "enviando" ? "…" : boton}
         </button>
       </div>
+      <AvisoFiltro palabras={malas} />
       {estado && estado !== "enviando" && <p className={`aviso ${estado === "ok" ? "ok" : "err"}`} style={{ marginTop: 10 }}>{estado === "ok" ? (es ? "¡Listo! Ya es parte del micelio 🍄" : "Done! It's now part of the mycelium 🍄") : ERRORES[lang][estado] || ERRORES[lang].error}</p>}
     </form>
+  );
+}
+
+// Ícono de info con la definición de micelio (hover, foco o toque)
+function InfoMicelio({ es }) {
+  const [abierto, setAbierto] = useState(false);
+  return (
+    <button
+      type="button"
+      className="info-tip"
+      aria-expanded={abierto}
+      aria-label={es ? "¿Qué es el micelio?" : "What is mycelium?"}
+      onClick={() => setAbierto((a) => !a)}
+      onBlur={() => setAbierto(false)}
+    >
+      i
+      <span className="tip" role="tooltip">
+        {es ? (
+          <>
+            <b>Micelio:</b> la red de filamentos de los hongos (las hifas) que crece bajo tierra e interconecta raíces de plantas y árboles. Por ella circulan agua, nutrientes y señales: el &ldquo;internet&rdquo; del bosque. De ahí el juego de palabras: <b>mi-celio</b>, mi red.
+          </>
+        ) : (
+          <>
+            <b>Mycelium:</b> the network of fungal filaments (hyphae) that grows underground and links the roots of plants and trees. Water, nutrients and signals travel through it: the forest&apos;s &ldquo;internet&rdquo;. Hence the pun in Spanish: <b>mi-celio</b>, my network.
+          </>
+        )}
+      </span>
+    </button>
   );
 }
 
@@ -113,7 +145,8 @@ export default function Comunidad({ muro, setMuro, sellar }) {
       <div className="wrap">
         <div className="eyebrow">{es ? "Comunidad" : "Community"} 🫶</div>
         <h2 className="display" id="com-t" style={{ fontSize: "clamp(1.8rem,4vw,3rem)", margin: "8px 0 6px" }}>
-          {es ? <>Dejá tu <span className="grad-text">huella</span> en el micelio</> : <>Leave your <span className="grad-text">mark</span> on the mycelium</>}
+          {es ? <>Dejá tu <span className="grad-text">huella</span> en mi-celio</> : <>Leave your <span className="grad-text">mark</span> on my-celium</>}
+          <InfoMicelio es={es} />
         </h2>
         <p style={{ color: "var(--text-2)", maxWidth: 680, marginTop: 0 }}>
           {es

@@ -4,6 +4,7 @@ import Modal from "../Modal";
 import { useLang } from "@/lib/i18n";
 import { LINKS } from "@/data/perfil";
 import { Whatsapp } from "../Iconos";
+import { useFiltro, AvisoFiltro, claseFiltro } from "../Filtro";
 
 // "Pedime algo": brief guiado con ingeniería de requerimientos, en pasos cortos y con pills.
 const L = (es, en, ico) => ({ es, en, ico });
@@ -145,6 +146,7 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
   const [paso, setPaso] = useState(0);
   const [estado, setEstado] = useState(null);
   const [nro, setNro] = useState(null);
+  const malas = useFiltro(b.problema, b.idea, b.referencias, b.nombre, b.empresa);
 
   useEffect(() => {
     try {
@@ -154,7 +156,7 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
   }, [b]);
 
   const set = (k) => (v) => setB((x) => ({ ...x, [k]: v }));
-  const campo = (k) => ({ value: b[k], onChange: (e) => set(k)(e.target.value) });
+  const campo = (k) => ({ value: b[k], onChange: (e) => set(k)(e.target.value), className: claseFiltro(b[k]) });
 
   // Qué tan completo está el brief (gamificado)
   const completo = useMemo(() => {
@@ -186,6 +188,7 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
     ].join("\n");
 
   const enviar = async () => {
+    if (malas.length || estado === "enviando") return;
     if (!b.nombre.trim() || (!b.email.trim() && !b.telefono.trim())) {
       setEstado("faltan");
       return;
@@ -217,7 +220,7 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
         try {
           localStorage.removeItem(KEY);
         } catch {}
-      } else setEstado(j.error === "email" ? "email" : j.error === "limite" ? "limite" : "error");
+      } else setEstado(["email", "limite", "lenguaje"].includes(j.error) ? j.error : "error");
     } catch {
       setEstado("error");
     }
@@ -326,6 +329,7 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
             {estado === "faltan" && <p className="aviso err">{es ? "Necesito tu nombre y un email o teléfono para responderte." : "I need your name and an email or phone to reply."}</p>}
             {estado === "email" && <p className="aviso err">{es ? "Revisá el email, parece que tiene un error." : "Check your email, it looks wrong."}</p>}
             {estado === "limite" && <p className="aviso err">{es ? "Ya recibí varios pedidos tuyos. ¡Te respondo pronto!" : "I've already received several requests from you. I'll reply soon!"}</p>}
+            {estado === "lenguaje" && !malas.length && <p className="aviso err">{es ? "Revisá el pedido: tiene lenguaje que no va en este espacio 🙏" : "Check your request: it has language that doesn't belong here 🙏"}</p>}
             {estado === "error" && <p className="aviso err">{es ? "No se pudo enviar. Mandámelo por WhatsApp con el botón de abajo." : "It didn't go through. Send it via WhatsApp with the button below."}</p>}
           </>
         )}
@@ -344,6 +348,7 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
           </div>
         )}
 
+        {paso < 6 && <AvisoFiltro palabras={malas} />}
         {paso < 6 && (
           <div className="acciones" style={{ justifyContent: "space-between" }}>
             <button className="btn ghost small" onClick={() => (paso ? setPaso(paso - 1) : onClose())}>← {paso ? (es ? "Atrás" : "Back") : es ? "Cerrar" : "Close"}</button>
@@ -351,8 +356,8 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
               <button className="btn" onClick={() => setPaso(paso + 1)}>{es ? "Siguiente →" : "Next →"}</button>
             ) : (
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <a className="btn wa small" href={`https://wa.me/${LINKS.whatsapp}?text=${encodeURIComponent(textoWa())}`} target="_blank" rel="noopener noreferrer"><Whatsapp width={14} height={14} /> WhatsApp</a>
-                <button className="btn" onClick={enviar} disabled={estado === "enviando"}>{estado === "enviando" ? (es ? "Enviando…" : "Sending…") : es ? "Enviar pedido 🚀" : "Send request 🚀"}</button>
+                {!malas.length && <a className="btn wa small" href={`https://wa.me/${LINKS.whatsapp}?text=${encodeURIComponent(textoWa())}`} target="_blank" rel="noopener noreferrer"><Whatsapp width={14} height={14} /> WhatsApp</a>}
+                <button className="btn" onClick={enviar} disabled={estado === "enviando" || malas.length > 0}>{estado === "enviando" ? (es ? "Enviando…" : "Sending…") : es ? "Enviar pedido 🚀" : "Send request 🚀"}</button>
               </div>
             )}
           </div>

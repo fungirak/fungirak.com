@@ -147,11 +147,11 @@ export const EXPERIENCIA = [
   {
     rol: { es: "Fundador", en: "Founder" },
     lugar: { es: "FUNGIRAK Studio", en: "FUNGIRAK Studio" },
-    org: { es: "Estudio independiente de productos digitales", en: "Independent digital product studio" },
+    org: { es: "Studio independiente de productos digitales", en: "Independent digital product studio" },
     desde: { es: "Actualidad", en: "Present" },
     logo: "/img/hongo.svg",
     items: [
-      { icono: "🧪", es: "MiTour, ECOS, Atlas Fit Pro, las guías de Santa Fe y Experimento Negro.", en: "MiTour, ECOS, Atlas Fit Pro, the Santa Fe guides and Experimento Negro." },
+      { icono: "🧪", es: "MiTour, ECOS, Atlas Fit Pro, las guías de Santa Fe y un sitio homenaje a Experimento Negro, banda de rock de mi ciudad.", en: "MiTour, ECOS, Atlas Fit Pro, the Santa Fe guides and a tribute site to Experimento Negro, a rock band from my city." },
     ],
   },
 ];
@@ -216,6 +216,6 @@ export const TIMELINE = [
   { año: "2023", icono: "🤖", es: "Microsoft Azure AI y Cisco Seguridad. Empiezo la Tecnicatura en la UTN FRSF.", en: "Microsoft Azure AI and Cisco Security. I start the IT Technician degree at UTN FRSF." },
   { año: "2024", icono: "⚡", es: "Rally de Innovación 2024 con Thinkers Group (UTN FRSF, UNL y UCES): pulseras de evacuación inteligentes con RFID. Presento Bro Exist, una app con reconocimiento facial para encontrar a tu \"hermano\" en el mundo.", en: "2024 Innovation Rally with Thinkers Group (UTN FRSF, UNL and UCES): smart evacuation wristbands with RFID. I present Bro Exist, a facial-recognition app to find your \"brother\" around the world." },
   { año: "2025", icono: "🎉", es: "Me recibo en la UTN y lanzo Team Joy.", en: "I graduate from UTN and launch Team Joy." },
-  { año: "2026", icono: "🍄", es: "La UTN FRSF me otorga el título (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atlas Fit Pro, las guías de Santa Fe y Experimento Negro.", en: "UTN FRSF grants my degree (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atlas Fit Pro, the Santa Fe guides and Experimento Negro." },
+  { año: "2026", icono: "🍄", es: "La UTN FRSF me otorga el título (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atlas Fit Pro, las guías de Santa Fe y el sitio homenaje a Experimento Negro.", en: "UTN FRSF grants my degree (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atlas Fit Pro, the Santa Fe guides and the Experimento Negro tribute site." },
   { año: "→", icono: "✨", es: "Lo que viene: dos libros, un EP y lo que construyamos juntos.", en: "What's next: two books, an EP and whatever we build together." },
 ];

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Modal from "../Modal";
 import { useLang } from "@/lib/i18n";
+import { useFiltro, AvisoFiltro, claseFiltro } from "../Filtro";
 
 // Bienvenida estilo linktree, dentro del sitio: primero qué busca, después el nombre (opcional),
 // y cada opción lleva directo a lo suyo. Pensada para quien llega desde la bio de Instagram.
@@ -11,7 +12,7 @@ export const DESTINOS = [
   { id: "proyectos", perfil: "curioso", ico: "🧪", es: ["Ver lo que hacés", "Mostrame tus proyectos"], en: ["See what you do", "Show me your projects"] },
   { id: "colega", perfil: "colega", ico: "💻", es: ["Soy colega", "Desarrollo, diseño o estudio"], en: ["I'm a colleague", "I code, design or study"] },
   { id: "redes", perfil: "curioso", ico: "📱", es: ["Tus redes", "Instagram, LinkedIn, YouTube…"], en: ["Your socials", "Instagram, LinkedIn, YouTube…"] },
-  { id: "donar", perfil: "curioso", ico: "💚", es: ["Apoyar el estudio", "Ayudar a que todo siga gratis"], en: ["Support the studio", "Help keep everything free"] },
+  { id: "donar", perfil: "curioso", ico: "💚", es: ["Apoyar el Studio", "Ayudar a que todo siga gratis"], en: ["Support the studio", "Help keep everything free"] },
 ];
 
 export default function Bienvenida({ onClose, setVisitante, onListo, desdeInstagram }) {
@@ -19,6 +20,7 @@ export default function Bienvenida({ onClose, setVisitante, onListo, desdeInstag
   const es = lang === "es";
   const [destino, setDestino] = useState(null);
   const [nombre, setNombre] = useState("");
+  const malas = useFiltro(nombre);
 
   const terminar = (d) => {
     setVisitante({ nombre: nombre.trim().slice(0, 40) || null, perfil: d.perfil, busca: d.id, origen: desdeInstagram ? "instagram" : null });
@@ -61,17 +63,18 @@ export default function Bienvenida({ onClose, setVisitante, onListo, desdeInstag
             </p>
           </>
         ) : (
-          <form onSubmit={(e) => { e.preventDefault(); terminar(destino); }} style={{ textAlign: "center" }}>
+          <form onSubmit={(e) => { e.preventDefault(); if (!malas.length) terminar(destino); }} style={{ textAlign: "center" }}>
             <h2 className="display" style={{ fontSize: "clamp(1.4rem,4vw,2rem)", margin: "6px 0 4px" }}>
               {es ? "¿Con quién tengo el gusto?" : "Who do I have the pleasure of meeting?"}
             </h2>
             <p style={{ marginTop: 0 }}>{destino.ico} {destino[lang][0]}. {es ? "Contame tu nombre así te trato como corresponde." : "Tell me your name so I can greet you properly."}</p>
             <div className="campo">
               <label htmlFor="b-nombre" className="sr-only">{es ? "Tu nombre" : "Your name"}</label>
-              <input id="b-nombre" className="big-input" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={es ? "Tu nombre" : "Your name"} autoFocus maxLength={40} autoComplete="given-name" />
+              <input id="b-nombre" className={`big-input ${claseFiltro(nombre) || ""}`} value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={es ? "Tu nombre" : "Your name"} autoFocus maxLength={40} autoComplete="given-name" />
             </div>
+            <AvisoFiltro palabras={malas} />
             <div className="acciones" style={{ justifyContent: "center" }}>
-              <button className="btn">{nombre.trim() ? (es ? `¡Un gusto, ${nombre.trim()}! →` : `Nice to meet you, ${nombre.trim()}! →`) : es ? "Seguir sin decirlo →" : "Continue anonymously →"}</button>
+              <button className="btn" disabled={malas.length > 0}>{nombre.trim() ? (es ? `¡Un gusto, ${nombre.trim()}! →` : `Nice to meet you, ${nombre.trim()}! →`) : es ? "Seguir sin decirlo →" : "Continue anonymously →"}</button>
               <button type="button" className="btn ghost small" onClick={() => setDestino(null)}>← {es ? "Volver" : "Back"}</button>
             </div>
             <p style={{ fontSize: "0.78rem", marginTop: 16, color: "var(--text-3)" }}>

@@ -83,7 +83,7 @@ export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) 
             <button className="btn pulse" onClick={() => abrir("hablemos")}>{visitante?.nombre ? `${ui.nav.hablemos}, ${visitante.nombre}` : ui.nav.hablemos} 👋</button>
             <button className="btn amber" onClick={() => abrir("brief")}>🚀 {ui.nav.pedir}</button>
             <button className="btn ghost" onClick={() => abrir("saber")}>{ui.nav.saber}</button>
-            <button className="btn violet" onClick={() => abrir("juego")} style={{ gridColumn: "1 / -1" }}>🎮 {lang === "es" ? "Jugar a Espora" : "Play Espora"}</button>
+            <button className="btn violet" onClick={() => abrir("juego")} style={{ gridColumn: "1 / -1" }}>🎮 {lang === "es" ? "Jugar a La Espora" : "Play La Espora"}</button>
           </div>
 
           <Socials />

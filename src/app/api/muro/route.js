@@ -1,5 +1,5 @@
 import { leerMuro, publicarMuro, publicacionesRecientes, accionMuro, hashIp, permitido, mismoOrigen, leerJSON, limpio } from "@/lib/db";
-import { revisar, EMOJIS } from "@/lib/moderacion";
+import { revisar, segundaOpinion, EMOJIS } from "@/lib/moderacion";
 import { LINKS } from "@/data/perfil";
 
 export const dynamic = "force-dynamic";
@@ -41,6 +41,7 @@ export async function POST(req) {
   if (texto.length < 3) return Response.json({ ok: false, error: "corto" }, { status: 400 });
   const motivo = revisar(`${nombre || ""} ${texto}`);
   if (motivo) return Response.json({ ok: false, error: motivo }, { status: 400 });
+  if (await segundaOpinion(`${nombre || ""} ${texto}`)) return Response.json({ ok: false, error: "lenguaje" }, { status: 400 });
 
   try {
     if ((await publicacionesRecientes(ip)) >= 4) return Response.json({ ok: false, error: "limite" }, { status: 429 });

@@ -507,7 +507,7 @@ export default function Juego({ onClose, sonido, onLogro }) {
   }, [es, sonido, onLogro]);
 
   return (
-    <Modal onClose={onClose} wide color="#00e676" head={false} label="Espora">
+    <Modal onClose={onClose} wide color="#00e676" head={false} label="La Espora">
       <div style={{ position: "relative", background: "#000", borderRadius: 28, overflow: "clip" }}>
         <canvas ref={canvas} style={{ display: "block", width: "100%", touchAction: "none", cursor: "pointer" }} aria-label={es ? "Juego Espora: tocá para volar" : "Spore game: tap to fly"} />
         {ui.estado !== "jugando" && (
@@ -515,7 +515,7 @@ export default function Juego({ onClose, sonido, onLogro }) {
             {ui.estado === "intro" && (
               <>
                 <div className="eyebrow" style={{ color: "#00e676" }}>{es ? "Juego oculto de fungirak" : "fungirak's hidden game"}</div>
-                <h2 className="display">ESPORA</h2>
+                <h2 className="display">LA ESPORA</h2>
                 <p>{es ? "Sos un hongo. Volá desde lo más profundo del micelio, pasá el búnker y las raíces, y llegá al Bosque. 10 niveles." : "You're a mushroom. Fly from deep in the mycelium, past the bunker and the roots, up to the Forest. 10 levels."}</p>
                 <p style={{ fontSize: "0.8rem", opacity: 0.8 }}>{es ? "Tocá, hacé clic o apretá espacio para volar · ✦ juntá esporas" : "Tap, click or press space to fly · ✦ collect spores"}</p>
               </>
