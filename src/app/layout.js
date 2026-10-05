@@ -81,6 +81,10 @@ const jsonLd = {
 // Sigue el modo del sistema o navegador; si no hay preferencia, claro. Un cambio manual dura solo esa visita.
 const temaScript = `try{var t=sessionStorage.getItem('fgk-tema');if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t;var l=localStorage.getItem('fgk-lang');if(l)document.documentElement.lang=l}catch(e){document.documentElement.dataset.theme='light'}`;
 
+// App instalada (celu): después de la pantalla del sistema (que en Android 12+ solo muestra el ícono)
+// sigue una igual con el nombre abajo, y se va sola cuando la página cargó. En el navegador no aparece.
+const splashScript = `(function(){var s=document.getElementById('pwa-splash');if(!s||!(matchMedia('(display-mode: standalone)').matches||navigator.standalone))return;s.classList.add('on');var t0=Date.now();function go(){setTimeout(function(){s.classList.add('out')},Math.max(0,900-(Date.now()-t0)))}if(document.readyState==='complete')go();else addEventListener('load',go)})()`;
+
 export default function RootLayout({ children }) {
   return (
     <html lang="es" data-theme="light" className={`${display.variable} ${body.variable} ${mono.variable}`} suppressHydrationWarning>
@@ -89,6 +93,11 @@ export default function RootLayout({ children }) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body>
+        <div id="pwa-splash" aria-hidden="true" suppressHydrationWarning>
+          <img src="/icons/icon-192.png" width="96" height="96" alt="" />
+          <span>FUNGIRAK <b>Studio</b></span>
+        </div>
+        <script dangerouslySetInnerHTML={{ __html: splashScript }} />
         {children}
         <Analytics />
       </body>
