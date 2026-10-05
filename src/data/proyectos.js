@@ -98,7 +98,7 @@ export const PROYECTOS = [
       en: "You tell it how you travel through a game-like onboarding and MiTour builds the optimized route, an approximate daily budget and an animated map that flies through every stop with photos.",
     },
     datos: [
-      { n: "2.300+", es: "destinos", en: "destinations" },
+      { n: "2.300", es: "destinos", en: "destinations" },
       { n: "188", es: "países", en: "countries" },
       { n: "17", es: "pasos de onboarding", en: "onboarding steps" },
     ],

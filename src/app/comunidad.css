@@ -850,3 +850,28 @@
     transform: translateY(2px);
   }
 }
+
+/* Chrome, Edge y Safari ignoran ::-webkit-scrollbar si hay scrollbar-width/scrollbar-color, y dibujan
+   una barra recta que se sale de las esquinas redondeadas. Ahí manda la barra propia (redondeada y con
+   margen arriba y abajo); Firefox, que no tiene ::-webkit-scrollbar, sigue con la barra fina. */
+@supports selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: auto !important;
+    scrollbar-color: auto !important;
+  }
+  .term::-webkit-scrollbar-track {
+    margin: 8px 0 24px;
+  }
+}
+
+/* Celular: sin el destello celeste al tocar (juego de La Espora, cards, botones) */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* La Espora: tocar rápido no selecciona texto ni pinta la pantalla de celeste */
+.juego-lienzo {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}

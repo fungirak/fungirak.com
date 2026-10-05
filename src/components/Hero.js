@@ -70,7 +70,10 @@ const BORDE = [[8, 0], [30, 0], [52, 0], [74, 0], [96, 0], [100, 22], [100, 48],
 
 export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) {
   const { lang, ui } = useLang();
-  const est = proyecto(PERFIL.estudio.proyecto);
+  // Un proyecto distinto cada día (hora de Argentina); 3 y 8 son coprimos: pasan todos antes de repetir
+  const [dia] = useState(() => Math.floor((Date.now() - 3 * 3600e3) / 864e5));
+  const hoy = PERFIL.estudio[(dia * 3) % PERFIL.estudio.length];
+  const est = proyecto(hoy.proyecto);
   return (
     <>
       <VideoFondo />
@@ -129,9 +132,9 @@ export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) 
 
           <button className="estudio" onClick={() => abrir(`proyecto:${est.id}`)}>
             <span className="pill live">{ui.enVivo}</span>
-            <span>
+            <span suppressHydrationWarning>
               <b>{ui.estudio}</b>
-              {tx(PERFIL.estudio, lang)}
+              {tx(hoy, lang)}
             </span>
           </button>
 

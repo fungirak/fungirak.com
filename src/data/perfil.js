@@ -26,12 +26,17 @@ export const PERFIL = {
   subrol: { es: "Fundador de Team Joy · FUNGIRAK Studio", en: "Founder of Team Joy · FUNGIRAK Studio" },
   titulo: { es: "Técnico Universitario en Tecnologías de la Información · UTN FRSF", en: "University Technician in Information Technologies · UTN FRSF" },
   experiencia: "+4",
-  estudio: {
-    // "Hoy en el estudio": lo que estoy construyendo ahora. Se cambia acá y se publica.
-    es: "ECOS: personas estimadas en 3D",
-    en: "ECOS: estimated people in 3D",
-    proyecto: "ecos",
-  },
+  // "Hoy en el estudio": cada día menciona uno de los proyectos publicados (Hero elige según la fecha).
+  estudio: [
+    { proyecto: "ecos", es: "ECOS: personas estimadas en 3D", en: "ECOS: estimated people in 3D" },
+    { proyecto: "teamjoy", es: "Team Joy: novedades para la comunidad", en: "Team Joy: news for the community" },
+    { proyecto: "mitour", es: "MiTour: rutas y sellos para tu próximo viaje", en: "MiTour: routes and stamps for your next trip" },
+    { proyecto: "atlas", es: "Atlas Fit Pro: rutinas con evidencia", en: "Atlas Fit Pro: evidence-based workouts" },
+    { proyecto: "gourmet", es: "Santa Fe Gourmet: bares y cafés nuevos", en: "Santa Fe Gourmet: new bars and cafés" },
+    { proyecto: "schools", es: "Santa Fe Schools: más escuelas en el mapa", en: "Santa Fe Schools: more schools on the map" },
+    { proyecto: "telos", es: "Santa Fe Telo's: la guía al día", en: "Santa Fe Telo's: the guide, up to date" },
+    { proyecto: "negro", es: "Experimento Negro: discos y recitales", en: "Experimento Negro: albums and gigs" },
+  ],
 };
 
 export const SOBRE_MI = {
