@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { EMOJIS } from "@/lib/moderacion";
 import { useFiltro, AvisoFiltro, claseFiltro } from "./Filtro";
+import { avisarPorMail } from "@/lib/avisoMail";
 
 const ERRORES = {
   es: { links: "Sin links ni @usuarios, porfa 🙏", lenguaje: "Mantengámoslo family friendly 💚", gritos: "No hace falta gritar 😅", spam: "Eso parece spam 🤖", corto: "Escribí un poquito más", limite: "Ya dejaste varias, ¡gracias! Volvé en un rato", error: "No se pudo publicar, probá de nuevo" },
@@ -41,6 +42,7 @@ function Formulario({ tipo, onPublicado, placeholder, max, boton, onSello }) {
       });
       const j = await r.json().catch(() => ({}));
       if (r.ok && j.ok && j.item) {
+        if (tipo === "idea") avisarPorMail(`💡 fungirak.com · Idea de sitio #${j.item.id}`, { Idea: j.item.texto, Firma: j.item.nombre || "Anónimo", Icono: j.item.emoji });
         onPublicado(j.item);
         setTexto("");
         setEstado("ok");

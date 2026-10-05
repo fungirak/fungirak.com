@@ -1,6 +1,5 @@
 import { leerMuro, publicarMuro, publicacionesRecientes, accionMuro, hashIp, permitido, mismoOrigen, leerJSON, limpio } from "@/lib/db";
 import { revisar, segundaOpinion, EMOJIS } from "@/lib/moderacion";
-import { LINKS } from "@/data/perfil";
 
 export const dynamic = "force-dynamic";
 
@@ -46,15 +45,6 @@ export async function POST(req) {
   try {
     if ((await publicacionesRecientes(ip)) >= 4) return Response.json({ ok: false, error: "limite" }, { status: 429 });
     const item = await publicarMuro({ tipo, nombre, emoji, texto, ip_hash: ip });
-    // Las ideas de sitios le llegan a Gabriel por mail
-    if (tipo === "idea") {
-      await fetch(`https://formsubmit.co/ajax/${LINKS.email}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json", Origin: "https://fungirak.com", Referer: "https://fungirak.com/" },
-        body: JSON.stringify({ _subject: `💡 fungirak.com · Idea de sitio #${item.id}`, _template: "table", _captcha: "false", Idea: texto, Firma: nombre || "Anónimo", Icono: emoji }),
-        signal: AbortSignal.timeout(6000),
-      }).catch(() => {});
-    }
     return Response.json({ ok: true, item });
   } catch (e) {
     console.error("muro/post", e);

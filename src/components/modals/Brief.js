@@ -5,6 +5,7 @@ import { useLang } from "@/lib/i18n";
 import { LINKS } from "@/data/perfil";
 import { Whatsapp } from "../Iconos";
 import { useFiltro, AvisoFiltro, claseFiltro } from "../Filtro";
+import { avisarPorMail } from "@/lib/avisoMail";
 
 // "Pedime algo": brief guiado con ingeniería de requerimientos, en pasos cortos y con pills.
 const L = (es, en, ico) => ({ es, en, ico });
@@ -213,6 +214,11 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
       });
       const j = await r.json().catch(() => ({}));
       if (r.ok && j.ok) {
+        avisarPorMail(
+          `🚀 fungirak.com${j.id ? ` #${j.id}` : ""} · Pedido de proyecto de ${b.nombre}`,
+          { Nombre: b.nombre, Empresa: b.empresa || "-", Email: b.email || "-", Telefono: b.telefono || "-", Prefiere: OPC.canal[b.canal]?.es || "-", Completo: `${completo}%`, Pedido: resumen() },
+          b.email || undefined
+        );
         setNro(j.id || null);
         setEstado("ok");
         setPaso(6);

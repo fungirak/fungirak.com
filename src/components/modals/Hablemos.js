@@ -6,6 +6,7 @@ import { LINKS } from "@/data/perfil";
 import { Socials } from "../Hero";
 import { Whatsapp, Mail } from "../Iconos";
 import { useFiltro, AvisoFiltro, claseFiltro } from "../Filtro";
+import { avisarPorMail } from "@/lib/avisoMail";
 
 const INTERESES = [
   { id: "contratar", ico: "💼", es: ["Contratarte", "Tengo una propuesta laboral"], en: ["Hire you", "I have a job offer"] },
@@ -45,6 +46,12 @@ export default function Hablemos({ onClose, visitante, setVisitante, previo, onC
       });
       const j = await r.json().catch(() => ({}));
       if (r.ok && j.ok) {
+        // Ya quedó guardado; ahora el aviso al mail de Gabriel
+        avisarPorMail(
+          `🍄 fungirak.com${j.id ? ` #${j.id}` : ""} · ${nombre}: ${it ? it.es[0] : "Nuevo mensaje"}`,
+          { Nombre: nombre, Email: form.email || "-", Telefono: form.telefono || "-", Interes: it ? it.es[0] : "-", Canal: canal || "-", Mensaje: form.mensaje || "-", Perfil: visitante?.perfil || "-", Idioma: lang },
+          form.email || undefined
+        );
         setEstado("ok");
         setPaso(4);
         onConfetti?.();
