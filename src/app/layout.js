@@ -77,11 +77,12 @@ const jsonLd = {
 };
 
 // Aplica el tema guardado antes de pintar (sin parpadeo)
-const temaScript = `try{var t=localStorage.getItem('fgk-tema');if(!t){t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.dataset.theme=t;var l=localStorage.getItem('fgk-lang');if(l)document.documentElement.lang=l}catch(e){document.documentElement.dataset.theme='dark'}`;
+// Sigue el modo del sistema o navegador; si no hay preferencia, claro. Un cambio manual dura solo esa visita.
+const temaScript = `try{var t=sessionStorage.getItem('fgk-tema');if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t;var l=localStorage.getItem('fgk-lang');if(l)document.documentElement.lang=l}catch(e){document.documentElement.dataset.theme='light'}`;
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="es" data-theme="dark" className={`${display.variable} ${body.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="es" data-theme="light" className={`${display.variable} ${body.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: temaScript }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

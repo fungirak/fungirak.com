@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLang, tx } from "@/lib/i18n";
 import { LINKS, PERFIL, VIDEO } from "@/data/perfil";
 import { proyecto } from "@/data/proyectos";
@@ -10,14 +10,36 @@ import Escenario from "./Escenario";
 function VideoFondo() {
   const [on, setOn] = useState(false);
   const [cargar, setCargar] = useState(false);
+  const marco = useRef(null);
   useEffect(() => {
     const id = setTimeout(() => setCargar(true), 900);
-    return () => clearTimeout(id);
+    // YouTube avisa el estado del reproductor: 1 = reproduciendo. Si está en pausa o bloqueado, queda la imagen.
+    const msg = (e) => {
+      try {
+        if (!/youtube(-nocookie)?\.com$/.test(new URL(e.origin).hostname)) return;
+        const d = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+        const estado = d?.info?.playerState;
+        if (estado === 1) setOn(true);
+        else if (estado === 2 || estado === -1 || estado === 5) setOn(false);
+      } catch {}
+    };
+    window.addEventListener("message", msg);
+    return () => {
+      clearTimeout(id);
+      window.removeEventListener("message", msg);
+    };
   }, []);
-  const src = `https://www.youtube-nocookie.com/embed/${VIDEO.id}?autoplay=1&mute=1&loop=1&playlist=${VIDEO.id}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&disablekb=1`;
+  const escuchar = () => {
+    const w = marco.current?.contentWindow;
+    if (!w) return;
+    // Pide al reproductor que informe sus cambios de estado
+    w.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "*");
+    w.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"], id: 1, channel: "widget" }), "*");
+  };
+  const src = `https://www.youtube-nocookie.com/embed/${VIDEO.id}?autoplay=1&mute=1&loop=1&playlist=${VIDEO.id}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&disablekb=1&enablejsapi=1`;
   return (
     <div className="video-bg" style={{ backgroundImage: `url(https://i.ytimg.com/vi/${VIDEO.id}/hqdefault.jpg)` }} aria-hidden="true">
-      {cargar && <iframe src={src} title={VIDEO.titulo} allow="autoplay; encrypted-media" tabIndex={-1} className={on ? "on" : ""} onLoad={() => setTimeout(() => setOn(true), 600)} />}
+      {cargar && <iframe ref={marco} src={src} title={VIDEO.titulo} allow="autoplay; encrypted-media" tabIndex={-1} className={on ? "on" : ""} onLoad={escuchar} />}
     </div>
   );
 }

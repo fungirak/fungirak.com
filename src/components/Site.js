@@ -37,7 +37,7 @@ const ACORDE = ["teamjoy", "problematica", "libro-1", "libro-2", "ep"];
 
 export default function Site() {
   const [lang, setLangState] = useState("es");
-  const [tema, setTemaState] = useState("dark");
+  const [tema, setTemaState] = useState("light");
   const [sonido, setSonidoState] = useState(false);
   const [sellos, setSellos] = useState([]);
   const [visitante, setVisitanteState] = useState(null);
@@ -54,7 +54,7 @@ export default function Site() {
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect -- se lee localStorage una sola vez al montar */
     setLangState(leer("fgk-lang", navigator.language?.startsWith("es") ? "es" : "en"));
-    setTemaState(document.documentElement.dataset.theme || "dark");
+    setTemaState(document.documentElement.dataset.theme || "light");
     setSonidoState(leer("fgk-sonido", false));
     setSellos(leerSellos());
     const v = leer("fgk-visitante", null);
@@ -88,6 +88,21 @@ export default function Site() {
     document.documentElement.lang = lang;
   }, [lang]);
 
+  // Si el visitante cambia el modo de su sistema con el sitio abierto, lo seguimos (salvo que haya elegido a mano)
+  useEffect(() => {
+    const mq = matchMedia("(prefers-color-scheme: dark)");
+    const cambio = (e) => {
+      try {
+        if (sessionStorage.getItem("fgk-tema")) return;
+      } catch {}
+      const t = e.matches ? "dark" : "light";
+      document.documentElement.dataset.theme = t;
+      setTemaState(t);
+    };
+    mq.addEventListener("change", cambio);
+    return () => mq.removeEventListener("change", cambio);
+  }, []);
+
   const setLang = useCallback((l) => {
     setLangState(l);
     guardar("fgk-lang", l);
@@ -97,7 +112,7 @@ export default function Site() {
     setTemaState(t);
     document.documentElement.dataset.theme = t;
     try {
-      localStorage.setItem("fgk-tema", t);
+      sessionStorage.setItem("fgk-tema", t);
     } catch {}
   }, []);
 

@@ -24,13 +24,10 @@ function Alias({ es }) {
     }
   };
   return (
-    <div className="alias">
-      <span>
-        <small>{es ? "O transferí al alias" : "Or transfer to the alias"}</small>
-        <b>{ALIAS}</b>
-      </span>
-      <button className="btn ghost small" onClick={copiar} aria-live="polite">{copiado ? (es ? "¡Copiado! ✓" : "Copied! ✓") : es ? "Copiar" : "Copy"}</button>
-    </div>
+    <small className="alias">
+      {es ? "o por alias" : "or via alias"} <b>{ALIAS}</b>
+      <button onClick={copiar} aria-live="polite" title={es ? "Copiar alias" : "Copy alias"}>{copiado ? (es ? "copiado ✓" : "copied ✓") : es ? "copiar" : "copy"}</button>
+    </small>
   );
 }
 
@@ -78,10 +75,10 @@ export default function Donar({ stats, abrir }) {
             <img src="/img/logoColaboracion.png" alt="" width={22} height={22} />
             {es ? "Aportar con Mercado Pago" : "Support via Mercado Pago"}
           </a>
-          <Alias es={es} />
           <small style={{ color: "var(--text-3)", textAlign: "center" }}>
             {es ? "Elegís cuánto en Mercado Pago. Gracias de corazón 🍄" : "You choose the amount on Mercado Pago. Thank you 🍄"}
           </small>
+          <Alias es={es} />
         </div>
       </div>
     </section>

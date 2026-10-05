@@ -41,7 +41,7 @@ function Card({ p, onOpen, sellado, dim, lit, onHover, idx }) {
       <div className="art">
         <Arte p={p} />
       </div>
-      <div className="name">{tx(p.nombreCard || p.nombre, lang)}</div>
+      <div className={`name${tx(p.nombre, lang).length > 22 ? " largo" : ""}`}>{tx(p.nombre, lang)}</div>
       <div className="tag">{tx(p.tagline, lang)}</div>
       {p.fila === 2 && (
         <div className="pills">
@@ -85,7 +85,7 @@ export default function Escenario({ onOpen, sellos, onSound }) {
           <div className="fila-head">
             <h2 className="display">{n === 1 ? ui.fila1 : ui.fila2}</h2>
             <span className="count" title={lang === "es" ? "Cada card que abrís te da un sello en tu Pasaporte FUNGIRAK" : "Every card you open gives you a stamp in your FUNGIRAK Passport"}>
-              {lang === "es" ? "Abriste" : "Opened"} {fila(n).filter((p) => sellos.includes(p.id)).length} {lang === "es" ? "de" : "of"} {fila(n).length} 🛂
+              ✓ {lang === "es" ? "Abriste" : "Opened"} {fila(n).filter((p) => sellos.includes(p.id)).length} {lang === "es" ? "de" : "of"} {fila(n).length}
             </span>
           </div>
           <div className="cards">

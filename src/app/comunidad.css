@@ -578,3 +578,107 @@
     display: grid;
   }
 }
+
+/* "Lo central": compacta, como antes. El texto sigue al título sin reservar renglones */
+.card:not(.con-pills) {
+  height: 236px;
+}
+
+.card:not(.con-pills) .name,
+.card:not(.con-pills) .tag {
+  min-height: 0;
+}
+
+@media (max-width: 900px) {
+  .card:not(.con-pills) {
+    height: 228px;
+  }
+}
+
+/* "Lo central" como el diseño original: el dibujo ocupa el espacio y el texto queda abajo */
+.card:not(.con-pills) .art {
+  flex: 1;
+  height: auto;
+}
+
+/* Nombres largos: un poco más chicos para que entren en dos renglones */
+.card .name.largo {
+  font-size: 0.8rem;
+  letter-spacing: -0.03em;
+}
+
+/* Alias discreto, debajo del texto */
+.alias {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-3);
+  font-size: 0.78rem;
+}
+
+.alias b {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-2);
+}
+
+.alias button {
+  border: 0;
+  background: none;
+  padding: 2px 6px;
+  border-radius: 8px;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.alias button:hover {
+  background: color-mix(in srgb, var(--c-green) 14%, transparent);
+}
+
+/* La "i" bien centrada en su círculo */
+.info-tip {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  margin-left: 6px;
+  vertical-align: top;
+  position: relative;
+  top: 0.2em;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0;
+  font-family: var(--font-body);
+  font-style: normal;
+}
+
+/* Nombres de "Más del Studio" con alto fijo aunque cambie la letra */
+.card.con-pills .name {
+  min-height: 2.5rem;
+}
+
+/* Contador de cards abiertas: pastilla legible sobre el video, en claro y oscuro */
+.fila-head .count {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--glass-strong);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+  color: var(--text-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: help;
+}
+
+.fila-head h2 {
+  padding: 2px 10px;
+  margin-left: -10px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(6px);
+}

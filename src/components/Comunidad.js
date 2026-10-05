@@ -97,11 +97,11 @@ function InfoMicelio({ es }) {
       <span className="tip" role="tooltip">
         {es ? (
           <>
-            <b>Micelio:</b> la red de filamentos de los hongos (las hifas) que crece bajo tierra e interconecta raíces de plantas y árboles. Por ella circulan agua, nutrientes y señales: el &ldquo;internet&rdquo; del bosque. De ahí el juego de palabras: <b>mi-celio</b>, mi red.
+            <b>Micelio:</b> la red de filamentos de los hongos (las hifas) que crece bajo tierra e interconecta raíces de plantas y árboles. Por ella circulan agua, nutrientes y señales: el &ldquo;internet&rdquo; del bosque.
           </>
         ) : (
           <>
-            <b>Mycelium:</b> the network of fungal filaments (hyphae) that grows underground and links the roots of plants and trees. Water, nutrients and signals travel through it: the forest&apos;s &ldquo;internet&rdquo;. Hence the pun in Spanish: <b>mi-celio</b>, my network.
+            <b>Mycelium:</b> the network of fungal filaments (hyphae) that grows underground and links the roots of plants and trees. Water, nutrients and signals travel through it: the forest&apos;s &ldquo;internet&rdquo;.
           </>
         )}
       </span>
