@@ -42,7 +42,9 @@ function Formulario({ tipo, onPublicado, placeholder, max, boton, onSello }) {
       });
       const j = await r.json().catch(() => ({}));
       if (r.ok && j.ok && j.item) {
+        // Aviso por mail de todo lo que se publica en el muro
         if (tipo === "idea") avisarPorMail(`💡 fungirak.com · Idea de sitio #${j.item.id}`, { Idea: j.item.texto, Firma: j.item.nombre || "Anónimo", Icono: j.item.emoji });
+        else avisarPorMail(`👣 fungirak.com · Nueva huella #${j.item.id}`, { Huella: j.item.texto, Firma: j.item.nombre || "Anónimo", Icono: j.item.emoji });
         onPublicado(j.item);
         setTexto("");
         setEstado("ok");

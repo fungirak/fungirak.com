@@ -4,6 +4,12 @@
 const DESTINO = "https://formsubmit.co/ajax/fungirak@gmail.com";
 
 export async function avisarPorMail(asunto, campos, responderA) {
+  if (await enviarUnaVez(asunto, campos, responderA)) return true;
+  await new Promise((r) => setTimeout(r, 2500));
+  return enviarUnaVez(asunto, campos, responderA);
+}
+
+async function enviarUnaVez(asunto, campos, responderA) {
   try {
     const r = await fetch(DESTINO, {
       method: "POST",
