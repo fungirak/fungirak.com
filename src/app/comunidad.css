@@ -1,0 +1,293 @@
+/* =========================================================
+   COMUNIDAD: huellas e ideas · marco del perfil · YouTube
+   ========================================================= */
+.muro-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(18px, 3vw, 36px);
+  margin-top: 26px;
+}
+
+.muro-col h3 {
+  font-size: 1.15rem;
+  margin: 0 0 12px;
+}
+
+.muro-form {
+  padding: 16px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+
+.emoji-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.emoji-pick button {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1.5px solid transparent;
+  background: var(--surface-2);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-pop), border-color 0.2s;
+}
+
+.emoji-pick button:hover {
+  transform: scale(1.15) rotate(-6deg);
+}
+
+.emoji-pick button.on {
+  border-color: var(--c-green);
+  background: color-mix(in srgb, var(--c-green) 18%, var(--surface));
+  transform: scale(1.12);
+}
+
+.muro-form textarea {
+  min-height: 80px;
+}
+
+.firma {
+  flex: 1;
+  min-width: 140px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line-2);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+}
+
+.anonimo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.huellas {
+  columns: 2 220px;
+  column-gap: 12px;
+}
+
+.huella {
+  break-inside: avoid;
+  margin: 0 0 12px;
+  padding: 14px 14px 10px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 0.3s var(--ease-pop);
+  animation: rise 0.5s var(--ease) both;
+}
+
+.huella:hover {
+  transform: rotate(0) scale(1.03);
+}
+
+.huella-emoji {
+  font-size: 1.7rem;
+}
+
+.huella p {
+  margin: 4px 0 8px;
+  font-size: 0.92rem;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.huella footer,
+.idea small {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--text-3);
+}
+
+.huella footer button,
+.idea .rep {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--text-3);
+  opacity: 0.5;
+  font-size: 0.8rem;
+}
+
+.huella footer button:hover,
+.idea .rep:hover {
+  opacity: 1;
+  color: var(--c-red);
+}
+
+.ideas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.idea {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  animation: rise 0.45s var(--ease) both;
+}
+
+.idea.top {
+  border-color: color-mix(in srgb, var(--c-green) 50%, transparent);
+  background: linear-gradient(120deg, color-mix(in srgb, var(--c-green) 10%, var(--surface)), var(--surface));
+}
+
+.idea p {
+  margin: 0 0 4px;
+  overflow-wrap: anywhere;
+}
+
+.idea small {
+  justify-content: flex-start;
+}
+
+.voto {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 54px;
+  border-radius: 14px;
+  border: 1.5px solid var(--line-2);
+  background: var(--surface-2);
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--text-3);
+  transition: all 0.25s var(--ease-pop);
+}
+
+.voto b {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.voto:hover,
+.voto.on {
+  border-color: var(--c-green);
+  color: var(--c-green);
+  transform: translateY(-2px);
+}
+
+.voto.on {
+  background: color-mix(in srgb, var(--c-green) 16%, var(--surface));
+}
+
+/* Marco de la comunidad alrededor de la tarjeta de perfil */
+.marco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.marco span {
+  position: absolute;
+  font-size: 1.05rem;
+  translate: -50% -50%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+  animation: float 5s ease-in-out infinite;
+}
+
+/* YouTube */
+.yt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.yt {
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  transition: transform 0.25s var(--ease-pop);
+}
+
+.yt:hover {
+  transform: translateY(-4px);
+}
+
+.yt img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.yt div {
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.yt small {
+  display: block;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .muro-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Juego Espora */
+.juego-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 24px;
+  text-align: center;
+  color: #e8fff0;
+  background: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.75));
+  animation: fade 0.3s var(--ease);
+}
+
+.juego-overlay h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 6vw, 3.4rem);
+  color: #00e676;
+  text-shadow: 0 0 24px rgba(0, 230, 118, 0.6);
+}
+
+.juego-overlay p {
+  margin: 0;
+  max-width: 460px;
+  color: #c8ffd9;
+}
+
+.juego-overlay .btn {
+  margin-top: 10px;
+}
