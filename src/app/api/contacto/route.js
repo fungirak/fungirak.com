@@ -1,7 +1,6 @@
-import { guardarMensaje, mensajesRecientes, hashIp, mismoOrigen, sumar } from "@/lib/db";
+import { guardarMensaje, mensajesRecientes, hashIp, mismoOrigen, sumar, leerJSON, limpio } from "@/lib/db";
 import { LINKS } from "@/data/perfil";
 
-const limpiar = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const INTERESES = {
@@ -15,23 +14,19 @@ const INTERESES = {
 export async function POST(req) {
   if (!mismoOrigen(req)) return Response.json({ ok: false, error: "origen" }, { status: 403 });
 
-  let b;
-  try {
-    b = await req.json();
-  } catch {
-    return Response.json({ ok: false, error: "formato" }, { status: 400 });
-  }
+  const b = await leerJSON(req, 24_000);
+  if (!b) return Response.json({ ok: false, error: "formato" }, { status: 400 });
 
   // Trampa para robots: si completan el campo oculto, se responde OK sin hacer nada
   if (b._hp) return Response.json({ ok: true });
 
   const m = {
-    nombre: limpiar(b.nombre, 80),
-    email: limpiar(b.email, 120),
-    telefono: limpiar(b.telefono, 40),
-    perfil: limpiar(b.perfil, 30),
-    interes: limpiar(b.interes, 30),
-    mensaje: limpiar(b.mensaje, 6000),
+    nombre: limpio(b.nombre, 80),
+    email: limpio(b.email, 120),
+    telefono: limpio(b.telefono, 40).replace(/[^\d+\-\s()]/g, ""),
+    perfil: limpio(b.perfil, 30),
+    interes: limpio(b.interes, 30),
+    mensaje: limpio(b.mensaje, 6000, true),
     idioma: b.idioma === "en" ? "en" : "es",
     ip_hash: hashIp(req),
     brief: null,
@@ -60,7 +55,7 @@ export async function POST(req) {
   try {
     const r = await fetch(`https://formsubmit.co/ajax/${LINKS.email}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json", Origin: "https://www.fungirak.com", Referer: "https://www.fungirak.com/" },
+      headers: { "Content-Type": "application/json", Accept: "application/json", Origin: "https://fungirak.com", Referer: "https://fungirak.com/" },
       body: JSON.stringify({
         _subject: `🍄 fungirak.com${id ? ` #${id}` : ""} · ${m.nombre}: ${m.brief ? "Pedido de proyecto" : INTERESES[m.interes] || "Nuevo mensaje"}`,
         _template: "table",

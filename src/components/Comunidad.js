@@ -80,15 +80,26 @@ function Formulario({ tipo, onPublicado, placeholder, max, boton, onSello }) {
 export default function Comunidad({ muro, setMuro, sellar }) {
   const { lang } = useLang();
   const es = lang === "es";
-  const [votadas, setVotadas] = useState([]);
+  const [votadas, setVotadas] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("fgk-votos") || "[]");
+    } catch {
+      return [];
+    }
+  });
   const [reportadas, setReportadas] = useState([]);
 
   const accion = async (id, a) => {
     if (a === "votar") {
       if (votadas.includes(id)) return;
-      setVotadas((v) => [...v, id]);
+      const nuevas = [...votadas, id].slice(-300);
+      setVotadas(nuevas);
+      try {
+        localStorage.setItem("fgk-votos", JSON.stringify(nuevas));
+      } catch {}
       setMuro((m) => ({ ...m, ideas: m.ideas.map((x) => (x.id === id ? { ...x, votos: x.votos + 1 } : x)).sort((p, q) => q.votos - p.votos) }));
     } else {
+      if (reportadas.includes(id)) return;
       setReportadas((v) => [...v, id]);
     }
     fetch("/api/muro", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ accion: a, id }) }).catch(() => {});

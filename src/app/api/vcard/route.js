@@ -12,7 +12,7 @@ export function GET() {
     "TITLE:Desarrollador de Software Full Stack",
     `EMAIL;TYPE=INTERNET:${LINKS.email}`,
     `TEL;TYPE=CELL:+${LINKS.whatsapp}`,
-    "URL:https://www.fungirak.com",
+    "URL:https://fungirak.com",
     `X-SOCIALPROFILE;TYPE=linkedin:${LINKS.linkedin}`,
     `X-SOCIALPROFILE;TYPE=instagram:${LINKS.instagram}`,
     `X-SOCIALPROFILE;TYPE=github:${LINKS.github}`,

@@ -9,14 +9,27 @@ import { Casa, Llave, Persona, Flecha, Linkedin, Instagram } from "../Iconos";
 function Aplauso({ id, valor, onAplauso }) {
   const { ui } = useLang();
   const [bursts, setBursts] = useState([]);
+  const [dados, setDados] = useState(() => {
+    try {
+      return Number(sessionStorage.getItem(`fgk-aplauso-${id}`) || 0);
+    } catch {
+      return 0;
+    }
+  });
   const click = () => {
+    if (dados >= 10) return;
+    const n = dados + 1;
+    setDados(n);
+    try {
+      sessionStorage.setItem(`fgk-aplauso-${id}`, String(n));
+    } catch {}
     const k = Date.now();
     setBursts((b) => [...b, k]);
     setTimeout(() => setBursts((b) => b.filter((x) => x !== k)), 900);
     onAplauso(id);
   };
   return (
-    <button className="btn ghost aplauso" onClick={click} aria-label={ui.aplaudir}>
+    <button className="btn ghost aplauso" onClick={click} aria-label={ui.aplaudir} title={dados >= 10 ? "¡Gracias! 💚" : undefined}>
       👏 {valor || 0} <span style={{ fontWeight: 600, textTransform: "none" }}>{ui.aplausos}</span>
       {bursts.map((k) => (
         <span key={k} className="burst">👏</span>

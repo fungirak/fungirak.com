@@ -149,7 +149,7 @@ export const EXPERIENCIA = [
     lugar: { es: "FUNGIRAK Studio", en: "FUNGIRAK Studio" },
     org: { es: "Estudio independiente de productos digitales", en: "Independent digital product studio" },
     desde: { es: "Actualidad", en: "Present" },
-    logo: "/img/funguito.svg",
+    logo: "/img/hongo.svg",
     items: [
       { icono: "🧪", es: "MiTour, ECOS, Atlas Fit Pro, las guías de Santa Fe y Experimento Negro.", en: "MiTour, ECOS, Atlas Fit Pro, the Santa Fe guides and Experimento Negro." },
     ],

@@ -8,7 +8,7 @@ const display = Unbounded({ subsets: ["latin"], weight: ["500", "700", "800"], v
 const body = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--f-body", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["500", "700"], variable: "--f-mono", display: "swap" });
 
-const SITE = "https://www.fungirak.com";
+const SITE = "https://fungirak.com";
 const DESC =
   "Gabriel Lazzarini (fungirak), desarrollador de software full stack de Santa Fe, Argentina. Más de 4 años en el Gobierno de Santa Fe, fundador de Team Joy y FUNGIRAK Studio: MiTour, ECOS, Atlas Fit Pro y más.";
 
@@ -32,7 +32,8 @@ export const metadata = {
   },
   twitter: { card: "summary_large_image", title: "Gabriel Lazzarini · fungirak", description: "Desarrollador full stack · Team Joy · FUNGIRAK Studio" },
   robots: { index: true, follow: true },
-  icons: { icon: "/favicon.ico" },
+  appleWebApp: { capable: true, title: "fungirak", statusBarStyle: "black-translucent" },
+  applicationName: "fungirak",
 };
 
 export const viewport = {

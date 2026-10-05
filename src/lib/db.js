@@ -41,6 +41,13 @@ export function asegurarTablas() {
         ip_hash text
       )`;
       await sql`CREATE INDEX IF NOT EXISTS muro_tipo_visible ON muro (tipo, visible, creado DESC)`;
+      await sql`CREATE TABLE IF NOT EXISTS muro_acciones (
+        muro_id int NOT NULL REFERENCES muro(id) ON DELETE CASCADE,
+        accion text NOT NULL,
+        ip_hash text NOT NULL,
+        creado timestamptz NOT NULL DEFAULT now(),
+        PRIMARY KEY (muro_id, accion, ip_hash)
+      )`;
     })().catch((e) => {
       listo = null;
       throw e;
@@ -101,6 +108,10 @@ export function hashIp(req) {
 const ventanas = globalThis.__fgkRate || (globalThis.__fgkRate = new Map());
 export function permitido(clave, max, ms) {
   const ahora = Date.now();
+  if (ventanas.size > 5000) {
+    for (const [k, v] of ventanas) if (!v.length || ahora - v[v.length - 1] > 86400_000) ventanas.delete(k);
+    if (ventanas.size > 5000) ventanas.clear();
+  }
   const lista = (ventanas.get(clave) || []).filter((t) => ahora - t < ms);
   if (lista.length >= max) return false;
   lista.push(ahora);
@@ -113,7 +124,13 @@ export function mismoOrigen(req) {
   if (!origin) return true;
   try {
     const host = new URL(origin).host;
-    return host === req.headers.get("host") || host.endsWith("fungirak.com") || host.endsWith(".vercel.app") || host.startsWith("localhost");
+    return (
+      host === req.headers.get("host") ||
+      host === "fungirak.com" ||
+      host.endsWith(".fungirak.com") ||
+      /^fungirak(-com)?-[a-z0-9-]+\.vercel\.app$/.test(host) ||
+      /^localhost(:\d+)?$/.test(host)
+    );
   } catch {
     return false;
   }
@@ -122,7 +139,7 @@ export function mismoOrigen(req) {
 // ---------- Muro de la comunidad (huellas e ideas de sitios) ----------
 export async function leerMuro() {
   if (!sql) {
-    const v = (memoria.muro || []).filter((x) => x.visible);
+    const v = (memoria.muro || []).filter((x) => x.visible).map(({ ip_hash, reportes, visible, ...publico }) => publico);
     return {
       huellas: v.filter((x) => x.tipo === "huella").sort((a, b) => b.id - a.id).slice(0, 60),
       ideas: v.filter((x) => x.tipo === "idea").sort((a, b) => b.votos - a.votos || b.id - a.id).slice(0, 40),
@@ -155,19 +172,52 @@ export async function publicacionesRecientes(ipHash) {
   return r[0].n;
 }
 
-export async function accionMuro(id, accion) {
+export async function accionMuro(id, accion, ipHash) {
   if (!sql) {
-    const it = (memoria.muro || []).find((m) => m.id === id);
+    const it = (memoria.muro || []).find((m) => m.id === id && m.visible);
     if (!it) return null;
-    if (accion === "votar") return ++it.votos;
+    memoria.acciones = memoria.acciones || new Set();
+    const k = `${id}:${accion}:${ipHash}`;
+    if (memoria.acciones.has(k)) return accion === "votar" ? it.votos : true;
+    memoria.acciones.add(k);
+    if (accion === "votar") return it.tipo === "idea" ? ++it.votos : null;
     if (++it.reportes >= 3) it.visible = false;
     return true;
   }
   await asegurarTablas();
+  // Una acción por persona y publicación (la clave primaria lo garantiza)
+  const nueva = await sql`INSERT INTO muro_acciones (muro_id, accion, ip_hash)
+    SELECT ${id}, ${accion}, ${ipHash} WHERE EXISTS (SELECT 1 FROM muro WHERE id = ${id} AND visible)
+    ON CONFLICT DO NOTHING RETURNING muro_id`;
   if (accion === "votar") {
-    const r = await sql`UPDATE muro SET votos = votos + 1 WHERE id = ${id} AND tipo = 'idea' AND visible RETURNING votos`;
+    if (!nueva.length) {
+      const r = await sql`SELECT votos FROM muro WHERE id = ${id}`;
+      return r[0]?.votos ?? null;
+    }
+    const r = await sql`UPDATE muro SET votos = votos + 1 WHERE id = ${id} AND tipo = 'idea' RETURNING votos`;
     return r[0]?.votos ?? null;
   }
-  await sql`UPDATE muro SET reportes = reportes + 1, visible = (reportes + 1) < 3 WHERE id = ${id}`;
+  if (nueva.length) await sql`UPDATE muro SET reportes = reportes + 1, visible = (reportes + 1) < 3 WHERE id = ${id}`;
   return true;
+}
+
+// Lee el cuerpo JSON con tope de tamaño (evita que saturen la función)
+export async function leerJSON(req, max = 16_000) {
+  const largo = Number(req.headers.get("content-length") || 0);
+  if (largo > max) return null;
+  const txt = await req.text();
+  if (txt.length > max) return null;
+  try {
+    const v = JSON.parse(txt);
+    return v && typeof v === "object" && !Array.isArray(v) ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+// Saca caracteres de control (deja saltos de línea si se pide)
+export function limpio(v, max, saltos = false) {
+  if (typeof v !== "string") return "";
+  const sinControl = saltos ? v.replace(/[\u0000-\u0009\u000B-\u001F\u007F]/g, "") : v.replace(/[\u0000-\u001F\u007F]/g, " ");
+  return sinControl.trim().slice(0, max);
 }

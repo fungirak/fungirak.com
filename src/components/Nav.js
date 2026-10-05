@@ -59,7 +59,7 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
     <>
       <header className={`nav${scrolled ? " scrolled" : ""}`}>
         <button className="brand" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="fungirak.com">
-          <img src="/img/funguito.svg" alt="" width={34} height={34} />
+          <img src="/img/hongo.svg" alt="" width={34} height={34} />
           <span>
             fungirak
             <small>{visitante?.nombre ? `${ui.hola}, ${visitante.nombre}!` : "Studio"}</small>
@@ -85,7 +85,7 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
         <div className="drawer" role="dialog" aria-modal="true" aria-label={ui.menu}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div className="brand">
-              <img src="/img/funguito.svg" alt="" width={34} height={34} />
+              <img src="/img/hongo.svg" alt="" width={34} height={34} />
               <span>fungirak<small>{visitante?.nombre ? `${ui.hola}, ${visitante.nombre}!` : "Studio"}</small></span>
             </div>
             <button className="icon-btn" onClick={() => setDrawer(false)} aria-label={ui.cerrar} autoFocus>

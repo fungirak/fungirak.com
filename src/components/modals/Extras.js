@@ -372,7 +372,7 @@ export function Instagram({ onClose }) {
       <div className="modal-body">
         <div className="ig-cards">
           <a className="ig-card" href={LINKS.instagram} target="_blank" rel="noopener noreferrer">
-            <img src="/img/funguito.svg" alt="" />
+            <img src="/img/hongo.svg" alt="" />
             <span><b>@fungirak</b><small>Gabriel · FUNGIRAK Studio</small></span>
             <IgIcon style={{ marginLeft: "auto" }} />
           </a>

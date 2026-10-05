@@ -1,4 +1,4 @@
-import { leerContadores, sumar, hashIp, permitido, mismoOrigen } from "@/lib/db";
+import { leerContadores, sumar, hashIp, permitido, mismoOrigen, leerJSON } from "@/lib/db";
 import { PROYECTOS } from "@/data/proyectos";
 
 const IDS = new Set(PROYECTOS.map((p) => p.id));
@@ -20,10 +20,7 @@ export async function GET() {
 
 export async function POST(req) {
   if (!mismoOrigen(req)) return Response.json({ ok: false }, { status: 403 });
-  let b = {};
-  try {
-    b = await req.json();
-  } catch {}
+  const b = (await leerJSON(req, 1_000)) || {};
   const ip = hashIp(req);
   let clave = null;
   if (b.evento === "visita") clave = "visitas";
