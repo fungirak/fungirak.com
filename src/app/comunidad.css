@@ -798,3 +798,55 @@
     top: max(12px, env(safe-area-inset-top));
   }
 }
+
+/* Títulos de cards: aire para letras que bajan (g, p, y) sin cambiar tamaño ni alineación */
+.card .name {
+  line-height: 1.2;
+  padding-bottom: 0.14em;
+}
+
+/* Nombres largos: 3 renglones exactos dentro del mismo alto que los demás */
+.card .name.largo {
+  font-size: 0.7rem;
+  line-height: 1.12;
+  -webkit-line-clamp: 3;
+  padding-bottom: 0;
+}
+
+/* El ícono de info no se transforma (un transform desubica el globo con position: fixed) */
+.info-tip:hover,
+.info-tip:focus-visible,
+.info-tip[aria-expanded="true"] {
+  transform: none;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-green) 22%, transparent);
+}
+
+/* Entrada de las cards con su turno (antes iba en línea) */
+.card {
+  animation-delay: calc(0.25s + var(--i, 0) * 0.07s);
+}
+
+/* Después de la entrada, las cards quedan quietas */
+.escenario.listo .card {
+  animation: none;
+}
+
+/* La ola de la cancha */
+.escenario.ola .card {
+  animation: ola 0.7s var(--ease-pop) both;
+  animation-delay: calc(var(--i, 0) * 0.08s);
+}
+
+@keyframes ola {
+  0%,
+  100% {
+    transform: none;
+  }
+  35% {
+    transform: translateY(-18px) rotate(-2deg);
+    box-shadow: 0 0 0 2px var(--c), 0 22px 40px color-mix(in srgb, var(--c) 40%, transparent);
+  }
+  60% {
+    transform: translateY(2px);
+  }
+}

@@ -11,6 +11,7 @@ function VideoFondo() {
   const [on, setOn] = useState(false);
   const [cargar, setCargar] = useState(false);
   const marco = useRef(null);
+  const revelar = useRef(null);
   useEffect(() => {
     const id = setTimeout(() => setCargar(true), 900);
     // YouTube avisa el estado del reproductor: 1 = reproduciendo. Si está en pausa o bloqueado, queda la imagen.
@@ -19,13 +20,20 @@ function VideoFondo() {
         if (!/youtube(-nocookie)?\.com$/.test(new URL(e.origin).hostname)) return;
         const d = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
         const estado = d?.info?.playerState;
-        if (estado === 1) setOn(true);
-        else if (estado === 2 || estado === -1 || estado === 5) setOn(false);
+        // Al arrancar, YouTube muestra sus controles un par de segundos: el video aparece recién después
+        if (estado === 1) {
+          clearTimeout(revelar.current);
+          revelar.current = setTimeout(() => setOn(true), 2600);
+        } else if (estado === 2 || estado === -1 || estado === 5 || estado === 3) {
+          clearTimeout(revelar.current);
+          if (estado !== 3) setOn(false);
+        }
       } catch {}
     };
     window.addEventListener("message", msg);
     return () => {
       clearTimeout(id);
+      clearTimeout(revelar.current);
       window.removeEventListener("message", msg);
     };
   }, []);

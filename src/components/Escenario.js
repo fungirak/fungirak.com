@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PROYECTOS, INDUSTRIAS } from "@/data/proyectos";
 import { useLang, tx } from "@/lib/i18n";
 import { Casa, Llave, Persona } from "./Iconos";
@@ -27,7 +27,7 @@ function Card({ p, onOpen, sellado, dim, lit, onHover, idx }) {
   return (
     <button
       className={`card${p.fila === 2 ? " con-pills" : ""}${p.id === "teamjoy" ? " teamjoy" : ""}${dim ? " dim" : ""}${lit ? " lit" : ""}`}
-      style={{ "--c": p.color, animationDelay: `${0.25 + idx * 0.07}s` }}
+      style={{ "--c": p.color, "--i": idx }}
       data-card={p.id}
       onClick={() => onOpen(p.id)}
       onMouseEnter={() => onHover(p.id)}
@@ -58,6 +58,33 @@ export default function Escenario({ onOpen, sellos, onSound }) {
   const { lang, ui } = useLang();
   const [filtro, setFiltro] = useState("todas");
   const [hover, setHover] = useState(null);
+  const [ola, setOla] = useState(false);
+  const [listo, setListo] = useState(false);
+
+  // La entrada de las cards corre una sola vez; después quedan quietas hasta la próxima ola
+  useEffect(() => {
+    const t = setTimeout(() => setListo(true), 2000);
+    return () => clearTimeout(t);
+  }, []);
+
+  // "La ola": al ir a Proyectos, las cards saltan una tras otra (primero la fila de arriba, después la de abajo)
+  useEffect(() => {
+    let t;
+    const hacerOla = () => {
+      clearTimeout(t);
+      setOla(false);
+      // Un instante después se vuelve a activar, así la ola arranca de cero aunque toquen varias veces
+      t = setTimeout(() => {
+        setOla(true);
+        t = setTimeout(() => setOla(false), 2200);
+      }, 40);
+    };
+    window.addEventListener("fgk-ola", hacerOla);
+    return () => {
+      window.removeEventListener("fgk-ola", hacerOla);
+      clearTimeout(t);
+    };
+  }, []);
 
   const hoverYSonido = (id) => {
     setHover(id);
@@ -69,7 +96,7 @@ export default function Escenario({ onOpen, sellos, onSound }) {
   const brilla = (p) => filtro !== "todas" && p.industrias.includes(filtro);
 
   return (
-    <section className="escenario" id="proyectos" aria-label={ui.nav.proyectos}>
+    <section className={`escenario${listo ? " listo" : ""}${ola ? " ola" : ""}`} id="proyectos" aria-label={ui.nav.proyectos}>
       <Micelio filtro={filtro} hover={hover} />
 
       <div className="filtros" role="group" aria-label={ui.filtrar}>

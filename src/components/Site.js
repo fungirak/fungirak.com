@@ -163,6 +163,7 @@ export default function Site() {
       if (key === "donar" || key === "comunidad" || key === "proyectos") {
         setModal(null);
         setTimeout(() => document.getElementById(key)?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+        if (key === "proyectos") setTimeout(() => window.dispatchEvent(new Event("fgk-ola")), 450);
         return;
       }
       setPayload(data);
@@ -230,7 +231,7 @@ export default function Site() {
               else if (d === "colega") abrir("skills");
               else if (d === "redes") abrir("hablemos", { interes: "redes" });
               else if (d === "donar") { cerrar(); scroll("donar"); }
-              else { cerrar(); scroll("proyectos"); }
+              else abrir("proyectos");
             }}
           />
         );
