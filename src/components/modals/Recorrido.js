@@ -82,22 +82,72 @@ export function Skills({ onClose }) {
   const { lang } = useLang();
   const es = lang === "es";
   const [grupo, setGrupo] = useState(null);
-  // Posiciones fijas y prolijas: cada grupo es un brazo de la constelación
+  const caja = useRef(null);
+  const [tam, setTam] = useState({ w: 0, h: 0 });
+
+  // Mide el área disponible (y se recalcula si cambia el tamaño)
+  useEffect(() => {
+    const el = caja.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => setTam({ w: e.contentRect.width, h: e.contentRect.height }));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Posiciones sin solapamiento: cada grupo arranca en su brazo de la constelación
+  // y después las pills se empujan entre sí hasta que ninguna pisa a otra.
   const estrellas = useMemo(() => {
-    const out = [];
+    const { w, h } = tam;
+    if (!w || !h) return [];
+    const nodos = [];
     SKILLS.forEach((g, gi) => {
       const ang0 = (gi / SKILLS.length) * Math.PI * 2 - Math.PI / 2;
       g.items.forEach((s, si) => {
-        const r = 16 + (si / g.items.length) * 30;
-        const ang = ang0 + (si % 2 ? 0.22 : -0.22) * (1 - si / g.items.length) + si * 0.05;
-        out.push({ s, g: gi, x: 50 + Math.cos(ang) * r * 1.15, y: 50 + Math.sin(ang) * r });
+        const r = 0.2 + (si / g.items.length) * 0.27;
+        const ang = ang0 + (si % 2 ? 0.25 : -0.25) * (1 - si / (g.items.length + 2));
+        nodos.push({ s, g: gi, x: w / 2 + Math.cos(ang) * r * w, y: h / 2 + Math.sin(ang) * r * h, ancho: s.length * 7.2 + 26, alto: 28 });
       });
     });
-    return out;
-  }, []);
+    const centro = { x: w / 2, y: h / 2, ancho: 118, alto: 32 };
+    const margen = 8;
+    for (let it = 0; it < 320; it++) {
+      let movio = false;
+      for (let a = 0; a < nodos.length; a++) {
+        const A = nodos[a];
+        for (const B of [...nodos.slice(a + 1), centro]) {
+          const dx = B.x - A.x;
+          const dy = B.y - A.y;
+          const solX = (A.ancho + B.ancho) / 2 + margen - Math.abs(dx);
+          const solY = (A.alto + B.alto) / 2 + margen - Math.abs(dy);
+          if (solX > 0 && solY > 0) {
+            movio = true;
+            // Se separan por el eje que menos se pisa
+            if (solX / (A.ancho + B.ancho) < solY / (A.alto + B.alto)) {
+              const m = (solX / 2) * (dx >= 0 ? 1 : -1);
+              A.x -= m;
+              if (B !== centro) B.x += m;
+              else A.x -= m;
+            } else {
+              const m = (solY / 2) * (dy >= 0 ? 1 : -1);
+              A.y -= m;
+              if (B !== centro) B.y += m;
+              else A.y -= m;
+            }
+          }
+        }
+        // Dentro de la caja
+        A.x = Math.min(w - A.ancho / 2 - 6, Math.max(A.ancho / 2 + 6, A.x));
+        A.y = Math.min(h - A.alto / 2 - 6, Math.max(A.alto / 2 + 6, A.y));
+      }
+      if (!movio) break;
+    }
+    return nodos;
+  }, [tam]);
+
   const total = SKILLS.reduce((n, g) => n + g.items.length, 0);
+  const visible = (gi) => grupo === null || grupo === gi;
   return (
-    <Modal onClose={onClose} wide color="#8b5cf6" eyebrow={es ? "Skills" : "Skills"} titulo={es ? "Constelación de herramientas" : "Tool constellation"} bajada={es ? `${total} tecnologías que usé de verdad en proyectos y trabajo.` : `${total} technologies I've actually used at work and in projects.`}>
+    <Modal onClose={onClose} wide color="#8b5cf6" eyebrow="Skills" titulo={es ? "Constelación de herramientas" : "Tool constellation"} bajada={es ? `${total} tecnologías que usé de verdad en proyectos y trabajo.` : `${total} technologies I've actually used at work and in projects.`}>
       <div className="modal-body">
         <div className="grupos">
           {SKILLS.map((g, i) => (
@@ -106,19 +156,30 @@ export function Skills({ onClose }) {
             </button>
           ))}
         </div>
-        <div className="constelacion">
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+
+        <div className="constelacion" ref={caja}>
+          <svg width={tam.w} height={tam.h} aria-hidden="true">
             {estrellas.map((e, i) => {
-              const sig = estrellas[i + 1];
-              if (!sig || sig.g !== e.g) return <line key={i} x1="50" y1="50" x2={estrellas.find((x) => x.g === e.g).x} y2={estrellas.find((x) => x.g === e.g).y} stroke={SKILLS[e.g].color} strokeWidth="0.25" opacity=".5" />;
-              return <line key={i} x1={e.x} y1={e.y} x2={sig.x} y2={sig.y} stroke={SKILLS[e.g].color} strokeWidth={grupo === e.g ? 0.5 : 0.22} opacity={grupo === null || grupo === e.g ? 0.8 : 0.15} />;
+              const ant = estrellas[i - 1];
+              const desde = ant && ant.g === e.g ? ant : { x: tam.w / 2, y: tam.h / 2 };
+              return <line key={e.s} x1={desde.x} y1={desde.y} x2={e.x} y2={e.y} stroke={SKILLS[e.g].color} strokeWidth={grupo === e.g ? 2 : 1} opacity={visible(e.g) ? 0.55 : 0.08} />;
             })}
           </svg>
           <div className="star" style={{ left: "50%", top: "50%", "--sc": "#00e676", fontFamily: "var(--font-display)" }}>🍄 fungirak</div>
           {estrellas.map((e, i) => (
-            <span key={e.s} className={`star${grupo === e.g ? " on" : ""}`} style={{ left: `${e.x}%`, top: `${e.y}%`, "--sc": SKILLS[e.g].color, opacity: grupo === null || grupo === e.g ? 1 : 0.25, animationDelay: `${-i * 0.3}s` }}>
+            <span key={e.s} className={`star${grupo === e.g ? " on" : ""}`} style={{ left: e.x, top: e.y, "--sc": SKILLS[e.g].color, opacity: visible(e.g) ? 1 : 0.2, animationDelay: `${-i * 0.3}s` }}>
               {e.s}
             </span>
+          ))}
+        </div>
+
+        {/* En pantallas chicas: lista agrupada, legible y sin amontonar */}
+        <div className="skills-lista">
+          {SKILLS.map((g, gi) => (
+            <div key={gi} style={{ opacity: visible(gi) ? 1 : 0.35 }}>
+              <h3 style={{ color: g.color }}>{tx(g.grupo, lang)}</h3>
+              <div className="stack">{g.items.map((s) => <span key={s} className="pill" style={{ borderColor: g.color }}>{s}</span>)}</div>
+            </div>
           ))}
         </div>
       </div>

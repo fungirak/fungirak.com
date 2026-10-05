@@ -9,6 +9,31 @@ const TIERS = [
   { id: "idea", ico: "🚀", es: ["Una idea nueva al mundo", "El empujón para lanzar el próximo producto del Studio."], en: ["A new idea into the world", "The push to launch the studio's next product."] },
 ];
 
+const ALIAS = "cuenta.gabi.sf";
+
+// Alias de Mercado Pago con botón para copiar (sirve para transferir desde cualquier banco o billetera)
+function Alias({ es }) {
+  const [copiado, setCopiado] = useState(false);
+  const copiar = async () => {
+    try {
+      await navigator.clipboard.writeText(ALIAS);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      setCopiado(false);
+    }
+  };
+  return (
+    <div className="alias">
+      <span>
+        <small>{es ? "O transferí al alias" : "Or transfer to the alias"}</small>
+        <b>{ALIAS}</b>
+      </span>
+      <button className="btn ghost small" onClick={copiar} aria-live="polite">{copiado ? (es ? "¡Copiado! ✓" : "Copied! ✓") : es ? "Copiar" : "Copy"}</button>
+    </div>
+  );
+}
+
 export default function Donar({ stats, abrir }) {
   const { lang } = useLang();
   const [tier, setTier] = useState("server");
@@ -53,6 +78,7 @@ export default function Donar({ stats, abrir }) {
             <img src="/img/logoColaboracion.png" alt="" width={22} height={22} />
             {es ? "Aportar con Mercado Pago" : "Support via Mercado Pago"}
           </a>
+          <Alias es={es} />
           <small style={{ color: "var(--text-3)", textAlign: "center" }}>
             {es ? "Elegís cuánto en Mercado Pago. Gracias de corazón 🍄" : "You choose the amount on Mercado Pago. Thank you 🍄"}
           </small>

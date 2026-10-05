@@ -13,7 +13,8 @@ export default function Modal({ onClose, color, eyebrow, titulo, bajada, wide, c
     const html = document.documentElement;
     const overflow = html.style.overflow;
     html.style.overflow = "hidden";
-    ref.current?.focus();
+    // Si un campo de adentro ya tomó el foco (autoFocus), no se lo sacamos
+    if (ref.current && !ref.current.contains(document.activeElement)) ref.current.focus();
     const onKey = (e) => {
       if (e.key === "Escape") onClose();
       if (e.key === "Tab" && ref.current) {

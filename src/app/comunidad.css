@@ -521,3 +521,60 @@
     transform: translateX(10px);
   }
 }
+
+/* Alias de Mercado Pago */
+.alias {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1.5px dashed color-mix(in srgb, var(--c-green) 55%, transparent);
+  background: color-mix(in srgb, var(--c-green) 8%, var(--surface-2));
+}
+
+.alias small {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-3);
+  font-weight: 600;
+}
+
+.alias b {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+/* Constelación más grande y lista para celular */
+.modal.wide:has(.constelacion) {
+  width: min(1180px, 100%);
+}
+
+.constelacion {
+  height: min(620px, 64vh);
+  min-height: 460px;
+}
+
+.constelacion svg {
+  inset: 0;
+}
+
+.skills-lista {
+  display: none;
+  gap: 4px;
+}
+
+.skills-lista h3 {
+  margin: 14px 0 8px;
+}
+
+@media (max-width: 760px) {
+  .constelacion {
+    display: none;
+  }
+  .skills-lista {
+    display: grid;
+  }
+}

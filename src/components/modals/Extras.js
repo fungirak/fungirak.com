@@ -79,7 +79,9 @@ export function Terminal({ onClose, abrir, setTema, setLang, tema }) {
   const [hist, setHist] = useState([]);
   const [hi, setHi] = useState(-1);
   const fin = useRef(null);
-  useEffect(() => fin.current?.scrollIntoView({ block: "end" }), [lineas]);
+  useEffect(() => {
+    fin.current?.scrollIntoView({ block: "end" });
+  }, [lineas]);
 
   const salida = (cmd) => {
     const [c, ...args] = cmd.trim().toLowerCase().split(/\s+/);
