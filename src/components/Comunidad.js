@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { EMOJIS } from "@/lib/moderacion";
 import { useFiltro, AvisoFiltro, claseFiltro } from "./Filtro";
@@ -84,17 +84,30 @@ function Formulario({ tipo, onPublicado, placeholder, max, boton, onSello }) {
 // Ícono de info con la definición de micelio (hover, foco o toque)
 function InfoMicelio({ es }) {
   const [abierto, setAbierto] = useState(false);
+  const [pos, setPos] = useState(null);
+  // Ubica el globo siempre dentro de la pantalla: hacia la derecha del ícono si entra, si no, lo corre lo justo
+  const ubicar = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const ancho = Math.min(320, window.innerWidth - 32);
+    const izq = Math.min(Math.max(16, r.left - 12), window.innerWidth - ancho - 16);
+    setPos({ top: r.bottom + 10, left: izq, width: ancho });
+  };
   return (
     <button
       type="button"
       className="info-tip"
       aria-expanded={abierto}
       aria-label={es ? "¿Qué es el micelio?" : "What is mycelium?"}
-      onClick={() => setAbierto((a) => !a)}
+      onClick={(e) => {
+        ubicar(e);
+        setAbierto((a) => !a);
+      }}
+      onMouseEnter={ubicar}
+      onFocus={ubicar}
       onBlur={() => setAbierto(false)}
     >
       i
-      <span className="tip" role="tooltip">
+      <span className="tip" role="tooltip" style={pos ? { position: "fixed", top: pos.top, left: pos.left, right: "auto", width: pos.width } : undefined}>
         {es ? (
           <>
             <b>Micelio:</b> la red de filamentos de los hongos (las hifas) que crece bajo tierra e interconecta raíces de plantas y árboles. Por ella circulan agua, nutrientes y señales: el &ldquo;internet&rdquo; del bosque.
@@ -136,6 +149,13 @@ export default function Comunidad({ muro, setMuro, sellar }) {
     }
     fetch("/api/muro", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ accion: a, id }) }).catch(() => {});
   };
+
+  // Si se hace scroll con el globo abierto, se cierra (para que no quede flotando en otro lugar)
+  useEffect(() => {
+    const cerrar = () => document.activeElement?.classList?.contains("info-tip") && document.activeElement.blur();
+    window.addEventListener("scroll", cerrar, { passive: true });
+    return () => window.removeEventListener("scroll", cerrar);
+  }, []);
 
   const huellas = muro.huellas.filter((h) => !reportadas.includes(h.id));
   const ideas = muro.ideas.filter((h) => !reportadas.includes(h.id));

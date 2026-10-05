@@ -4,7 +4,7 @@ import { Cruz } from "./Iconos";
 import { useLang } from "@/lib/i18n";
 
 // Modal accesible: Escape cierra, foco atrapado adentro, scroll del fondo bloqueado.
-export default function Modal({ onClose, color, eyebrow, titulo, bajada, wide, children, head = true, label }) {
+export default function Modal({ onClose, color, eyebrow, titulo, bajada, wide, full, children, head = true, label }) {
   const ref = useRef(null);
   const { ui } = useLang();
 
@@ -32,7 +32,31 @@ export default function Modal({ onClose, color, eyebrow, titulo, bajada, wide, c
       }
     };
     document.addEventListener("keydown", onKey);
+
+    // Celular: cuando aparece el teclado, el modal sube y queda por encima (iPhone no achica la página solo)
+    const vv = window.visualViewport;
+    const ajustar = () => {
+      if (!vv || !ref.current) return;
+      const teclado = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      ref.current.parentElement.style.setProperty("--teclado", `${teclado}px`);
+      ref.current.parentElement.style.setProperty("--alto-visible", `${vv.height}px`);
+    };
+    const alEnfocar = (e) => {
+      if (!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+      setTimeout(() => {
+        ajustar();
+        e.target.scrollIntoView({ block: "center", behavior: "smooth" });
+      }, 320);
+    };
+    vv?.addEventListener("resize", ajustar);
+    vv?.addEventListener("scroll", ajustar);
+    ref.current?.addEventListener("focusin", alEnfocar);
+    const nodo = ref.current;
+    ajustar();
     return () => {
+      vv?.removeEventListener("resize", ajustar);
+      vv?.removeEventListener("scroll", ajustar);
+      nodo?.removeEventListener("focusin", alEnfocar);
       document.removeEventListener("keydown", onKey);
       html.style.overflow = overflow;
       anterior?.focus?.();
@@ -40,10 +64,10 @@ export default function Modal({ onClose, color, eyebrow, titulo, bajada, wide, c
   }, [onClose]);
 
   return (
-    <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className={`modal-backdrop${full ? " full" : ""}`} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div
         ref={ref}
-        className={`modal${wide ? " wide" : ""}`}
+        className={`modal${wide ? " wide" : ""}${full ? " full" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-label={label || (typeof titulo === "string" ? titulo : undefined)}

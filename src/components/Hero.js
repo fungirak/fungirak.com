@@ -85,7 +85,16 @@ export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) 
                 {PERFIL.nombre}
                 <span className="alias">@{PERFIL.alias}</span>
               </h1>
-              <p className="rol">{tx(PERFIL.rol, lang)}</p>
+              <p className="rol">
+                {tx(PERFIL.rol, lang).endsWith("Full Stack") ? (
+                  <>
+                    {tx(PERFIL.rol, lang).slice(0, -"Full Stack".length)}
+                    <span className="nowrap">Full Stack</span>
+                  </>
+                ) : (
+                  tx(PERFIL.rol, lang)
+                )}
+              </p>
             </div>
           </div>
           <p className="meta">

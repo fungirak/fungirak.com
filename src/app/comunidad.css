@@ -682,3 +682,119 @@
   background: color-mix(in srgb, var(--bg) 55%, transparent);
   backdrop-filter: blur(6px);
 }
+
+/* Opciones de la bienvenida y donación: título en color normal, descripción suave */
+.tier b {
+  color: var(--text);
+}
+
+.tier > span:not(.ico) {
+  color: var(--text);
+}
+
+.tier > span > span {
+  display: block;
+  color: var(--text-3);
+}
+
+.renglon-m {
+  display: inline;
+}
+
+@media (max-width: 520px) {
+  .renglon-m {
+    display: block;
+  }
+  /* El modal que sale de abajo sube por encima del teclado */
+  .modal-backdrop {
+    padding-bottom: var(--teclado, 0px);
+    transition: padding-bottom 0.2s ease;
+  }
+  .modal {
+    max-height: min(92vh, calc(var(--alto-visible, 100dvh) - 12px));
+  }
+}
+
+/* Terminal en celular: nunca más alta que el espacio libre sobre el teclado */
+@media (max-width: 520px) {
+  .term {
+    min-height: 0;
+    height: min(360px, calc(var(--alto-visible, 100dvh) - 110px));
+    max-height: none;
+  }
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.solo-m {
+  display: none;
+}
+
+/* Footer en celular: centrado, "Hecho en Argentina" en su renglón y pills en una sola línea */
+@media (max-width: 520px) {
+  .footer-bottom {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+  }
+  .footer-bottom .sep-desk {
+    display: none;
+  }
+  .footer-bottom .renglon-m {
+    margin-top: 2px;
+  }
+  .live-stats {
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 5px;
+  }
+  .live-stats .pill {
+    font-size: 0.64rem;
+    padding: 0.2em 0.55em;
+  }
+  .solo-desk {
+    display: none;
+  }
+  .solo-m {
+    display: inline;
+  }
+  .footer-grid {
+    text-align: center;
+  }
+  .footer-grid .seal-wrap {
+    flex-direction: column;
+  }
+  .footer-grid .socials {
+    justify-content: center;
+  }
+  .footer li button,
+  .footer li a {
+    text-align: center;
+  }
+}
+
+/* Juego a pantalla completa en celular (la cruz queda arriba para salir) */
+@media (max-width: 700px) {
+  .modal-backdrop.full {
+    padding: 0;
+    place-items: stretch;
+  }
+  .modal.full {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    border: 0;
+    overflow: hidden;
+  }
+  .modal.full .juego-lienzo {
+    border-radius: 0 !important;
+    height: 100dvh;
+  }
+  .modal.full .modal-close {
+    top: max(12px, env(safe-area-inset-top));
+  }
+}

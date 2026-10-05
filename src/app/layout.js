@@ -39,6 +39,7 @@ export const metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  interactiveWidget: "resizes-content",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#f3f6f9" },
     { media: "(prefers-color-scheme: dark)", color: "#0a0d1f" },
@@ -61,7 +62,7 @@ const jsonLd = {
       alumniOf: [{ "@type": "CollegeOrUniversity", name: "Universidad Tecnológica Nacional, Facultad Regional Santa Fe" }],
       worksFor: [{ "@type": "GovernmentOrganization", name: "Gobierno de la Provincia de Santa Fe" }, { "@id": `${SITE}/#studio` }],
       founder: [{ "@id": `${SITE}/#studio` }, { "@type": "Organization", name: "Team Joy", url: "https://teamjoy.site" }],
-      knowsAbout: ["React", "Next.js", "Java", "Spring Boot", "Oracle", "PostgreSQL", "Three.js", "PHP", "Symfony", "PWA", "UX/UI"],
+      knowsAbout: ["React", "Next.js", "Java", "Spring Boot", "Oracle", "PostgreSQL", "AWS", "Three.js", "PHP", "Symfony", "PWA", "UX/UI"],
       sameAs: [LINKS.linkedin, LINKS.github, LINKS.instagram, LINKS.youtube, LINKS.teamjoyPerfil],
     },
     {

@@ -40,7 +40,9 @@ export default function Bienvenida({ onClose, setVisitante, onListo, desdeInstag
             <h2 className="display" style={{ textAlign: "center", fontSize: "clamp(1.4rem,4vw,2rem)", margin: "6px 0 4px" }}>
               {desdeInstagram ? (es ? "¡Hola! Llegaste desde Instagram 📸" : "Hi! You came from Instagram 📸") : es ? "¡Hola! Soy Gabriel" : "Hi! I'm Gabriel"}
             </h2>
-            <p style={{ textAlign: "center", marginTop: 0 }}>{es ? "¿Qué te trae por acá? Tocá una opción y te llevo directo." : "What brings you here? Tap one and I'll take you straight there."}</p>
+            <p style={{ textAlign: "center", marginTop: 0 }}>
+              {es ? "¿Qué te trae por acá?" : "What brings you here?"} <span className="renglon-m">{es ? "Tocá una opción y te llevo directo." : "Tap one and I'll take you straight there."}</span>
+            </p>
             <div style={{ display: "grid", gap: 10 }}>
               {DESTINOS.map((d, i) => (
                 <button

@@ -78,8 +78,9 @@ export default function Juego({ onClose, sonido, onLogro }) {
       const r = cv.parentElement.getBoundingClientRect();
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = r.width;
-      H = Math.min(r.width * 1.25, window.innerHeight * 0.66, 640);
-      H = Math.max(H, 360);
+      // En celular el juego ocupa toda la pantalla; en compu, un lienzo cómodo dentro del modal
+      const celular = matchMedia("(max-width: 700px)").matches;
+      H = celular ? window.innerHeight : Math.max(360, Math.min(r.width * 1.25, window.innerHeight * 0.66, 640));
       cv.style.height = `${H}px`;
       cv.width = Math.round(W * dpr);
       cv.height = Math.round(H * dpr);
@@ -507,8 +508,8 @@ export default function Juego({ onClose, sonido, onLogro }) {
   }, [es, sonido, onLogro]);
 
   return (
-    <Modal onClose={onClose} wide color="#00e676" head={false} label="La Espora">
-      <div style={{ position: "relative", background: "#000", borderRadius: 28, overflow: "clip" }}>
+    <Modal onClose={onClose} wide full color="#00e676" head={false} label="La Espora">
+      <div className="juego-lienzo" style={{ position: "relative", background: "#000", borderRadius: 28, overflow: "clip" }}>
         <canvas ref={canvas} style={{ display: "block", width: "100%", touchAction: "none", cursor: "pointer" }} aria-label={es ? "Juego Espora: tocá para volar" : "Spore game: tap to fly"} />
         {ui.estado !== "jugando" && (
           <div className="juego-overlay">

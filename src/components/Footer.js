@@ -66,12 +66,15 @@ export default function Footer({ abrir, stats }) {
       </div>
 
       <div className="wrap footer-bottom">
-        <span>© {new Date().getFullYear()} 🍄 Gabriel Lazzarini · FUNGIRAK Studio · {es ? "Hecho en Argentina 💚" : "Made in Argentina 💚"}</span>
+        <span className="copy">
+          © {new Date().getFullYear()} 🍄 Gabriel Lazzarini · FUNGIRAK Studio<span className="sep-desk"> · </span>
+          <span className="renglon-m">{es ? "Hecho en Argentina 💚" : "Made in Argentina 💚"}</span>
+        </span>
         <span className="live-stats">
           <span className="pill live">{ui.enVivo}</span>
           <span className="pill">👀 {(stats?.visitas || 0).toLocaleString(lang)} {ui.visitas}</span>
-          <span className="pill">🍄 {stats?.pasaportes || 0} {ui.pasaportes}</span>
-          <span className="pill">💬 {stats?.mensajes || 0} {ui.mensajes}</span>
+          <span className="pill">🍄 {stats?.pasaportes || 0} <span className="solo-desk">{ui.pasaportes}</span><span className="solo-m">{es ? "pasaportes" : "passports"}</span></span>
+          <span className="pill">💬 {stats?.mensajes || 0} <span className="solo-desk">{ui.mensajes}</span><span className="solo-m">{es ? "charlas" : "chats"}</span></span>
         </span>
       </div>
     </footer>

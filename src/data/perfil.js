@@ -204,7 +204,7 @@ export const SKILLS = [
   { grupo: { es: "Backend", en: "Backend" }, color: "var(--c-blue)", items: ["Java", "Spring Boot", "Spring Security", "JWT", "Hibernate", "Node.js", "Express", "PHP", "Symfony", "Doctrine", "Twig"] },
   { grupo: { es: "Datos", en: "Data" }, color: "var(--c-violet)", items: ["Oracle", "PostgreSQL (Neon)", "MySQL", "MongoDB", "Vercel Blob", "APIs REST"] },
   { grupo: { es: "Web moderna", en: "Modern web" }, color: "var(--c-amber)", items: ["Three.js", "WebGL", "Leaflet", "PWA", "Web Bluetooth", "Web Audio", "Speech Synthesis", "Canvas", "i18n ES/EN", "SEO"] },
-  { grupo: { es: "Plataforma", en: "Platform" }, color: "var(--c-coral)", items: ["Vercel", "Git", "GitHub", "Mercado Pago", "Metodologías ágiles", "UX/UI"] },
+  { grupo: { es: "Plataforma", en: "Platform" }, color: "var(--c-coral)", items: ["AWS", "AWS CLI", "Vercel", "Git", "GitHub", "Mercado Pago", "Metodologías ágiles", "UX/UI"] },
 ];
 
 // Línea de tiempo (de lo más viejo a lo más nuevo)
