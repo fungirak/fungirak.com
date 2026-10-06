@@ -940,6 +940,7 @@ html {
   color: var(--c-coral, #ff5a5f);
 }
 .aviso-nota {
+  margin-top: 10px;
   color: var(--text-3);
   font-size: 0.78rem;
 }
