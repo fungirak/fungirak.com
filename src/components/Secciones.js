@@ -339,6 +339,27 @@ function Reclamo({ premio, token, onListo, onClose, onUsar, es }) {
   );
 }
 
+// Los 12 sorteos como sellitos: punteados y vacíos hasta que se sortean; ahí se "estampan" con 🏆 y el código ganador
+function Sellos({ st, es }) {
+  const ganado = Object.fromEntries((st.ganadores || []).map((g) => [g.fecha, g.codigo]));
+  const corto = (f) => new Date(`${f}T12:00:00-03:00`).toLocaleDateString(es ? "es-AR" : "en-US", { month: "short", year: "2-digit" }).replace(".", "");
+  return (
+    <ol className="sellos" aria-label={es ? "Sorteos" : "Draws"}>
+      {st.fechas.map((f, i) => {
+        const g = ganado[f];
+        const cls = g ? "hecho" : f === st.proximo ? "prox" : "";
+        return (
+          <li key={f} className={`sello ${cls}`} style={{ "--i": i }} title={g ? `${es ? "Ganó" : "Winner"} ${g}` : corto(f)}>
+            <span className="sello-ico">{g ? "🏆" : f === st.proximo ? "🎟️" : i + 1}</span>
+            <span className="sello-fecha">{corto(f)}</span>
+            {g && <span className="sello-cod">{g.replace("SORTEO-", "")}</span>}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 // Próximo sorteo del sitio (datos públicos de /api/sorteo) con cuenta regresiva y link a las bases
 function ProximoSorteo({ es }) {
   const [st, setSt] = useState(null);
@@ -356,6 +377,7 @@ function ProximoSorteo({ es }) {
       <b>{fecha}</b>
       <span>{dias === 0 ? (es ? "¡Es hoy!" : "It's today!") : es ? `Faltan ${dias} días · ${st.participaciones ? `${st.participaciones} participaciones` : "¡Sé el primero en participar!"}` : `${dias} days to go · ${st.participaciones ? `${st.participaciones} entries` : "Be the first to enter!"}`}</span>
       <small>{es ? "Un ganador cada dos meses. Tus participaciones se acumulan para los próximos sorteos." : "One winner every two months. Your entries carry over to the next draws."} <a href="/sorteo">{es ? "Bases y condiciones" : "Terms"}</a></small>
+      <Sellos st={st} es={es} />
     </div>
   );
 }

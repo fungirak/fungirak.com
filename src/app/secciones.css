@@ -68,7 +68,7 @@
 @media (max-width: 640px) { .bit-flecha { width: 32px; height: 32px; font-size: 1.2rem; } .bit-linea { grid-template-columns: repeat(var(--n), 170px); } .bit-card { width: 152px; } }
 
 /* 4. Ruleta */
-.ruleta { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; }
+.ruleta { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: center; }
 .rul-premios { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .rul-premios li { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 700; font-size: .85rem; }
 .rul-premios i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
@@ -109,9 +109,23 @@
 .cupon-aplicado { margin: 0 0 16px; padding: 10px 14px; border-radius: var(--radius-s); background: color-mix(in srgb, var(--c-amber) 14%, transparent); border: 1px dashed var(--c-amber); font-weight: 600; }
 
 /* Próximo sorteo (sección ruleta) */
-.rul-sorteo { display: grid; gap: 2px; margin-top: 18px; padding: 16px 18px; border-radius: var(--radius); background: var(--glass-strong); border: 1px solid color-mix(in srgb, var(--c-amber) 50%, transparent); box-shadow: var(--shadow); }
+.rul-sorteo { min-width: 0; display: grid; gap: 2px; margin-top: 18px; padding: 16px 18px; border-radius: var(--radius); background: var(--glass-strong); border: 1px solid color-mix(in srgb, var(--c-amber) 50%, transparent); box-shadow: var(--shadow); }
 .rul-sorteo-ojo { font-size: .74rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--c-amber); }
 .rul-sorteo b { font-family: var(--font-display); font-size: 1.35rem; }
 .rul-sorteo > span:nth-of-type(2) { font-weight: 700; color: var(--text-2); }
 .rul-sorteo small { color: var(--text-3); line-height: 1.5; margin-top: 4px; }
 .rul-sorteo a, .rul-legal a { color: var(--accent); font-weight: 700; }
+
+/* Sellitos de los 12 sorteos */
+.sellos { list-style: none; margin: 12px 0 0; padding: 6px 4px 8px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; min-width: 0; }
+.sello { min-width: 0; overflow: hidden; display: grid; justify-items: center; align-content: center; gap: 2px; aspect-ratio: 1; border-radius: 14px; border: 2px dashed var(--line-2); color: var(--text-3); font-size: .7rem; text-align: center; transition: all .5s var(--ease); }
+.sello-ico { font-size: .95rem; font-weight: 800; line-height: 1; }
+.sello-fecha { text-transform: uppercase; font-weight: 700; letter-spacing: .02em; }
+.sello-cod { font-family: var(--font-mono); font-size: .62rem; color: var(--text); }
+.sello.prox { border-color: var(--c-amber); color: var(--text); animation: sello-late 1.8s ease-in-out infinite; }
+@keyframes sello-late { 50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-amber) 22%, transparent); } }
+.sello.hecho { border-style: solid; border-color: var(--c-amber); background: color-mix(in srgb, var(--c-amber) 22%, var(--surface)); color: var(--text); transform: rotate(-6deg); box-shadow: 0 4px 0 color-mix(in srgb, var(--c-amber) 60%, transparent); animation: sello-estampa .5s var(--ease-pop) both; animation-delay: calc(var(--i) * 60ms); }
+.sello.hecho:nth-child(even) { transform: rotate(5deg); }
+@keyframes sello-estampa { from { transform: scale(1.6) rotate(-20deg); opacity: 0; } }
+@media (max-width: 420px) { .sellos { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { .sello.prox, .sello.hecho { animation: none; } }
