@@ -375,7 +375,7 @@ function ProximoSorteo({ es }) {
     <div className="rul-sorteo">
       <span className="rul-sorteo-ojo">🎟️ {es ? "Próximo sorteo de un sitio web" : "Next website giveaway"}</span>
       <b>{fecha}</b>
-      <span>{dias === 0 ? (es ? "¡Es hoy!" : "It's today!") : es ? `Faltan ${dias} días · ${st.participaciones ? `${st.participaciones} participaciones` : "¡Sé el primero en participar!"}` : `${dias} days to go · ${st.participaciones ? `${st.participaciones} entries` : "Be the first to enter!"}`}</span>
+      <span>{dias === 0 ? (es ? "¡Es hoy!" : "It's today!") : es ? `Faltan ${dias} días · ${st.participaciones ? `${st.participaciones} ${st.participaciones === 1 ? "participación" : "participaciones"}` : "¡Sé el primero en participar!"}` : `${dias} days to go · ${st.participaciones ? `${st.participaciones} ${st.participaciones === 1 ? "entry" : "entries"}` : "Be the first to enter!"}`}</span>
       <small>{es ? "Un ganador cada dos meses. Tus participaciones se acumulan para los próximos sorteos." : "One winner every two months. Your entries carry over to the next draws."} <a href="/sorteo">{es ? "Bases y condiciones" : "Terms"}</a></small>
       <Sellos st={st} es={es} />
     </div>

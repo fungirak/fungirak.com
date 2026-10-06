@@ -25,7 +25,7 @@ export default async function Sorteo() {
           <div className="sorteo-prox">
             <span>Próximo sorteo</span>
             <b>{largo(st.proximo)}</b>
-            <small>{st.participaciones ? `${st.participaciones} participaciones vigentes` : "Todavía no hay participaciones: girá la ruleta y sé el primero."}</small>
+            <small>{st.participaciones ? `${st.participaciones} ${st.participaciones === 1 ? "participación vigente" : "participaciones vigentes"}` : "Todavía no hay participaciones: girá la ruleta y sé el primero."}</small>
           </div>
         )}
 
