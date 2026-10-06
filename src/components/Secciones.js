@@ -241,7 +241,7 @@ const ETIQ = {
   d10: { es: "10% OFF", en: "10% OFF", c: "var(--c-green)" },
   d15: { es: "15% OFF", en: "15% OFF", c: "var(--c-blue)" },
   d20: { es: "20% OFF", en: "20% OFF", c: "var(--c-rose)" },
-  sorteo: { es: "Sitio gratis", en: "Free site", c: "var(--c-amber)" },
+  sorteo: { es: "Sorteo sitio", en: "Giveaway", c: "var(--c-amber)" },
   otro: { es: "Otro giro", en: "Spin again", c: "var(--c-violet)" },
   nada: { es: "Esta vez no", en: "Not this time", c: "var(--c-navy)" },
 };
@@ -403,7 +403,7 @@ export function Ruleta({ abrir }) {
     }, 4300);
   };
   const msg = {
-    listo: es ? "Un giro por día. Los premios son de verdad." : "One spin a day. The prizes are real.",
+    listo: es ? "Un giro por día. ¡Probá tu suerte!" : "One spin a day. Try your luck!",
     girando: es ? "Girando…" : "Spinning…",
     invita: es ? "¡Te toca a vos! 🎡" : "Your turn! 🎡",
     otro: es ? "¡Otro giro! Dale de nuevo 🍀" : "Spin again! Go 🍀",
@@ -418,8 +418,8 @@ export function Ruleta({ abrir }) {
       <div className="wrap ruleta">
         <div>
           <Cabeza id="rul-t" ojo={es ? "La ruleta del micelio" : "The mycelium wheel"}
-            titulo={es ? <>Girá y ganá un <span className="grad-text">descuento</span>.</> : <>Spin and win a <span className="grad-text">discount</span>.</>}
-            bajada={es ? "Hasta 20% off en tu sitio o app, o entrar al sorteo de un sitio web gratis. Un giro por día." : "Up to 20% off your website or app, or a spot in the free website giveaway. One spin a day."} />
+            titulo={es ? <>Girá y <span className="grad-text">probá tu suerte</span>.</> : <>Spin and <span className="grad-text">try your luck</span>.</>}
+            bajada={es ? "Podés ganar hasta 20% off en tu sitio o app, o entrar al sorteo de un sitio web gratis. Un giro por día." : "You could win up to 20% off your website or app, or a spot in the free website giveaway. One spin a day."} />
           <ul className="rul-premios">
             {["d20", "d15", "d10", "sorteo", "otro"].map((p) => <li key={p} style={{ "--c": ETIQ[p].c }}><i />{ETIQ[p][lang]}</li>)}
           </ul>
@@ -450,7 +450,7 @@ export function Ruleta({ abrir }) {
           ) : (
             <button className="btn amber pulse" disabled={!puede} onClick={girar}>🎡 {estado === "otro" ? (es ? "Girar otra vez" : "Spin again") : (es ? "Girar la ruleta" : "Spin the wheel")}</button>
           )}
-          <small className="rul-legal">{es ? "Descuentos válidos por 60 días para proyectos nuevos; no acumulables. Un premio por persona por mes." : "Discounts valid for 60 days on new projects; not combinable. One prize per person per month."}</small>
+          <small className="rul-legal">{es ? "Cada giro es al azar: no siempre hay premio. Descuentos válidos por 60 días para proyectos nuevos, no acumulables. El sorteo da una chance de ganar, no un sitio asegurado. Un premio por persona por mes." : "Each spin is random: there isn't always a prize. Discounts valid for 60 days on new projects, not combinable. The giveaway is a chance to win, not a guaranteed site. One prize per person per month."}</small>
         </div>
       </div>
       {modal && premio && (guardado?.cupon ? (
