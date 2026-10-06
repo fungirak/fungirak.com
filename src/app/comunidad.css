@@ -917,3 +917,29 @@ html {
 @keyframes splash-in {
   from { opacity: 0; transform: translateY(8px); }
 }
+
+/* "Avisame cuando salga" en libros y EP: formulario en el mismo modal */
+.aviso-form {
+  display: grid;
+  gap: 4px;
+  margin-top: 6px;
+  animation: splash-in 0.3s ease both;
+}
+.aviso-ok {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--c-green) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-green) 45%, transparent);
+}
+.aviso-err {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--c-coral, #ff5a5f);
+}
+.aviso-nota {
+  color: var(--text-3);
+  font-size: 0.78rem;
+}

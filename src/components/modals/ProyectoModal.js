@@ -4,6 +4,7 @@ import Modal from "../Modal";
 import { proyecto, INDUSTRIAS } from "@/data/proyectos";
 import { LINKS } from "@/data/perfil";
 import { useLang, tx } from "@/lib/i18n";
+import { avisarPorMail } from "@/lib/avisoMail";
 import { Casa, Llave, Persona, Flecha, Linkedin, Instagram } from "../Iconos";
 
 function Aplauso({ id, valor, onAplauso }) {
@@ -111,7 +112,51 @@ function Problematica({ p, lang }) {
   );
 }
 
-function Proximo({ p, lang, abrir }) {
+// "Avisame cuando salga": deja el email ahí mismo (sin saltar a Hablemos) y le llega a Gabriel por FormSubmit.
+const leerLS = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
+function AvisoSalida({ p, es }) {
+  const clave = `fgk-aviso-${p.id}`;
+  const [abierto, setAbierto] = useState(false);
+  const [estado, setEstado] = useState(() => (typeof window !== "undefined" && leerLS(clave) ? "ok" : "form"));
+  const [nombre, setNombre] = useState(() => (typeof window !== "undefined" && leerLS("fgk-visitante")?.nombre) || "");
+  const [email, setEmail] = useState("");
+  const [hp, setHp] = useState("");
+  const titulo = tx(p.nombre, es ? "es" : "en");
+  const enviar = async (e) => {
+    e.preventDefault();
+    if (hp || estado === "enviando") return;
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email.trim())) return setEstado("email");
+    setEstado("enviando");
+    const ok = await avisarPorMail(`🔔 fungirak.com · Avisame cuando salga: ${titulo}`,
+      { Proyecto: titulo, Email: email.trim(), Nombre: nombre.trim() || "-", Idioma: es ? "es" : "en" }, email.trim());
+    if (ok) { try { localStorage.setItem(clave, JSON.stringify({ email: email.trim(), at: Date.now() })); } catch {} setEstado("ok"); }
+    else setEstado("error");
+  };
+  if (estado === "ok") return <p className="aviso-ok">✅ {es ? `¡Listo! Te aviso apenas salga ${titulo}.` : `Done! I'll let you know as soon as ${titulo} is out.`}</p>;
+  if (!abierto) return <button className="btn" onClick={() => setAbierto(true)}>🔔 {es ? "Avisame cuando salga" : "Let me know"}</button>;
+  return (
+    <form className="aviso-form" onSubmit={enviar}>
+      <div className="campo">
+        <label htmlFor={`av-mail-${p.id}`}>{es ? "Tu email" : "Your email"}</label>
+        <input id={`av-mail-${p.id}`} type="email" inputMode="email" autoComplete="email" autoFocus required maxLength={120} placeholder={es ? "tu@email.com" : "you@email.com"} value={email} onChange={(e) => { setEmail(e.target.value); if (estado !== "form") setEstado("form"); }} />
+      </div>
+      <div className="campo">
+        <label htmlFor={`av-nom-${p.id}`}>{es ? "Tu nombre (opcional)" : "Your name (optional)"}</label>
+        <input id={`av-nom-${p.id}`} autoComplete="given-name" maxLength={40} value={nombre} onChange={(e) => setNombre(e.target.value)} />
+      </div>
+      <input className="honeypot" tabIndex={-1} autoComplete="off" aria-hidden="true" value={hp} onChange={(e) => setHp(e.target.value)} />
+      {estado === "email" && <p className="aviso-err">{es ? "Revisá el email, parece que le falta algo." : "Check your email, something seems off."}</p>}
+      {estado === "error" && <p className="aviso-err">{es ? "No se pudo enviar. Probá de nuevo en un ratito." : "It couldn't be sent. Please try again in a bit."}</p>}
+      <div className="acciones">
+        <button className="btn" disabled={estado === "enviando"}>{estado === "enviando" ? (es ? "Enviando…" : "Sending…") : `🔔 ${es ? "Avisame" : "Notify me"}`}</button>
+        <button type="button" className="btn ghost" onClick={() => setAbierto(false)}>{es ? "Cancelar" : "Cancel"}</button>
+      </div>
+      <small className="aviso-nota">{es ? "Solo lo uso para avisarte de este lanzamiento. Nada de spam." : "I'll only use it to tell you about this release. No spam."}</small>
+    </form>
+  );
+}
+
+function Proximo({ p, lang }) {
   const es = lang === "es";
   const ep = p.tipo === "ep";
   return (
@@ -130,10 +175,8 @@ function Proximo({ p, lang, abrir }) {
             </div>
           )}
           <p>{es ? "Si querés enterarte apenas salga, dejame tu contacto y te aviso personalmente." : "If you want to know the moment it's out, leave me your contact and I'll tell you myself."}</p>
-          <div className="acciones">
-            <button className="btn" onClick={() => abrir("hablemos")}>🔔 {es ? "Avisame cuando salga" : "Let me know"}</button>
-            {ep && <a className="btn ghost" href={LINKS.youtube} target="_blank" rel="noopener noreferrer">▶ YouTube @fungirak</a>}
-          </div>
+          <AvisoSalida p={p} es={es} />
+          {ep && <div className="acciones"><a className="btn ghost" href={LINKS.youtube} target="_blank" rel="noopener noreferrer">▶ YouTube @fungirak</a></div>}
         </div>
       </div>
     </>
@@ -198,7 +241,7 @@ export default function ProyectoModal({ id, onClose, abrir, stats, onAplauso }) 
   let cuerpo;
   if (p.id === "teamjoy") cuerpo = <TeamJoy p={p} lang={lang} />;
   else if (p.id === "problematica") cuerpo = <Problematica p={p} lang={lang} />;
-  else if (p.tipo) cuerpo = <Proximo p={p} lang={lang} abrir={abrir} />;
+  else if (p.tipo) cuerpo = <Proximo p={p} lang={lang} />;
   else cuerpo = <Generico p={p} lang={lang} />;
 
   return (
