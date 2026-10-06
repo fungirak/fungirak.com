@@ -326,8 +326,11 @@ export function Ruleta() {
   }, []);
   // Al cargar, el servidor dice si ya giró hoy (desde esta conexión o este dispositivo)
   useEffect(() => {
+    // El servidor manda: si dice que puede girar, se olvida lo anotado en el dispositivo (salvo un premio ganado)
     fetch(`/api/ruleta?dispositivo=${encodeURIComponent(dispositivo())}`).then((r) => r.json()).then((j) => {
-      if (j.puede === false && !j.error) setEstado((e) => (e === "listo" ? "ya" : e));
+      if (j.error) return;
+      if (j.puede === false) setEstado((e) => (e === "listo" ? "ya" : e));
+      else if (!leer("fgk-ruleta")?.cupon) { try { localStorage.removeItem("fgk-ruleta"); } catch {} setGuardado(null); setEstado((e) => (e === "ya" || e === "nada" ? "listo" : e)); }
     }).catch(() => {});
   }, []);
   const [no, setNo] = useState(0); // sacudón de "no" cuando no se puede girar

@@ -32,6 +32,9 @@ function asegurar() {
         premio text NOT NULL, email text NOT NULL, nombre text, giro_id int REFERENCES ruleta_giros(id),
         ip_hash text, usado boolean NOT NULL DEFAULT false)`;
       await sql`CREATE INDEX IF NOT EXISTS ruleta_cupones_email ON ruleta_cupones (lower(email), creado)`;
+      // Limpieza única de las pruebas del 5/10/2026 (giros y cupón de prueba de Claude). Se saca en el próximo deploy.
+      await sql`DELETE FROM ruleta_cupones WHERE codigo = 'FUNGI-10-VCZUF'`;
+      await sql`DELETE FROM ruleta_giros WHERE dispositivo LIKE 'prueba-claude-%' OR dispositivo LIKE 'otro-disp-%'`;
     })().catch((e) => {
       listo = null;
       throw e;
