@@ -63,7 +63,7 @@ function TeamJoy({ p, lang }) {
   return (
     <>
       <div style={{ display: "flex", gap: 18, alignItems: "center", flexWrap: "wrap" }}>
-        <img src="/img/teamjoy-logo.jpg" alt="Team Joy" width={110} height={110} style={{ borderRadius: "50%", background: "#fff", boxShadow: "0 0 0 4px #00e676, 0 0 40px rgba(0,230,118,.45)" }} />
+        <img src="/img/teamjoy-logo-sq.jpg" alt="Team Joy" width={110} height={110} style={{ flex: "none", objectFit: "cover", borderRadius: "50%", background: "#fff", boxShadow: "0 0 0 4px #00e676, 0 0 40px rgba(0,230,118,.45)" }} />
         <div style={{ flex: 1, minWidth: 220 }}>
           <p className="cita" style={{ "--c": "#00c853" }}>{es ? "La experiencia lúdica para la oficina." : "The playful experience for the office."}</p>
           <p style={{ margin: 0 }}>

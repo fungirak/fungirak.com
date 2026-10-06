@@ -165,13 +165,39 @@ export function Bitacora({ abrir }) {
     const n = pista.current;
     if (!n) return;
     const upd = () => setBorde({ ini: n.scrollLeft < 4, fin: n.scrollLeft + n.clientWidth >= n.scrollWidth - 4 });
-    n.scrollLeft = n.scrollWidth; // arranca mostrando lo más reciente
     upd();
     n.addEventListener("scroll", upd, { passive: true });
     window.addEventListener("resize", upd);
     return () => { n.removeEventListener("scroll", upd); window.removeEventListener("resize", upd); };
   }, []);
-  const mover = (d) => pista.current?.scrollBy({ left: d * Math.max(240, pista.current.clientWidth * 0.7), behavior: "smooth" });
+  // Recorrido automático: arranca desde el primer lanzamiento y avanza solo, despacio.
+  // Se pausa si la persona pasa el mouse, toca o usa las flechas; al final espera y vuelve al principio.
+  useEffect(() => {
+    const n = pista.current;
+    if (!n || !visto || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf, pausa = 0, x = n.scrollLeft, ultimo = performance.now();
+    const quieto = (ms) => { pausa = performance.now() + ms; x = n.scrollLeft; };
+    const paso = (t) => {
+      const dt = Math.min(50, t - ultimo);
+      ultimo = t;
+      if (t > pausa) {
+        const fin = n.scrollWidth - n.clientWidth;
+        if (x >= fin - 1) { quieto(2500); n.scrollTo({ left: 0, behavior: "smooth" }); setTimeout(() => { x = 0; }, 900); }
+        else { x = Math.min(fin, x + dt * 0.035); n.scrollLeft = x; }
+      }
+      raf = requestAnimationFrame(paso);
+    };
+    const parar = () => quieto(4000);
+    n.addEventListener("pointerenter", parar);
+    n.addEventListener("pointerdown", parar);
+    n.addEventListener("wheel", parar, { passive: true });
+    n.addEventListener("touchstart", parar, { passive: true });
+    n.addEventListener("focusin", parar);
+    quieto(1200); // un respiro antes de arrancar
+    raf = requestAnimationFrame(paso);
+    return () => { cancelAnimationFrame(raf); ["pointerenter", "pointerdown", "wheel", "touchstart", "focusin"].forEach((e) => n.removeEventListener(e, parar)); };
+  }, [visto]);
+  const mover = (d) => { pista.current?.dispatchEvent(new Event("pointerdown")); pista.current?.scrollBy({ left: d * Math.max(240, pista.current.clientWidth * 0.7), behavior: "smooth" }); };
   return (
     <section className="band" id="bitacora" aria-labelledby="bit-t">
       <div className="wrap">
@@ -298,6 +324,25 @@ export function Ruleta() {
     setEstado(g.cupon ? "gano" : g.premio === "otro" ? "listo" : "ya");
     if (g.cupon) setPremio(g.premio);
   }, []);
+  // Al cargar, el servidor dice si ya giró hoy (desde esta conexión o este dispositivo)
+  useEffect(() => {
+    fetch(`/api/ruleta?dispositivo=${encodeURIComponent(dispositivo())}`).then((r) => r.json()).then((j) => {
+      if (j.puede === false && !j.error) setEstado((e) => (e === "listo" ? "ya" : e));
+    }).catch(() => {});
+  }, []);
+  const [no, setNo] = useState(0); // sacudón de "no" cuando no se puede girar
+  // Giro de presentación al aparecer en pantalla: da unas vueltas, frena e invita ("¡Te toca a vos!")
+  const [zona, zonaVista] = useVisto(0.45);
+  const [intro, setIntro] = useState("espera"); // espera | girando | lista
+  useEffect(() => {
+    if (!zonaVista) return;
+    const quieto = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* eslint-disable-next-line react-hooks/set-state-in-effect -- arranca la animación al entrar en pantalla (una sola vez) */
+    setIntro(quieto ? "lista" : "girando");
+    if (quieto) return;
+    const t = setTimeout(() => setIntro("lista"), 3000);
+    return () => clearTimeout(t);
+  }, [zonaVista]);
   const girar = async () => {
     if (estado === "girando") return;
     setEstado("girando");
@@ -305,7 +350,7 @@ export function Ruleta() {
     try {
       const r = await fetch("/api/ruleta", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ accion: "girar", dispositivo: dispositivo() }) });
       j = await r.json().catch(() => ({}));
-      if (j.error === "ya-giraste") { setEstado("ya"); guardar("fgk-ruleta", { dia: hoyAR(), premio: "nada" }); return; }
+      if (j.error === "ya-giraste") { setEstado("ya"); setNo((x) => x + 1); guardar("fgk-ruleta", { dia: hoyAR(), premio: "nada" }); return; }
       if (!r.ok || !j.premio) { setEstado("error"); return; }
     } catch { setEstado("error"); return; }
     // Cae en un gajo con ese premio (si hay dos iguales, uno al azar)
@@ -325,12 +370,13 @@ export function Ruleta() {
   const msg = {
     listo: es ? "Un giro por día. Los premios son de verdad." : "One spin a day. The prizes are real.",
     girando: es ? "Girando…" : "Spinning…",
+    invita: es ? "¡Te toca a vos! 🎡" : "Your turn! 🎡",
     otro: es ? "¡Otro giro! Dale de nuevo 🍀" : "Spin again! Go 🍀",
     nada: es ? "Esta vez no 😅 Volvé mañana." : "Not this time 😅 Come back tomorrow.",
     ya: es ? "Ya giraste hoy. ¡Volvé mañana!" : "You already spun today. Come back tomorrow!",
     error: es ? "La ruleta se está preparando. Probá en un rato." : "The wheel is warming up. Try again soon.",
     gano: es ? "¡Ganaste! Guardá tu premio." : "You won! Save your prize.",
-  }[estado];
+  }[estado === "listo" && intro === "lista" ? "invita" : estado];
   const puede = estado === "listo" || estado === "otro";
   return (
     <section className="band" id="ruleta" aria-labelledby="rul-t">
@@ -344,8 +390,9 @@ export function Ruleta() {
           </ul>
         </div>
         <div className="rul-zona">
-          <div className="rul-rueda-wrap">
+          <div ref={zona} className={`rul-rueda-wrap ${no ? "no" : ""}`} key={no} onClick={() => { if (estado === "ya") setNo((x) => x + 1); }}>
             <span className="rul-flecha" aria-hidden="true">▼</span>
+            <div className={`rul-intro ${intro === "girando" ? "gira" : ""}`}>
             <svg className="rul-rueda" viewBox="-110 -110 220 220" style={{ transform: `rotate(${giro}deg)` }} role="img" aria-label={es ? "Ruleta" : "Wheel"}>
               {GAJOS.map((g, i) => {
                 const a0 = (i * 45 - 90) * (Math.PI / 180), a1 = ((i + 1) * 45 - 90) * (Math.PI / 180);
@@ -360,8 +407,9 @@ export function Ruleta() {
               <circle r="18" fill="var(--surface)" stroke="var(--line-2)" strokeWidth="2" />
               <text textAnchor="middle" dominantBaseline="central" fontSize="16">🍄</text>
             </svg>
+            </div>
           </div>
-          <p className="rul-msg" aria-live="polite">{msg}</p>
+          <p className={`rul-msg ${estado === "ya" || estado === "nada" ? "aviso" : ""} ${estado === "listo" && intro === "lista" ? "invita" : ""}`} aria-live="polite">{msg}</p>
           {estado === "gano" ? (
             <button className="btn amber" onClick={() => setModal(true)}>{guardado?.cupon || token === null ? (es ? "Ver mi premio" : "See my prize") : (es ? "Guardar mi premio" : "Save my prize")} 🎁</button>
           ) : (
@@ -384,6 +432,9 @@ export function Ruleta() {
 // ---------- 5. El estudio en números ----------
 const NUMEROS = [
   { n: 8, mas: false, es: "productos en línea", en: "live products" },
+  { n: 24, mas: false, es: "jurisdicciones del país listas en Team Joy", en: "Argentine jurisdictions ready in Team Joy" },
+  { n: 260, mas: true, es: "ministerios que pueden sumarse a Team Joy hoy", en: "ministries that can join Team Joy today" },
+  { n: 500, mas: true, es: "secretarías que pueden sumarse a Team Joy hoy", en: "departments that can join Team Joy today" },
   { n: 3400, mas: true, es: "instituciones educativas en Santa Fe Schools", en: "schools in Santa Fe Schools" },
   { n: 2300, mas: true, es: "destinos para viajar en MiTour", en: "destinations in MiTour" },
   { n: 400, mas: true, es: "bares, cafés y restós en Santa Fe Gourmet", en: "bars, cafés and restaurants in Santa Fe Gourmet" },

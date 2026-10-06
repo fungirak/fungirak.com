@@ -49,6 +49,15 @@ function sortear() {
   return "nada";
 }
 
+// ¿Puede girar hoy? (sólo consulta, no gira)
+export async function puedeGirar(ipHash, dispositivo) {
+  if (!sql) return { puede: false, error: "no-disponible" };
+  await asegurar();
+  const hoy = await sql`SELECT premio FROM ruleta_giros
+    WHERE dia = (now() AT TIME ZONE 'America/Argentina/Buenos_Aires')::date AND (ip_hash = ${ipHash} OR dispositivo = ${dispositivo})`;
+  return { puede: !(hoy.filter((g) => g.premio !== "otro").length > 0 || hoy.length >= MAX_GIROS_DIA) };
+}
+
 // Puede girar si hoy (por conexión o por dispositivo) no tuvo un giro "final" y no pasó el tope.
 export async function girar(ipHash, dispositivo) {
   if (!sql) return { error: "no-disponible" };

@@ -1,10 +1,18 @@
 // /api/ruleta — POST { accion: "girar", dispositivo } → { premio, token? } · POST { accion: "reclamar", token, email, nombre } → { codigo, vence }
 // El sorteo y los códigos se hacen acá (servidor). El navegador nunca ve probabilidades ni puede inventar códigos.
 import { hashIp, mismoOrigen, leerJSON, limpio, permitido } from "@/lib/db";
-import { girar, reclamar } from "@/lib/ruleta";
+import { girar, reclamar, puedeGirar } from "@/lib/ruleta";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const res = (data, status = 200) => Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
+
+// GET ?dispositivo=… → { puede } para mostrar "ya giraste hoy" antes de que toquen el botón
+export async function GET(req) {
+  const d = (new URL(req.url).searchParams.get("dispositivo") || "").replace(/[^\w-]/g, "").slice(0, 40);
+  if (d.length < 16) return res({ error: "formato" }, 400);
+  if (!permitido(`ruleta-q:${hashIp(req)}`, 20, 60_000)) return res({ error: "despacio" }, 429);
+  try { return res(await puedeGirar(hashIp(req), d)); } catch (e) { console.error(e); return res({ error: "servidor" }, 500); }
+}
 
 export async function POST(req) {
   if (!mismoOrigen(req)) return res({ error: "origen" }, 403);
