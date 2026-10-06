@@ -304,7 +304,7 @@ export default function Site() {
       <Calculadora abrir={abrir} />
       <Bitacora abrir={abrir} />
       <Comunidad muro={muro} setMuro={setMuro} sellar={sellar} />
-      <Ruleta />
+      <Ruleta abrir={abrir} />
       <EnNumeros />
       <Donar stats={stats} abrir={abrir} />
       <Footer abrir={abrir} stats={stats} />

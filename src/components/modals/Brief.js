@@ -110,7 +110,7 @@ const OPC = {
   },
 };
 
-const VACIO = { tipo: "", rubro: "", publico: [], objetivo: [], problema: "", funciones: [], idea: "", referencias: "", hoy: "", contenido: "", plataforma: "", urgencia: "", fecha: "", presupuesto: "", mantenimiento: "", nombre: "", empresa: "", email: "", telefono: "", canal: "whatsapp", _hp: "" };
+const VACIO = { cupon: "", tipo: "", rubro: "", publico: [], objetivo: [], problema: "", funciones: [], idea: "", referencias: "", hoy: "", contenido: "", plataforma: "", urgencia: "", fecha: "", presupuesto: "", mantenimiento: "", nombre: "", empresa: "", email: "", telefono: "", canal: "whatsapp", _hp: "" };
 const KEY = "fgk-brief";
 
 function Pills({ grupo, valor, onChange, multi, lang }) {
@@ -142,7 +142,13 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
     try {
       guardado = JSON.parse(localStorage.getItem(KEY) || "{}");
     } catch {}
-    return { ...VACIO, ...guardado, ...(previo?.brief || {}), nombre: guardado.nombre || visitante?.nombre || "" };
+    // Cupón de la ruleta ganado en este dispositivo (si sigue vigente) se carga solo
+    let cupon = "";
+    try {
+      const r = JSON.parse(localStorage.getItem("fgk-ruleta") || "null");
+      if (r?.cupon?.startsWith("FUNGI-") && (!r.vence || r.vence >= new Date().toISOString().slice(0, 10))) cupon = r.cupon;
+    } catch {}
+    return { ...VACIO, ...guardado, cupon, ...(previo?.brief || {}), nombre: guardado.nombre || visitante?.nombre || "" };
   });
   const [paso, setPaso] = useState(0);
   const [estado, setEstado] = useState(null);
@@ -216,7 +222,7 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
       if (r.ok && j.ok) {
         avisarPorMail(
           `🚀 fungirak.com${j.id ? ` #${j.id}` : ""} · Pedido de proyecto de ${b.nombre}`,
-          { Nombre: b.nombre, Empresa: b.empresa || "-", Email: b.email || "-", Telefono: b.telefono || "-", Prefiere: OPC.canal[b.canal]?.es || "-", Completo: `${completo}%`, Pedido: resumen() },
+          { Nombre: b.nombre, Cupon: b.cupon || "-", Empresa: b.empresa || "-", Email: b.email || "-", Telefono: b.telefono || "-", Prefiere: OPC.canal[b.canal]?.es || "-", Completo: `${completo}%`, Pedido: resumen() },
           b.email || undefined
         );
         setNro(j.id || null);
@@ -237,6 +243,7 @@ export default function Brief({ onClose, visitante, setVisitante, previo, onConf
   return (
     <Modal onClose={onClose} wide color="#00c853" eyebrow={es ? "Pedime algo" : "Request a project"} titulo={paso === 6 ? (es ? `¡Recibido, ${b.nombre}! 🎉` : `Got it, ${b.nombre}! 🎉`) : es ? "Contame qué querés construir" : "Tell me what you want to build"} bajada={paso < 6 ? (es ? "Elegí con un toque; escribí solo si querés. Cuanto más detalle, más precisa mi propuesta." : "Tap to choose; type only if you want. More detail means a sharper proposal.") : undefined}>
       <div className="modal-body">
+        {b.cupon && paso < 6 && <p className="cupon-aplicado">🎟️ {es ? <>Cupón <b>{b.cupon}</b> aplicado: el descuento va en tu presupuesto.</> : <>Coupon <b>{b.cupon}</b> applied: the discount goes into your quote.</>}</p>}
         {paso < 6 && (
           <>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, fontSize: "0.8rem", fontWeight: 700 }}>

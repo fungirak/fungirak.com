@@ -5,6 +5,7 @@ import { useLang, tx } from "@/lib/i18n";
 import { proyecto } from "@/data/proyectos";
 import { BITACORA } from "@/data/bitacora";
 import { avisarPorMail } from "@/lib/avisoMail";
+import { tocar } from "@/lib/sonido";
 
 // Secciones nuevas de la portada: Cómo trabajo · ¿Cuánto saldría? · Bitácora · Ruleta · El estudio en números.
 
@@ -251,7 +252,14 @@ const PREMIO_TXT = {
   sorteo: { es: "Entrás al sorteo de un sitio web gratis", en: "You're in the free website giveaway" },
 };
 const leer = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
+// Sonidos de la ruleta (Web Audio, sin archivos): ganar = arpegio alegre, otro giro = dos notas, nada = tono suave
+const SONIDO = {
+  gano: () => [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => setTimeout(() => tocar(f, { dur: 0.7, vol: 0.13 }), i * 110)),
+  otro: () => [587.33, 880].forEach((f, i) => setTimeout(() => tocar(f, { dur: 0.5, vol: 0.11 }), i * 140)),
+  nada: () => tocar(196, { dur: 0.8, tipo: "sine", vol: 0.1 }),
+};
 const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const fechaAR = (f) => (f ? f.split("-").reverse().join("/") : ""); // 2026-12-05 → 05/12/2026
 const hoyAR = () => new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10);
 function dispositivo() {
   let d = leer("fgk-disp");
@@ -259,7 +267,20 @@ function dispositivo() {
   return d;
 }
 
-function Reclamo({ premio, token, onListo, onClose, es }) {
+// Qué hacer con el premio (se muestra al ganar y al volver a ver el cupón)
+function Instrucciones({ premio, es }) {
+  return premio === "sorteo" ? (
+    <p>{es ? "Ya estás participando. Cuando haga el sorteo te aviso a tu email. Guardá tu número por las dudas." : "You're in. When I run the giveaway I'll email you. Keep your number just in case."}</p>
+  ) : (
+    <ol className="reclamo-pasos">
+      <li>{es ? "Copiá tu código (también te llega por email)." : "Copy your code (you'll also get it by email)."}</li>
+      <li>{es ? <>Tocá <b>Usar mi descuento</b> y contame tu proyecto: el código ya va cargado.</> : <>Tap <b>Use my discount</b> and tell me about your project: the code is already included.</>}</li>
+      <li>{es ? "Cuando te pase el presupuesto, el descuento ya está aplicado." : "When I send you the quote, the discount is already applied."}</li>
+    </ol>
+  );
+}
+
+function Reclamo({ premio, token, onListo, onClose, onUsar, es }) {
   const [email, setEmail] = useState("");
   const [nombre, setNombre] = useState(() => leer("fgk-visitante")?.nombre || "");
   const [estado, setEstado] = useState(null);
@@ -280,34 +301,45 @@ function Reclamo({ premio, token, onListo, onClose, es }) {
       if (!r.ok || !j.codigo) return setEstado(j.error || "error");
       setCupon(j);
       onListo(j);
-      avisarPorMail(`🎡 fungirak.com · Premio de la ruleta: ${j.codigo}`, { Premio: PREMIO_TXT[j.premio].es, Codigo: j.codigo, Vence: j.vence, Email: email, Nombre: nombre || "-" }, email);
+      const txt = PREMIO_TXT[j.premio].es;
+      const hola = `¡Hola${nombre ? ` ${nombre}` : ""}!`;
+      // Aviso a Gabriel + copia automática al visitante (respuesta automática de FormSubmit al campo "email")
+      avisarPorMail(`🎡 fungirak.com · Premio de la ruleta: ${j.codigo}`, {
+        Premio: txt, Codigo: j.codigo, Vence: fechaAR(j.vence), Nombre: nombre || "-", email,
+        _autoresponse: j.premio === "sorteo"
+          ? `${hola} Ya estás participando del sorteo de un sitio web gratis de FUNGIRAK Studio. Tu número: ${j.codigo}. Cuando haga el sorteo te aviso a este email. — Gabriel · fungirak.com`
+          : `${hola} Ganaste ${txt} en la ruleta de fungirak.com. Tu código: ${j.codigo} (válido hasta el ${fechaAR(j.vence)}). Para usarlo, entrá a fungirak.com, tocá "Pedime algo" y contame tu proyecto mencionando el código (si pedís desde el mismo dispositivo, ya va cargado). El descuento se aplica en tu presupuesto. — Gabriel · fungirak.com`,
+      });
     } catch { setEstado("error"); }
   };
   const copiar = async () => { try { await navigator.clipboard.writeText(cupon.codigo); setCopiado(true); } catch {} };
   return (
     <Modal onClose={onClose} color="#f59e0b" eyebrow={es ? "La ruleta del micelio" : "The mycelium wheel"} titulo={cupon ? (es ? "¡Es tuyo! 🎉" : "It's yours! 🎉") : (es ? "¡Ganaste! 🎉" : "You won! 🎉")}
       bajada={PREMIO_TXT[premio][es ? "es" : "en"]}>
-      {cupon ? (
-        <div className="reclamo">
-          <p>{premio === "sorteo" ? (es ? "Ya estás participando. Este es tu número de participación:" : "You're in. This is your entry number:") : (es ? "Este es tu código de descuento. Mencionalo cuando me pidas tu proyecto:" : "This is your discount code. Mention it when you ask me for your project:")}</p>
-          <div className="cupon"><code>{cupon.codigo}</code><button className="btn small ghost" onClick={copiar}>{copiado ? (es ? "Copiado ✓" : "Copied ✓") : (es ? "Copiar" : "Copy")}</button></div>
-          <small>{es ? `Válido hasta el ${cupon.vence}. Un premio por persona.` : `Valid until ${cupon.vence}. One prize per person.`}</small>
-        </div>
-      ) : (
-        <form className="reclamo" onSubmit={enviar}>
-          <p>{es ? "Dejame tu email para guardar el premio a tu nombre." : "Leave your email to save the prize under your name."}</p>
-          <div className="campo"><label htmlFor="rl-mail">{es ? "Tu email" : "Your email"}</label><input id="rl-mail" type="email" inputMode="email" autoComplete="email" required maxLength={120} autoFocus value={email} onChange={(e) => setEmail(e.target.value)} /></div>
-          <div className="campo"><label htmlFor="rl-nom">{es ? "Tu nombre (opcional)" : "Your name (optional)"}</label><input id="rl-nom" autoComplete="given-name" maxLength={60} value={nombre} onChange={(e) => setNombre(e.target.value)} /></div>
-          {estado && estado !== "enviando" && <p className="aviso-err">{ERR[estado] || (es ? "No se pudo guardar. Probá de nuevo." : "Couldn't save it. Try again.")}</p>}
-          <div className="acciones"><button className="btn amber" disabled={estado === "enviando"}>{estado === "enviando" ? (es ? "Guardando…" : "Saving…") : (es ? "Guardar mi premio" : "Save my prize")}</button></div>
-          <small className="aviso-nota">{es ? "Sólo lo uso para tu premio y el sorteo. Nada de spam." : "Only used for your prize and the giveaway. No spam."}</small>
-        </form>
-      )}
+      <div className="modal-body">
+        {cupon ? (
+          <div className="reclamo">
+            <div className="cupon"><code>{cupon.codigo}</code><button className="btn small ghost" onClick={copiar}>{copiado ? (es ? "Copiado ✓" : "Copied ✓") : (es ? "Copiar" : "Copy")}</button></div>
+            <Instrucciones premio={cupon.premio} es={es} />
+            {cupon.premio !== "sorteo" && <div className="acciones"><button className="btn amber" onClick={() => onUsar(cupon.codigo)}>🎟️ {es ? "Usar mi descuento" : "Use my discount"}</button></div>}
+            <small className="aviso-nota">{es ? `Te mandamos una copia a ${email}. Válido hasta el ${fechaAR(cupon.vence)}. Un premio por persona.` : `We sent a copy to ${email}. Valid until ${fechaAR(cupon.vence)}. One prize per person.`}</small>
+          </div>
+        ) : (
+          <form className="reclamo" onSubmit={enviar}>
+            <p>{es ? "Dejame tu email para guardar el premio a tu nombre. Te llega una copia con las instrucciones." : "Leave your email to save the prize under your name. You'll get a copy with instructions."}</p>
+            <div className="campo"><label htmlFor="rl-mail">{es ? "Tu email" : "Your email"}</label><input id="rl-mail" type="email" inputMode="email" autoComplete="email" required maxLength={120} autoFocus value={email} onChange={(e) => setEmail(e.target.value)} /></div>
+            <div className="campo"><label htmlFor="rl-nom">{es ? "Tu nombre (opcional)" : "Your name (optional)"}</label><input id="rl-nom" autoComplete="given-name" maxLength={60} value={nombre} onChange={(e) => setNombre(e.target.value)} /></div>
+            {estado && estado !== "enviando" && <p className="aviso-err">{ERR[estado] || (es ? "No se pudo guardar. Probá de nuevo." : "Couldn't save it. Try again.")}</p>}
+            <div className="acciones"><button className="btn amber" disabled={estado === "enviando"}>{estado === "enviando" ? (es ? "Guardando…" : "Saving…") : (es ? "Guardar mi premio" : "Save my prize")}</button></div>
+            <small className="aviso-nota">{es ? "Sólo lo uso para tu premio y el sorteo. Nada de spam." : "Only used for your prize and the giveaway. No spam."}</small>
+          </form>
+        )}
+      </div>
     </Modal>
   );
 }
 
-export function Ruleta() {
+export function Ruleta({ abrir }) {
   const { lang } = useLang();
   const es = lang === "es";
   const [giro, setGiro] = useState(0); // grados acumulados
@@ -365,9 +397,9 @@ export function Ruleta() {
       setPremio(j.premio);
       setToken(j.token);
       guardar("fgk-ruleta", { dia: hoyAR(), premio: j.premio });
-      if (j.premio === "otro") setEstado("otro");
-      else if (j.premio === "nada") setEstado("nada");
-      else { setEstado("gano"); setModal(true); }
+      if (j.premio === "otro") { setEstado("otro"); SONIDO.otro(); }
+      else if (j.premio === "nada") { setEstado("nada"); SONIDO.nada(); }
+      else { setEstado("gano"); SONIDO.gano(); setModal(true); }
     }, 4300);
   };
   const msg = {
@@ -423,10 +455,15 @@ export function Ruleta() {
       </div>
       {modal && premio && (guardado?.cupon ? (
         <Modal onClose={() => setModal(false)} color="#f59e0b" eyebrow={es ? "Tu premio" : "Your prize"} titulo={PREMIO_TXT[premio][lang]}>
-          <div className="reclamo"><div className="cupon"><code>{guardado.cupon}</code></div><small>{es ? `Válido hasta el ${guardado.vence}.` : `Valid until ${guardado.vence}.`}</small></div>
+          <div className="modal-body"><div className="reclamo">
+            <div className="cupon"><code>{guardado.cupon}</code></div>
+            <Instrucciones premio={premio} es={es} />
+            {premio !== "sorteo" && <div className="acciones"><button className="btn amber" onClick={() => { setModal(false); abrir?.("brief", { brief: { cupon: guardado.cupon } }); }}>🎟️ {es ? "Usar mi descuento" : "Use my discount"}</button></div>}
+            <small className="aviso-nota">{es ? `Válido hasta el ${fechaAR(guardado.vence)}.` : `Valid until ${fechaAR(guardado.vence)}.`}</small>
+          </div></div>
         </Modal>
       ) : token ? (
-        <Reclamo premio={premio} token={token} es={es} onClose={() => setModal(false)} onListo={(c) => { const g = { dia: hoyAR(), premio: c.premio, cupon: c.codigo, vence: c.vence }; guardar("fgk-ruleta", g); setGuardado(g); }} />
+        <Reclamo premio={premio} token={token} es={es} onClose={() => setModal(false)} onUsar={(c) => { setModal(false); abrir?.("brief", { brief: { cupon: c } }); }} onListo={(c) => { const g = { dia: hoyAR(), premio: c.premio, cupon: c.codigo, vence: c.vence }; guardar("fgk-ruleta", g); setGuardado(g); }} />
       ) : null)}
     </section>
   );
