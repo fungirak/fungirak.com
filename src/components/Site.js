@@ -6,6 +6,7 @@ import { NOTAS, tocar, arpegio } from "@/lib/sonido";
 import Nav from "./Nav";
 import Hero from "./Hero";
 import Donar from "./Donar";
+import { ComoTrabajo, Calculadora, Bitacora, Ruleta, EnNumeros } from "./Secciones";
 import Footer from "./Footer";
 import ProyectoModal from "./modals/ProyectoModal";
 import { SaberMas, Experiencia, Educacion, Reconocimientos, Idiomas, Privacidad } from "./modals/PerfilModales";
@@ -299,7 +300,12 @@ export default function Site() {
     <LangCtx.Provider value={ctx}>
       <Nav abrir={abrir} tema={tema} setTema={setTema} sonido={sonido} setSonido={setSonido} sellos={sellos} visitante={visitante} />
       <Hero abrir={abrir} sellos={sellos} onSound={onSound} visitante={visitante} marco={muro.huellas.slice(0, 16).map((h) => h.emoji)} />
+      <ComoTrabajo abrir={abrir} />
+      <Calculadora abrir={abrir} />
+      <Bitacora abrir={abrir} />
       <Comunidad muro={muro} setMuro={setMuro} sellar={sellar} />
+      <Ruleta />
+      <EnNumeros />
       <Donar stats={stats} abrir={abrir} />
       <Footer abrir={abrir} stats={stats} />
       {vista}

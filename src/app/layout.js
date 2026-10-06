@@ -2,6 +2,7 @@ import { Unbounded, Poppins, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import "./comunidad.css";
+import "./secciones.css";
 import { LINKS, PERFIL } from "@/data/perfil";
 
 const display = Unbounded({ subsets: ["latin"], weight: ["500", "700", "800"], variable: "--f-display", display: "swap" });

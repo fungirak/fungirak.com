@@ -1,0 +1,95 @@
+/* ===== Secciones nuevas de la portada (Secciones.js) ===== */
+.sec-cabeza { max-width: 720px; margin-bottom: 28px; }
+.sec-cabeza h2 { font-size: clamp(1.8rem, 4vw, 3rem); margin: 8px 0 6px; text-wrap: balance; }
+.sec-cabeza p { color: var(--text-2); margin: 0; text-wrap: pretty; }
+.sec-cta { margin-top: 26px; display: flex; justify-content: center; }
+
+/* 1. Cómo trabajo */
+.pasos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; position: relative; }
+.pasos::before { content: ""; position: absolute; left: 6%; right: 6%; top: 34px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--c-green), var(--c-cyan), var(--c-violet), var(--c-amber)); transform: scaleX(0); transform-origin: left; transition: transform 1.2s var(--ease); opacity: .55; }
+.pasos.visto::before { transform: scaleX(1); }
+.paso { position: relative; display: grid; gap: 6px; padding: 20px 18px; border-radius: var(--radius); background: var(--glass-strong); border: 1px solid var(--line); box-shadow: var(--shadow); backdrop-filter: blur(12px); opacity: 0; transform: translateY(16px); transition: opacity .6s var(--ease), transform .6s var(--ease); transition-delay: calc(var(--i) * 120ms); }
+.pasos.visto .paso { opacity: 1; transform: none; }
+.paso-ico { width: 48px; height: 48px; display: grid; place-items: center; font-size: 1.5rem; border-radius: 16px; background: var(--surface-2); border: 1px solid var(--line); }
+.paso-n { position: absolute; top: 16px; right: 18px; font-family: var(--font-mono); font-size: .8rem; color: var(--text-3); }
+.paso b { font-family: var(--font-display); font-size: 1.05rem; }
+.paso > span:last-child { color: var(--text-2); font-size: .92rem; line-height: 1.5; }
+@media (max-width: 900px) { .pasos { grid-template-columns: 1fr 1fr; } .pasos::before { display: none; } }
+@media (max-width: 520px) { .pasos { grid-template-columns: 1fr; } }
+
+/* 2. Calculadora */
+.calc { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; align-items: start; }
+.calc-opciones, .calc-res { padding: 22px; border-radius: var(--radius); background: var(--glass-strong); border: 1px solid var(--line); box-shadow: var(--shadow); backdrop-filter: blur(12px); }
+.calc-res { display: grid; gap: 8px; position: sticky; top: 96px; }
+.calc-lbl { display: block; font-weight: 700; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; color: var(--text-3); margin: 4px 0 8px; }
+.calc-tipos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+.calc-tipo { display: grid; gap: 4px; justify-items: center; padding: 12px 8px; border-radius: var(--radius-s); background: var(--surface); border: 1px solid var(--line); font-weight: 700; font-size: .85rem; cursor: pointer; transition: border-color .2s, transform .15s, background .2s; color: var(--text); }
+.calc-tipo span { font-size: 1.5rem; }
+.calc-tipo.on { border-color: var(--c-green); background: color-mix(in srgb, var(--c-green) 12%, var(--surface)); transform: translateY(-2px); }
+.calc-funcs { display: flex; flex-wrap: wrap; gap: 8px; }
+.calc-func { padding: 8px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 600; font-size: .85rem; cursor: pointer; color: var(--text); transition: border-color .2s, background .2s; }
+.calc-func.on { border-color: var(--c-green); background: color-mix(in srgb, var(--c-green) 14%, var(--surface)); }
+.calc-sem { font-size: 1rem; color: var(--text-2); }
+.calc-sem b { font-family: var(--font-display); font-size: 2.6rem; line-height: 1; margin-right: 4px; }
+.calc-barra { height: 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; }
+.calc-barra i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--c-green), var(--c-amber), var(--c-rose)); transition: width .45s var(--ease); }
+.calc-nivel { font-weight: 700; margin: 4px 0 8px; }
+.calc-nivel b { font-family: var(--font-display); color: var(--accent); margin-right: 6px; }
+.calc-nota { color: var(--text-3); font-size: .78rem; line-height: 1.5; }
+@media (max-width: 900px) { .calc { grid-template-columns: 1fr; } .calc-res { position: static; } }
+@media (max-width: 520px) { .calc-tipos { grid-template-columns: 1fr 1fr; } }
+
+/* 3. Bitácora (línea de tiempo horizontal) */
+.bit { position: relative; display: flex; align-items: center; gap: 8px; }
+.bit-pista { flex: 1; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; padding: 4px 0; }
+.bit-pista::-webkit-scrollbar { display: none; }
+.bit-linea { list-style: none; margin: 0; padding: 0 20px; display: grid; grid-template-columns: repeat(var(--n), minmax(190px, 1fr)); grid-template-rows: 190px 30px 190px; position: relative; min-width: max-content; }
+.bit-linea::before { content: ""; position: absolute; left: 0; right: 0; top: 203px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--line-2), var(--c-green)); transform: scaleX(0); transform-origin: left; transition: transform 1.4s var(--ease); }
+.bit.visto .bit-linea::before { transform: scaleX(1); }
+.bit-hito { display: grid; grid-template-rows: 190px 30px 190px; justify-items: center; grid-row: 1 / 4; scroll-snap-align: center; position: relative; opacity: 0; transition: opacity .5s var(--ease); transition-delay: calc(var(--i) * 110ms + .3s); }
+.bit.visto .bit-hito { opacity: 1; }
+.bit-card { display: grid; gap: 4px; justify-items: center; text-align: center; width: 170px; padding: 12px; border-radius: var(--radius-s); background: var(--glass-strong); border: 1px solid var(--line); box-shadow: var(--shadow); cursor: pointer; color: var(--text); transition: transform .2s var(--ease), border-color .2s; }
+.bit-card:hover { transform: translateY(-3px); border-color: var(--c); }
+.bit-card b { font-family: var(--font-display); font-size: .92rem; }
+.bit-card > span:last-child { font-size: .8rem; color: var(--text-2); line-height: 1.35; }
+.bit-logo { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 12px; background: var(--surface-2); font-size: 1.2rem; overflow: hidden; }
+.bit-logo img { width: 28px; height: 28px; object-fit: contain; }
+.bit-hito.arriba .bit-card { grid-row: 1; align-self: end; }
+.bit-hito.abajo .bit-card { grid-row: 3; align-self: start; }
+.bit-punto { grid-row: 2; align-self: center; width: 16px; height: 16px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 4px var(--bg), 0 0 0 6px color-mix(in srgb, var(--c) 40%, transparent); z-index: 1; }
+.bit-hito.ultimo .bit-punto { width: 22px; height: 22px; animation: bit-latido 1.8s ease-in-out infinite; }
+@keyframes bit-latido { 50% { box-shadow: 0 0 0 4px var(--bg), 0 0 0 12px color-mix(in srgb, var(--c) 25%, transparent); } }
+.bit-fecha { position: absolute; top: 224px; font-family: var(--font-mono); font-size: .72rem; color: var(--text-3); text-transform: uppercase; white-space: nowrap; }
+.bit-hito.arriba .bit-fecha { top: 224px; }
+.bit-hito.abajo .bit-fecha { top: 168px; }
+.bit-flecha { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 1.5rem; line-height: 1; padding-bottom: 3px; background: var(--surface); color: var(--text); border: 1px solid var(--line-2); box-shadow: var(--shadow); cursor: pointer; transition: opacity .2s, transform .15s; }
+.bit-flecha:hover:not(:disabled) { transform: scale(1.08); }
+.bit-flecha:disabled { opacity: 0; pointer-events: none; }
+@media (max-width: 640px) { .bit-flecha { width: 32px; height: 32px; font-size: 1.2rem; } .bit-linea { grid-template-columns: repeat(var(--n), 170px); } .bit-card { width: 152px; } }
+
+/* 4. Ruleta */
+.ruleta { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; }
+.rul-premios { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.rul-premios li { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 700; font-size: .85rem; }
+.rul-premios i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.rul-zona { display: grid; justify-items: center; gap: 12px; text-align: center; }
+.rul-rueda-wrap { position: relative; width: min(340px, 82vw); aspect-ratio: 1; }
+.rul-rueda { width: 100%; height: 100%; border-radius: 50%; filter: drop-shadow(0 18px 40px rgba(0, 0, 0, .25)); transition: transform 4.2s cubic-bezier(.12, .7, .08, 1); }
+.rul-txt { fill: #fff; font: 800 8px var(--font-display); letter-spacing: .01em; }
+.rul-flecha { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); z-index: 2; font-size: 30px; color: var(--c-amber); filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .3)); }
+.rul-msg { margin: 0; font-weight: 700; min-height: 1.5em; }
+.rul-legal { color: var(--text-3); font-size: .74rem; max-width: 340px; line-height: 1.5; }
+.reclamo { display: grid; gap: 10px; }
+.reclamo p { margin: 0; color: var(--text-2); }
+.cupon { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-radius: var(--radius-s); background: var(--surface-2); border: 2px dashed var(--c-amber); }
+.cupon code { font-family: var(--font-mono); font-size: 1.25rem; font-weight: 700; letter-spacing: .06em; }
+@media (max-width: 900px) { .ruleta { grid-template-columns: 1fr; } }
+
+/* 5. El estudio en números */
+.numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.numero { display: grid; gap: 4px; padding: 20px; border-radius: var(--radius); background: var(--glass-strong); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.numero b { font-family: var(--font-display); font-size: clamp(2rem, 4.5vw, 2.8rem); line-height: 1.05; }
+.numero span { color: var(--text-2); font-size: .9rem; line-height: 1.4; }
+@media (max-width: 760px) { .numeros { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 420px) { .numeros { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .paso, .bit-hito { opacity: 1; transform: none; transition: none; } .pasos::before, .bit-linea::before { transform: none; } .rul-rueda { transition-duration: 1s; } }
