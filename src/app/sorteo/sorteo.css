@@ -1,0 +1,19 @@
+/* Página de bases del sorteo */
+.sorteo-page { min-height: 100dvh; background: var(--bg); color: var(--text); padding: 48px clamp(16px, 4vw, 40px) 80px; }
+.sorteo { max-width: 760px; margin: 0 auto; line-height: 1.65; }
+.sorteo h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 2.8rem); margin: 18px 0 6px; }
+.sorteo h2 { font-family: var(--font-display); font-size: 1.1rem; margin: 30px 0 8px; }
+.sorteo p { color: var(--text-2); margin: 0 0 10px; }
+.sorteo b { color: var(--text); }
+.sorteo code { font-family: var(--font-mono); font-size: .92em; }
+.sorteo-sub { color: var(--text-3) !important; font-size: .9rem; }
+.sorteo-volver { color: var(--accent); font-weight: 700; text-decoration: none; }
+.sorteo-prox { display: grid; gap: 2px; margin: 22px 0 8px; padding: 16px 20px; border-radius: var(--radius); background: var(--glass-strong); border: 1px solid color-mix(in srgb, var(--c-amber) 50%, transparent); box-shadow: var(--shadow); }
+.sorteo-prox span { font-size: .75rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--c-amber); }
+.sorteo-prox b { font-family: var(--font-display); font-size: 1.5rem; }
+.sorteo-prox small { color: var(--text-3); }
+.sorteo-fechas { list-style: none; padding: 0; margin: 8px 0 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.sorteo-fechas li { display: flex; justify-content: space-between; gap: 8px; padding: 10px 14px; border-radius: var(--radius-s); background: var(--surface); border: 1px solid var(--line); font-size: .9rem; }
+.sorteo-fechas li.prox { border-color: var(--c-amber); }
+.sorteo-fechas li.hecho { opacity: .7; }
+.sorteo-fechas li b { color: var(--accent); font-size: .8rem; }

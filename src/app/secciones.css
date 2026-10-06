@@ -107,3 +107,11 @@
 .reclamo-pasos { margin: 0; padding-left: 20px; display: grid; gap: 6px; color: var(--text-2); line-height: 1.5; }
 .reclamo .acciones { margin-top: 4px; }
 .cupon-aplicado { margin: 0 0 16px; padding: 10px 14px; border-radius: var(--radius-s); background: color-mix(in srgb, var(--c-amber) 14%, transparent); border: 1px dashed var(--c-amber); font-weight: 600; }
+
+/* Próximo sorteo (sección ruleta) */
+.rul-sorteo { display: grid; gap: 2px; margin-top: 18px; padding: 16px 18px; border-radius: var(--radius); background: var(--glass-strong); border: 1px solid color-mix(in srgb, var(--c-amber) 50%, transparent); box-shadow: var(--shadow); }
+.rul-sorteo-ojo { font-size: .74rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--c-amber); }
+.rul-sorteo b { font-family: var(--font-display); font-size: 1.35rem; }
+.rul-sorteo > span:nth-of-type(2) { font-weight: 700; color: var(--text-2); }
+.rul-sorteo small { color: var(--text-3); line-height: 1.5; margin-top: 4px; }
+.rul-sorteo a, .rul-legal a { color: var(--accent); font-weight: 700; }

@@ -339,6 +339,27 @@ function Reclamo({ premio, token, onListo, onClose, onUsar, es }) {
   );
 }
 
+// Próximo sorteo del sitio (datos públicos de /api/sorteo) con cuenta regresiva y link a las bases
+function ProximoSorteo({ es }) {
+  const [st, setSt] = useState(null);
+  useEffect(() => {
+    fetch("/api/sorteo").then((r) => r.json()).then((j) => {
+      if (j?.proximo) setSt({ ...j, dias: Math.max(0, Math.ceil((new Date(`${j.proximo}T12:00:00-03:00`) - Date.now()) / 864e5)) });
+    }).catch(() => {});
+  }, []);
+  if (!st?.proximo) return null;
+  const dias = st.dias;
+  const fecha = new Date(`${st.proximo}T12:00:00-03:00`).toLocaleDateString(es ? "es-AR" : "en-US", { day: "numeric", month: "long", year: "numeric" });
+  return (
+    <div className="rul-sorteo">
+      <span className="rul-sorteo-ojo">🎟️ {es ? "Próximo sorteo de un sitio web" : "Next website giveaway"}</span>
+      <b>{fecha}</b>
+      <span>{dias === 0 ? (es ? "¡Es hoy!" : "It's today!") : es ? `Faltan ${dias} días · ${st.participaciones ? `${st.participaciones} participaciones` : "¡Sé el primero en participar!"}` : `${dias} days to go · ${st.participaciones ? `${st.participaciones} entries` : "Be the first to enter!"}`}</span>
+      <small>{es ? "Un ganador cada dos meses. Tus participaciones se acumulan para los próximos sorteos." : "One winner every two months. Your entries carry over to the next draws."} <a href="/sorteo">{es ? "Bases y condiciones" : "Terms"}</a></small>
+    </div>
+  );
+}
+
 export function Ruleta({ abrir }) {
   const { lang } = useLang();
   const es = lang === "es";
@@ -423,6 +444,7 @@ export function Ruleta({ abrir }) {
           <ul className="rul-premios">
             {["d20", "d15", "d10", "sorteo", "otro"].map((p) => <li key={p} style={{ "--c": ETIQ[p].c }}><i />{ETIQ[p][lang]}</li>)}
           </ul>
+          <ProximoSorteo es={es} />
         </div>
         <div className="rul-zona">
           <div ref={zona} className={`rul-rueda-wrap ${no ? "no" : ""}`} key={no} onClick={() => { if (estado === "ya") setNo((x) => x + 1); }}>
@@ -450,7 +472,7 @@ export function Ruleta({ abrir }) {
           ) : (
             <button className="btn amber pulse" disabled={!puede} onClick={girar}>🎡 {estado === "otro" ? (es ? "Girar otra vez" : "Spin again") : (es ? "Girar la ruleta" : "Spin the wheel")}</button>
           )}
-          <small className="rul-legal">{es ? "Cada giro es al azar: no siempre hay premio. Descuentos válidos por 60 días para proyectos nuevos, no acumulables. El sorteo da una chance de ganar, no un sitio asegurado. Un premio por persona por mes." : "Each spin is random: there isn't always a prize. Discounts valid for 60 days on new projects, not combinable. The giveaway is a chance to win, not a guaranteed site. One prize per person per month."}</small>
+          <small className="rul-legal"><a href="/sorteo">{es ? "Bases y condiciones" : "Terms"}</a> · {es ? "Cada giro es al azar: no siempre hay premio. Descuentos válidos por 60 días para proyectos nuevos, no acumulables. El sorteo da una chance de ganar, no un sitio asegurado. Un premio por persona por mes." : "Each spin is random: there isn't always a prize. Discounts valid for 60 days on new projects, not combinable. The giveaway is a chance to win, not a guaranteed site. One prize per person per month."}</small>
         </div>
       </div>
       {modal && premio && (guardado?.cupon ? (
