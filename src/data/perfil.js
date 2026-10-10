@@ -30,6 +30,7 @@ export const PERFIL = {
   estudio: [
     { proyecto: "ecos", es: "ECOS: personas estimadas en 3D", en: "ECOS: estimated people in 3D" },
     { proyecto: "teamjoy", es: "Team Joy: novedades para la comunidad", en: "Team Joy: news for the community" },
+    { proyecto: "atalaya", es: "Atalaya: nuevas alertas de estafas en el radar", en: "Atalaya: new scam alerts on the radar" },
     { proyecto: "mitour", es: "MiTour: rutas y sellos para tu próximo viaje", en: "MiTour: routes and stamps for your next trip" },
     { proyecto: "atlas", es: "Atlas Fit Pro: rutinas con evidencia", en: "Atlas Fit Pro: evidence-based workouts" },
     { proyecto: "gourmet", es: "Santa Fe Gourmet: bares y cafés nuevos", en: "Santa Fe Gourmet: new bars and cafés" },

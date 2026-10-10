@@ -88,9 +88,12 @@ const BORDE = [[8, 0], [30, 0], [52, 0], [74, 0], [96, 0], [100, 22], [100, 48],
 
 export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) {
   const { lang, ui } = useLang();
-  // Un proyecto distinto cada día (hora de Argentina); 3 y 8 son coprimos: pasan todos antes de repetir
+  // Un proyecto distinto cada día (hora de Argentina). El salto es coprimo con la cantidad de proyectos,
+  // así pasan todos antes de repetir aunque se sumen nuevos (con 9, un salto de 3 mostraría solo 3).
   const [dia] = useState(() => Math.floor((Date.now() - 3 * 3600e3) / 864e5));
-  const hoy = PERFIL.estudio[(dia * 3) % PERFIL.estudio.length];
+  const n = PERFIL.estudio.length, mcd = (a, b) => (b ? mcd(b, a % b) : a);
+  const salto = [3, 5, 7, 11, 13].find((s) => mcd(s, n) === 1) || 1;
+  const hoy = PERFIL.estudio[(dia * salto) % n];
   const est = proyecto(hoy.proyecto);
   return (
     <>
