@@ -2323,3 +2323,7 @@ img {
     display: none !important;
   }
 }
+
+/* Carta de proyecto: logo y "Visitar sitio" arriba, a la vista sin hacer scroll */
+.cabeza-proyecto { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.cabeza-proyecto .btn { margin-left: auto; }

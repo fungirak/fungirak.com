@@ -247,7 +247,16 @@ export default function ProyectoModal({ id, onClose, abrir, stats, onAplauso }) 
   return (
     <Modal onClose={onClose} color={p.color} eyebrow={eyebrow} titulo={tx(p.nombre, lang)} bajada={tx(p.tagline, lang)}>
       <div className="modal-body">
-        {p.logo && <img src={p.logo} alt={`Logo de ${tx(p.nombre, lang)}`} width={64} height={64} className="logo-real" style={{ marginBottom: 12 }} />}
+        {(p.logo || p.url) && (
+          <div className="cabeza-proyecto">
+            {p.logo && <img src={p.logo} alt={`Logo de ${tx(p.nombre, lang)}`} width={64} height={64} className="logo-real" />}
+            {p.url && (
+              <a className="btn" href={p.url} target="_blank" rel="noopener noreferrer" style={{ "--b": p.color === "#E5E5E5" ? "#1f2937" : p.color, "--bd": "rgba(0,0,0,.35)", "--fg": "#fff" }}>
+                {ui.verSitio} <Flecha width={14} height={14} />
+              </a>
+            )}
+          </div>
+        )}
         <div className="stack" style={{ marginBottom: 14 }}>
           {p.pills.map((x) => <span key={x} className={`pill${x === "+18" ? " adult" : ""}`}>{x}</span>)}
         </div>
@@ -259,11 +268,6 @@ export default function ProyectoModal({ id, onClose, abrir, stats, onAplauso }) 
           </>
         )}
         <div className="acciones">
-          {p.url && (
-            <a className="btn" href={p.url} target="_blank" rel="noopener noreferrer" style={{ "--b": p.color === "#E5E5E5" ? "#1f2937" : p.color, "--bd": "rgba(0,0,0,.35)", "--fg": "#fff" }}>
-              {ui.verSitio} <Flecha width={14} height={14} />
-            </a>
-          )}
           <Aplauso id={p.id} valor={stats?.aplausos?.[p.id]} onAplauso={onAplauso} />
           {p.fila === 2 && <button className="btn ghost" onClick={() => abrir("quiz")}>🧪 {lang === "es" ? "¿Algo así para vos?" : "Something like this for you?"}</button>}
         </div>
