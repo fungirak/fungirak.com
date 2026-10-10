@@ -1,6 +1,7 @@
 "use client";
-import { useLang } from "@/lib/i18n";
+import { useLang, tx } from "@/lib/i18n";
 import { LINKS } from "@/data/perfil";
+import { PROYECTOS } from "@/data/proyectos";
 import Sello from "./Sello";
 import { Socials } from "./Hero";
 
@@ -55,6 +56,7 @@ export default function Footer({ abrir, stats }) {
           [ui.nav.pasaporte, "pasaporte"],
           [`${ui.terminal} (Ctrl+K)`, "terminal"],
         ])}
+        {col("Apps", PROYECTOS.filter((p) => p.url).map((p) => [tx(p.nombre, lang), null, p.url]))}
         {col(es ? "Contacto" : "Contact", [
           [ui.nav.hablemos, "hablemos"],
           [`💚 ${ui.nav.ayudar}`, "donar"],

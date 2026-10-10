@@ -1192,7 +1192,7 @@ img {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.4fr repeat(4, 1fr);
+  grid-template-columns: 1.4fr repeat(5, 1fr);
   gap: 28px;
 }
 

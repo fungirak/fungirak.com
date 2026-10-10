@@ -71,10 +71,12 @@ const jsonLd = {
       "@id": `${SITE}/#studio`,
       name: "FUNGIRAK Studio",
       url: SITE,
+      logo: `${SITE}/icons/icon-512.png`,
       email: LINKS.email,
       founder: { "@id": `${SITE}/#gabriel` },
       sameAs: [LINKS.instagram],
     },
+    { "@type": "WebSite", "@id": `${SITE}/#web`, name: "fungirak", alternateName: "FUNGIRAK Studio", url: SITE, publisher: { "@id": `${SITE}/#studio` } },
   ],
 };
 
