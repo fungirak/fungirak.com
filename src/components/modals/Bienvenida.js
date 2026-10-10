@@ -7,9 +7,9 @@ import { useFiltro, AvisoFiltro, claseFiltro } from "../Filtro";
 // Bienvenida estilo linktree, dentro del sitio: primero qué busca, después el nombre (opcional),
 // y cada opción lleva directo a lo suyo. Pensada para quien llega desde la bio de Instagram.
 export const DESTINOS = [
-  { id: "brief", perfil: "cliente", ico: "🚀", es: ["Busco una app o un sitio", "Tengo una idea y quiero construirla"], en: ["I need an app or a website", "I have an idea and want to build it"], destacado: true },
-  { id: "contratar", perfil: "empresa", ico: "💼", es: ["Quiero contratarte", "Vengo de una empresa o equipo"], en: ["I want to hire you", "I'm from a company or team"] },
-  { id: "proyectos", perfil: "curioso", ico: "🧪", es: ["Ver lo que hacés", "Mostrame tus proyectos"], en: ["See what you do", "Show me your projects"] },
+  { id: "brief", perfil: "cliente", ico: "🚀", es: ["Quiero mi propia app o sitio", "Tengo una idea y quiero que la construyas"], en: ["I want my own app or website", "I have an idea and want you to build it"], destacado: true },
+  { id: "proyectos", perfil: "curioso", ico: "🧪", es: ["Ver tus apps y proyectos", "Quiero probar lo que hiciste"], en: ["See your apps and projects", "I want to try what you've built"] },
+  { id: "contratar", perfil: "empresa", ico: "💼", es: ["Quiero sumarte a mi equipo", "Vengo de una empresa: empleo o proyecto en equipo"], en: ["I want you on my team", "I'm from a company: a job or a team project"] },
   { id: "colega", perfil: "colega", ico: "💻", es: ["Soy colega", "Desarrollo, diseño o estudio"], en: ["I'm a colleague", "I code, design or study"] },
   { id: "redes", perfil: "curioso", ico: "📱", es: ["Tus redes", "Instagram, LinkedIn, YouTube…"], en: ["Your socials", "Instagram, LinkedIn, YouTube…"] },
   { id: "donar", perfil: "curioso", ico: "💚", es: ["Apoyar el Studio", "Ayudar a que todo siga gratis"], en: ["Support the studio", "Help keep everything free"] },
