@@ -17,7 +17,7 @@ export default function CV() {
       <Imprimir />
       <article className="cv">
         <header className="cv-head">
-          <img src="/img/fotoPerfil.jpg" alt="" width={96} height={96} />
+          <img src="/img/fotoPerfil-200.webp" alt="" width={96} height={96} />
           <div>
             <h1>{PERFIL.nombre}</h1>
             <p className="cv-rol">{es(PERFIL.rol)} · {PERFIL.edad} años</p>

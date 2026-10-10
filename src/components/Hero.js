@@ -6,14 +6,30 @@ import { proyecto } from "@/data/proyectos";
 import { Linkedin, Github, Instagram, Youtube, Whatsapp, Mail } from "./Iconos";
 import Escenario from "./Escenario";
 
-// Video "No Limits" de fondo: primero la miniatura, el video entra cuando la página ya cargó.
+// Video "No Limits" de fondo: primero la miniatura; el video (unos 6 MB) entra recién cuando la página terminó de cargar
+// y el visitante interactúa, o a los 4 s de quieto. Con "ahorro de datos" activado queda la miniatura.
 function VideoFondo() {
   const [on, setOn] = useState(false);
   const [cargar, setCargar] = useState(false);
   const marco = useRef(null);
   const revelar = useRef(null);
   useEffect(() => {
-    const id = setTimeout(() => setCargar(true), 900);
+    let id;
+    const eventos = ["pointerdown", "pointermove", "scroll", "keydown", "touchstart"];
+    const arrancar = () => {
+      clearTimeout(id);
+      eventos.forEach((ev) => window.removeEventListener(ev, arrancar));
+      setCargar(true);
+    };
+    const cargada = () => {
+      id = setTimeout(arrancar, 4000);
+      eventos.forEach((ev) => window.addEventListener(ev, arrancar, { once: true, passive: true }));
+    };
+    const ahorro = navigator.connection?.saveData;
+    if (!ahorro) {
+      if (document.readyState === "complete") cargada();
+      else window.addEventListener("load", cargada, { once: true });
+    }
     // YouTube avisa el estado del reproductor: 1 = reproduciendo. Si está en pausa o bloqueado, queda la imagen.
     const msg = (e) => {
       try {
@@ -33,6 +49,8 @@ function VideoFondo() {
     window.addEventListener("message", msg);
     return () => {
       clearTimeout(id);
+      window.removeEventListener("load", cargada);
+      eventos.forEach((ev) => window.removeEventListener(ev, arrancar));
       clearTimeout(revelar.current);
       window.removeEventListener("message", msg);
     };
@@ -88,8 +106,8 @@ export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) 
           )}
           <div className="perfil-top">
             <div className="avatar">
-              <img src="/img/fotoPerfil.jpg" alt={`Foto de ${PERFIL.nombre}`} width={92} height={92} />
-              <img className="utn" src="/img/update/LogoUTN.png" alt="UTN" width={34} height={34} />
+              <img src="/img/fotoPerfil-200.webp" alt={`Foto de ${PERFIL.nombre}`} width={92} height={92} />
+              <img className="utn" src="/img/update/LogoUTN-68.png" alt="UTN" width={34} height={34} />
             </div>
             <div>
               <h1 className="display">

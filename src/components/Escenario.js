@@ -6,7 +6,7 @@ import { Casa, Llave, Persona } from "./Iconos";
 import Micelio from "./Micelio";
 
 function Arte({ p }) {
-  if (p.id === "teamjoy") return <img src="/img/teamjoy-logo.jpg" alt="Team Joy" width={118} height={118} style={{ objectFit: "contain" }} />;
+  if (p.id === "teamjoy") return <img src="/img/teamjoy-logo-240.webp" alt="Team Joy" width={118} height={118} style={{ objectFit: "contain" }} />;
   if (p.id === "problematica")
     return (
       <div className="roles" aria-hidden="true">
@@ -34,7 +34,6 @@ function Card({ p, onOpen, sellado, dim, lit, onHover, idx }) {
       onMouseLeave={() => onHover(null)}
       onFocus={() => onHover(p.id)}
       onBlur={() => onHover(null)}
-      aria-label={`${tx(p.nombre, lang)}: ${tx(p.tagline, lang)}`}
     >
       {p.badge && <span className="badge">{tx(p.badge, lang)}</span>}
       {sellado && <span className="stamped" title="✓">✓</span>}

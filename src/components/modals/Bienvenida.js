@@ -31,7 +31,7 @@ export default function Bienvenida({ onClose, setVisitante, onListo, desdeInstag
     <Modal onClose={() => { setVisitante((v) => ({ ...(v || {}), salteado: true })); onClose(); }} color="#00c853" head={false} label={es ? "Bienvenida" : "Welcome"}>
       <div className="modal-body" style={{ paddingTop: 30 }}>
         <div style={{ textAlign: "center" }}>
-          <img src="/img/fotoPerfil.jpg" alt="" width={78} height={78} style={{ width: 78, height: 78, borderRadius: 26, objectFit: "cover", objectPosition: "50% 30%", margin: "0 auto", boxShadow: "0 0 0 3px var(--c-green), var(--shadow)" }} />
+          <img src="/img/fotoPerfil-200.webp" alt="" width={78} height={78} style={{ width: 78, height: 78, borderRadius: 26, objectFit: "cover", objectPosition: "50% 30%", margin: "0 auto", boxShadow: "0 0 0 3px var(--c-green), var(--shadow)" }} />
           <span className="bienvenida-ico" aria-hidden="true" style={{ fontSize: "2rem", marginTop: 6 }}>👋</span>
         </div>
 

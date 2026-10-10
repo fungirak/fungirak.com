@@ -379,7 +379,7 @@ export function Instagram({ onClose }) {
             <IgIcon style={{ marginLeft: "auto" }} />
           </a>
           <a className="ig-card" href={LINKS.teamjoyInstagram} target="_blank" rel="noopener noreferrer">
-            <img src="/img/teamjoy-logo.jpg" alt="" />
+            <img src="/img/teamjoy-logo-240.webp" alt="" />
             <span><b>@teamjoy.app</b><small>Team Joy</small></span>
             <IgIcon style={{ marginLeft: "auto" }} />
           </a>

@@ -200,8 +200,8 @@ export default function Comunidad({ muro, setMuro, sellar }) {
           <div className="muro-col">
             <h3 className="display">💡 {es ? "Pedime un sitio" : "Pitch me a site"}</h3>
             <Formulario tipo="idea" max={280} placeholder={es ? "Me gustaría que hagas un sitio de…" : "I'd love you to build a site about…"} boton={es ? "Proponer" : "Pitch it"} onPublicado={(it) => setMuro((m) => ({ ...m, ideas: [...m.ideas, it] }))} onSello={() => sellar("idea")} />
+            {ideas.length === 0 && <p className="aviso">{es ? "Ninguna idea todavía. ¿Qué sitio te falta en el mundo?" : "No ideas yet. What site is the world missing?"}</p>}
             <ol className="ideas">
-              {ideas.length === 0 && <p className="aviso">{es ? "Ninguna idea todavía. ¿Qué sitio te falta en el mundo?" : "No ideas yet. What site is the world missing?"}</p>}
               {ideas.map((x, i) => (
                 <li key={x.id} className={`idea${i < 3 ? " top" : ""}`}>
                   <button className={`voto${votadas.includes(x.id) ? " on" : ""}`} onClick={() => accion(x.id, "votar")} aria-label={es ? "Votar" : "Vote"}>

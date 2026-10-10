@@ -142,7 +142,7 @@ export function Calculadora({ abrir }) {
             <small className="calc-lbl">{es ? "Plazo estimado" : "Estimated time"}</small>
             <div className="calc-sem"><b className="grad-text"><Animado valor={sem[0]} />–<Animado valor={sem[1]} /></b> {es ? "semanas" : "weeks"}</div>
             <small className="calc-lbl">{es ? "Complejidad" : "Complexity"}</small>
-            <div className="calc-barra" role="meter" aria-valuemin={0} aria-valuemax={20} aria-valuenow={pts}><i style={{ width: `${Math.min(100, (pts / 20) * 100)}%` }} /></div>
+            <div className="calc-barra" role="meter" aria-label={es ? "Complejidad del proyecto" : "Project complexity"} aria-valuemin={0} aria-valuemax={20} aria-valuenow={pts}><i style={{ width: `${Math.min(100, (pts / 20) * 100)}%` }} /></div>
             <div className="calc-nivel"><b>{nivel.simbolo}</b> {nivel[lang]}</div>
             <button className="btn" onClick={() => abrir("brief", { brief: { tipo, funciones: funcs } })}>{es ? "Pedir presupuesto exacto" : "Get an exact quote"} →</button>
             <small className="calc-nota">{es ? "Es orientativo: el número final depende de tu idea. El formulario ya va a tener lo que elegiste." : "It's a rough guide: the final number depends on your idea. The form will already have your picks."}</small>

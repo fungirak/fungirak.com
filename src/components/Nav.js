@@ -58,7 +58,7 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
   return (
     <>
       <header className={`nav${scrolled ? " scrolled" : ""}`}>
-        <button className="brand" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="fungirak.com">
+        <button className="brand" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
           <img src="/img/hongo.svg" alt="" width={34} height={34} />
           <span>
             fungirak
