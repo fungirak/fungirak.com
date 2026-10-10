@@ -11,6 +11,7 @@ export const INDUSTRIAS = [
   { id: "salud", es: "Salud y fitness", en: "Health & fitness", color: "var(--c-cyan)" },
   { id: "musica", es: "Música y cultura", en: "Music & culture", color: "var(--c-rose)" },
   { id: "tech", es: "Redes e IoT", en: "Networks & IoT", color: "var(--c-sky)" },
+  { id: "ciberseguridad", es: "Ciberseguridad", en: "Cybersecurity", color: "var(--c-red)" },
   { id: "vivienda", es: "Vivienda", en: "Housing", color: "var(--c-blue)" },
 ];
 
@@ -126,6 +127,32 @@ export const PROYECTOS = [
     destacados: {
       es: ["Funciona 100 % desde el navegador", "Mapa 3D con Three.js", "Personas estimadas en 3D a partir del ambiente"],
       en: ["Runs 100% in the browser", "3D map built with Three.js", "Estimated people in 3D from the environment"],
+    },
+  },
+  {
+    id: "atalaya",
+    fila: 2,
+    nombre: "Atalaya",
+    url: "https://atalaya.fungirak.com",
+    logo: "/img/logos/atalaya.png",
+    industrias: ["ciberseguridad", "educacion"],
+    pills: ["Web", "App instalable", "Claro/Oscuro", "Gamificada", "Comunidad"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "Vercel Blob", "Web Push", "PWA"],
+    color: "#3CF2A0",
+    lema: { es: "Mirá la ciberseguridad desde arriba.", en: "See cybersecurity from above." },
+    tagline: { es: "Aprendé ciberseguridad desde cero, en español", en: "Learn cybersecurity from scratch, in Spanish" },
+    descripcion: {
+      es: "Un mapa con todos los temas de la ciberseguridad, explicados en criollo y atados a fuentes oficiales, con labs, simulador de incidentes y ronda diaria. Y una comunidad de vigías: avisás las estafas que te llegan, alertás a todo el país y competís en el ranking con lo que aprendés.",
+      en: "A map of every cybersecurity topic, explained in plain Spanish and tied to official sources, with labs, an incident simulator and a daily round. Plus a community of lookouts: you report the scams that reach you, warn the whole country and climb the ranking with what you learn.",
+    },
+    datos: [
+      { n: "156", es: "temas", en: "topics" },
+      { n: "18", es: "ramas", en: "branches" },
+      { n: "17", es: "laboratorios", en: "labs" },
+    ],
+    destacados: {
+      es: ["Avisá estafas y alertá a todo el país", "Ranking de vigías con XP y racha", "Cada término técnico explicado al toque"],
+      en: ["Report scams and warn the whole country", "Lookout ranking with XP and streaks", "Every technical term explained on the spot"],
     },
   },
   {

@@ -9,7 +9,7 @@ export const contentType = "image/png";
 export default async function Image() {
   const foto = await readFile(join(process.cwd(), "public/img/fotoPerfil.jpg"));
   const src = `data:image/jpeg;base64,${foto.toString("base64")}`;
-  const pills = ["Team Joy", "MiTour", "ECOS", "Atlas Fit Pro", "+4 años en el Estado"];
+  const pills = ["Team Joy", "MiTour", "ECOS", "Atalaya", "Atlas Fit Pro", "+4 años en el Estado"];
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", gap: 56, padding: 72, background: "linear-gradient(135deg, #0a0d1f 0%, #1b1f44 60%, #0f3d2a 100%)", color: "#f4f6ff", fontFamily: "sans-serif" }}>

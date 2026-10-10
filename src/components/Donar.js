@@ -5,7 +5,7 @@ import { LINKS } from "@/data/perfil";
 
 const TIERS = [
   { id: "cafe", ico: "☕", es: ["Un café para el Studio", "Una noche más de código para la próxima guía de Santa Fe."], en: ["A coffee for the studio", "One more night of code for the next Santa Fe guide."] },
-  { id: "server", ico: "🖥️", es: ["Un mes de servidor", "Que MiTour, ECOS y Atlas sigan gratis y sin publicidad."], en: ["A month of servers", "Keeping MiTour, ECOS and Atlas free and ad-free."] },
+  { id: "server", ico: "🖥️", es: ["Un mes de servidor", "Que MiTour, ECOS, Atalaya y Atlas sigan gratis y sin publicidad."], en: ["A month of servers", "Keeping MiTour, ECOS, Atalaya and Atlas free and ad-free."] },
   { id: "idea", ico: "🚀", es: ["Una idea nueva al mundo", "El empujón para lanzar el próximo producto del Studio."], en: ["A new idea into the world", "The push to launch the studio's next product."] },
 ];
 
@@ -45,8 +45,8 @@ export default function Donar({ stats, abrir }) {
           </h2>
           <p>
             {es
-              ? "Team Joy, MiTour, ECOS, Atlas Fit Pro y las guías de Santa Fe son gratis y sin publicidad, y salvo Team Joy, se usan sin registrarte. Los sostengo yo, con mi tiempo. Si alguno te sirvió, tu aporte paga servidores, dominios y horas de código para el próximo."
-              : "Team Joy, MiTour, ECOS, Atlas Fit Pro and the Santa Fe guides are free and ad-free, and except for Team Joy, they work without signing up. I keep them alive on my own time. If one of them helped you, your support pays for servers, domains and coding hours for the next one."}
+              ? "Team Joy, MiTour, ECOS, Atalaya, Atlas Fit Pro y las guías de Santa Fe son gratis y sin publicidad, y salvo Team Joy, se usan sin registrarte. Los sostengo yo, con mi tiempo. Si alguno te sirvió, tu aporte paga servidores, dominios y horas de código para el próximo."
+              : "Team Joy, MiTour, ECOS, Atalaya, Atlas Fit Pro and the Santa Fe guides are free and ad-free, and except for Team Joy, they work without signing up. I keep them alive on my own time. If one of them helped you, your support pays for servers, domains and coding hours for the next one."}
           </p>
           <div className="contadores">
             <div><b className="grad-text">8</b><span>{es ? "productos en línea" : "live products"}</span></div>

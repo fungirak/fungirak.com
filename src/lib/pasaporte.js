@@ -11,6 +11,7 @@ export const SELLOS = [
   { id: "ep", icono: "🎵", es: "El EP", en: "The EP" },
   { id: "mitour", icono: "✈️", es: "MiTour", en: "MiTour" },
   { id: "ecos", icono: "📡", es: "ECOS", en: "ECOS" },
+  { id: "atalaya", icono: "🛡️", es: "Atalaya", en: "Atalaya" },
   { id: "atlas", icono: "💪", es: "Atlas Fit Pro", en: "Atlas Fit Pro" },
   { id: "gourmet", icono: "☕", es: "Gourmet", en: "Gourmet" },
   { id: "schools", icono: "🏫", es: "Schools", en: "Schools" },

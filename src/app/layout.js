@@ -11,7 +11,7 @@ const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["500", "700"], variab
 
 const SITE = "https://fungirak.com";
 const DESC =
-  "Gabriel Lazzarini (fungirak), desarrollador de software full stack de Santa Fe, Argentina. Más de 4 años en el Gobierno de Santa Fe, fundador de Team Joy y FUNGIRAK Studio: MiTour, ECOS, Atlas Fit Pro y más.";
+  "Gabriel Lazzarini (fungirak), desarrollador de software full stack de Santa Fe, Argentina. Más de 4 años en el Gobierno de Santa Fe, fundador de Team Joy y FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro y más.";
 
 export const metadata = {
   metadataBase: new URL(SITE),

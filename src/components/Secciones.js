@@ -515,12 +515,13 @@ export function Ruleta({ abrir }) {
 
 // ---------- 5. El estudio en números ----------
 const NUMEROS = [
-  { n: 8, mas: false, es: "productos en línea", en: "live products" },
+  { n: 9, mas: false, es: "productos en línea", en: "live products" },
   { n: 24, mas: false, es: "jurisdicciones del país listas en Team Joy", en: "Argentine jurisdictions ready in Team Joy" },
   { n: 260, mas: true, es: "ministerios que pueden sumarse a Team Joy hoy", en: "ministries that can join Team Joy today" },
   { n: 500, mas: true, es: "secretarías que pueden sumarse a Team Joy hoy", en: "departments that can join Team Joy today" },
   { n: 3400, mas: true, es: "instituciones educativas en Santa Fe Schools", en: "schools in Santa Fe Schools" },
   { n: 2300, mas: true, es: "destinos para viajar en MiTour", en: "destinations in MiTour" },
+  { n: 156, mas: false, es: "temas de ciberseguridad en Atalaya", en: "cybersecurity topics in Atalaya" },
   { n: 400, mas: true, es: "bares, cafés y restós en Santa Fe Gourmet", en: "bars, cafés and restaurants in Santa Fe Gourmet" },
   { n: 140, mas: true, es: "guías de entrenamiento en Atlas Fit Pro", en: "training guides in Atlas Fit Pro" },
   { n: 188, mas: false, es: "países en el mapa de MiTour", en: "countries on MiTour's map" },

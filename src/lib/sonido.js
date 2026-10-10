@@ -18,6 +18,7 @@ export const NOTAS = {
   ep: 587.33, // Re (9na)
   mitour: 440.0,
   ecos: 523.25,
+  atalaya: 587.33,
   atlas: 659.25,
   gourmet: 349.23,
   schools: 293.66,

@@ -266,7 +266,7 @@ export function Quiz({ onClose, abrir, onListo }) {
   let reco, prueba;
   if (fin) {
     reco = RECO[r.objetivo];
-    const porRubro = { salud: "atlas", turismo: "mitour", cultura: "negro", educacion: "schools", comercio: "gourmet", publico: "teamjoy" };
+    const porRubro = { salud: "atlas", turismo: "mitour", cultura: "negro", educacion: "atalaya", comercio: "gourmet", publico: "teamjoy" };
     const porObj = { comunidad: "teamjoy", cobrar: "teamjoy", wow: "ecos" };
     prueba = proyecto(reco.prueba[r.rubro] || porObj[r.objetivo] || porRubro[r.rubro] || "mitour");
   }
