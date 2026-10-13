@@ -171,6 +171,20 @@ export function Bitacora({ abrir }) {
     window.addEventListener("resize", upd);
     return () => { n.removeEventListener("scroll", upd); window.removeEventListener("resize", upd); };
   }, []);
+  // Alto de cada mitad: el de la carta más alta (nombres largos en el celular no se cortan)
+  useEffect(() => {
+    const n = pista.current;
+    const linea = n?.querySelector(".bit-linea");
+    if (!linea) return;
+    const medir = () => {
+      const alto = Math.max(190, ...[...linea.querySelectorAll(".bit-card")].map((c) => c.offsetHeight + 8));
+      linea.style.setProperty("--fila", `${Math.ceil(alto)}px`);
+    };
+    medir();
+    const ro = new ResizeObserver(medir);
+    linea.querySelectorAll(".bit-card").forEach((c) => ro.observe(c));
+    return () => ro.disconnect();
+  }, [lang]);
   // Recorrido automático: arranca desde el primer lanzamiento y avanza solo, despacio.
   // Se pausa si la persona pasa el mouse, toca o usa las flechas; al final espera y vuelve al principio.
   useEffect(() => {

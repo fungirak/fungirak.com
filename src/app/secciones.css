@@ -41,12 +41,12 @@
 
 /* 3. Bitácora (línea de tiempo horizontal) */
 .bit { position: relative; display: flex; align-items: center; gap: 8px; }
-.bit-pista { flex: 1; overflow-x: auto; scrollbar-width: none; padding: 4px 0; }   /* sin snap: si no, el avance automático se traba */
+.bit-pista { flex: 1; overflow-x: auto; scrollbar-width: none; padding: 6px 0 16px; }   /* sin snap: si no, el avance automático se traba */
 .bit-pista::-webkit-scrollbar { display: none; }
-.bit-linea { list-style: none; margin: 0; padding: 0 20px; display: grid; grid-template-columns: repeat(var(--n), minmax(190px, 1fr)); grid-template-rows: 190px 30px 190px; position: relative; min-width: max-content; }
-.bit-linea::before { content: ""; position: absolute; left: 0; right: 0; top: 203px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--line-2), var(--c-green)); transform: scaleX(0); transform-origin: left; transition: transform 1.4s var(--ease); }
+.bit-linea { list-style: none; margin: 0; padding: 0 20px; display: grid; grid-template-columns: repeat(var(--n), minmax(190px, 1fr)); grid-template-rows: var(--fila, 190px) 30px var(--fila, 190px); position: relative; min-width: max-content; }
+.bit-linea::before { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--fila, 190px) + 13px); height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--line-2), var(--c-green)); transform: scaleX(0); transform-origin: left; transition: transform 1.4s var(--ease); }
 .bit.visto .bit-linea::before { transform: scaleX(1); }
-.bit-hito { display: grid; grid-template-rows: 190px 30px 190px; justify-items: center; grid-row: 1 / 4; scroll-snap-align: center; position: relative; opacity: 0; transition: opacity .5s var(--ease); transition-delay: calc(var(--i) * 110ms + .3s); }
+.bit-hito { display: grid; grid-template-rows: var(--fila, 190px) 30px var(--fila, 190px); justify-items: center; grid-row: 1 / 4; scroll-snap-align: center; position: relative; opacity: 0; transition: opacity .5s var(--ease); transition-delay: calc(var(--i) * 110ms + .3s); }
 .bit.visto .bit-hito { opacity: 1; }
 .bit-card { display: grid; gap: 4px; justify-items: center; text-align: center; width: 170px; padding: 12px; border-radius: var(--radius-s); background: var(--glass-strong); border: 1px solid var(--line); box-shadow: var(--shadow); cursor: pointer; color: var(--text); transition: transform .2s var(--ease), border-color .2s; }
 .bit-card:hover { transform: translateY(-3px); border-color: var(--c); }
@@ -59,9 +59,9 @@
 .bit-punto { grid-row: 2; align-self: center; width: 16px; height: 16px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 4px var(--bg), 0 0 0 6px color-mix(in srgb, var(--c) 40%, transparent); z-index: 1; }
 .bit-hito.ultimo .bit-punto { width: 22px; height: 22px; animation: bit-latido 1.8s ease-in-out infinite; }
 @keyframes bit-latido { 50% { box-shadow: 0 0 0 4px var(--bg), 0 0 0 12px color-mix(in srgb, var(--c) 25%, transparent); } }
-.bit-fecha { position: absolute; top: 224px; font-family: var(--font-mono); font-size: .72rem; color: var(--text-3); text-transform: uppercase; white-space: nowrap; }
-.bit-hito.arriba .bit-fecha { top: 224px; }
-.bit-hito.abajo .bit-fecha { top: 168px; }
+.bit-fecha { position: absolute; top: calc(var(--fila, 190px) + 34px); font-family: var(--font-mono); font-size: .72rem; color: var(--text-3); text-transform: uppercase; white-space: nowrap; }
+.bit-hito.arriba .bit-fecha { top: calc(var(--fila, 190px) + 34px); }
+.bit-hito.abajo .bit-fecha { top: calc(var(--fila, 190px) - 22px); }
 .bit-flecha { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 1.5rem; line-height: 1; padding-bottom: 3px; background: var(--surface); color: var(--text); border: 1px solid var(--line-2); box-shadow: var(--shadow); cursor: pointer; transition: opacity .2s, transform .15s; }
 .bit-flecha:hover:not(:disabled) { transform: scale(1.08); }
 .bit-flecha:disabled { opacity: 0; pointer-events: none; }
