@@ -44,7 +44,7 @@ export function SaberMas({ onClose, abrir, visitante }) {
         </div>
         <div className="datos">
           <div className="dato"><b><Num to={4} suf="+" /></b><span>{es ? "años en el Estado" : "years in government"}</span></div>
-          <div className="dato"><b><Num to={8} /></b><span>{es ? "productos en línea" : "live products"}</span></div>
+          <div className="dato"><b><Num to={10} /></b><span>{es ? "productos en línea" : "live products"}</span></div>
           <div className="dato"><b><Num to={3} /></b><span>{es ? "ministerios" : "ministries"}</span></div>
           <div className="dato"><b><Num to={10} /></b><span>{es ? "certificados" : "certificates"}</span></div>
         </div>

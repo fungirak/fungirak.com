@@ -10,4 +10,5 @@ export const BITACORA = [
   { fecha: "2026-10", proyecto: "mitour", es: "Planificador de viajes con mapa animado", en: "Trip planner with an animated map" },
   { fecha: "2026-10", proyecto: "ecos", es: "Las ondas WiFi y Bluetooth en un mapa 3D", en: "WiFi and Bluetooth waves on a 3D map" },
   { fecha: "2026-10", proyecto: "atalaya", es: "Aprender ciberseguridad desde arriba, en comunidad", en: "Learning cybersecurity from above, as a community" },
+  { fecha: "2026-10", proyecto: "peyote", es: "Homenaje a El Peyote Asesino, rap blanco de Montevideo", en: "A tribute to El Peyote Asesino, white rap from Montevideo" },
 ];

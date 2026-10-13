@@ -17,6 +17,7 @@ export const SELLOS = [
   { id: "schools", icono: "🏫", es: "Schools", en: "Schools" },
   { id: "telos", icono: "🌙", es: "Telo's", en: "Telo's" },
   { id: "negro", icono: "🌲", es: "Bosque Negro", en: "Black Forest" },
+  { id: "peyote", icono: "🌵", es: "Villa Española", en: "Villa Española" },
   { id: "filosofia", icono: "🍄", es: "Filosofía", en: "Philosophy" },
   { id: "trayectoria", icono: "🧭", es: "Trayectoria", en: "Journey" },
   { id: "skills", icono: "✨", es: "Constelación", en: "Constellation" },

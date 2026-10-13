@@ -24,6 +24,7 @@ export const NOTAS = {
   schools: 293.66,
   telos: 220.0,
   negro: 196.0,
+  peyote: 246.94,
 };
 
 export function tocar(freq, { dur = 0.9, tipo = "triangle", vol = 0.12 } = {}) {

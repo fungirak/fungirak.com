@@ -37,6 +37,7 @@ export const PERFIL = {
     { proyecto: "schools", es: "Santa Fe Schools: más escuelas en el mapa", en: "Santa Fe Schools: more schools on the map" },
     { proyecto: "telos", es: "Santa Fe Telo's: la guía al día", en: "Santa Fe Telo's: the guide, up to date" },
     { proyecto: "negro", es: "Experimento Negro: discos y recitales", en: "Experimento Negro: albums and gigs" },
+    { proyecto: "peyote", es: "El Peyote Asesino: los tres discos para escuchar", en: "El Peyote Asesino: all three albums to play" },
   ],
 };
 
@@ -157,7 +158,7 @@ export const EXPERIENCIA = [
     desde: { es: "Actualidad", en: "Present" },
     logo: "/img/hongo.svg",
     items: [
-      { icono: "🧪", es: "MiTour, ECOS, Atlas Fit Pro, las guías de Santa Fe y un sitio homenaje a Experimento Negro, banda de rock de mi ciudad.", en: "MiTour, ECOS, Atlas Fit Pro, the Santa Fe guides and a tribute site to Experimento Negro, a rock band from my city." },
+      { icono: "🧪", es: "MiTour, ECOS, Atlas Fit Pro, las guías de Santa Fe y sitios homenaje a Experimento Negro, banda de rock de mi ciudad, y a El Peyote Asesino, de Montevideo.", en: "MiTour, ECOS, Atlas Fit Pro, the Santa Fe guides and tribute sites to Experimento Negro, a rock band from my city, and to El Peyote Asesino, from Montevideo." },
     ],
   },
 ];
@@ -222,6 +223,6 @@ export const TIMELINE = [
   { año: "2023", icono: "🤖", es: "Microsoft Azure AI y Cisco Seguridad. Empiezo la Tecnicatura en la UTN FRSF.", en: "Microsoft Azure AI and Cisco Security. I start the IT Technician degree at UTN FRSF." },
   { año: "2024", icono: "⚡", es: "Rally de Innovación 2024 con Thinkers Group (UTN FRSF, UNL y UCES): pulseras de evacuación inteligentes con RFID. Presento Bro Exist, una app con reconocimiento facial para encontrar a tu \"hermano\" en el mundo.", en: "2024 Innovation Rally with Thinkers Group (UTN FRSF, UNL and UCES): smart evacuation wristbands with RFID. I present Bro Exist, a facial-recognition app to find your \"brother\" around the world." },
   { año: "2025", icono: "🎉", es: "Me recibo en la UTN y lanzo Team Joy.", en: "I graduate from UTN and launch Team Joy." },
-  { año: "2026", icono: "🍄", es: "La UTN FRSF me otorga el título (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro, las guías de Santa Fe y el sitio homenaje a Experimento Negro.", en: "UTN FRSF grants my degree (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro, the Santa Fe guides and the Experimento Negro tribute site." },
+  { año: "2026", icono: "🍄", es: "La UTN FRSF me otorga el título (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro, las guías de Santa Fe y los sitios homenaje a Experimento Negro y El Peyote Asesino.", en: "UTN FRSF grants my degree (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro, the Santa Fe guides and the Experimento Negro and El Peyote Asesino tribute sites." },
   { año: "→", icono: "✨", es: "Lo que viene: dos libros, un EP y lo que construyamos juntos.", en: "What's next: two books, an EP and whatever we build together." },
 ];

@@ -247,7 +247,33 @@ export const PROYECTOS = [
       es: "Un sitio que hice como homenaje (no oficial) a Experimento Negro, banda de rock de Santa Fe, y a la voz de Rodrigo \"Negro\" González, también de La Cruda. No es mi banda: es mi regalo como fan. Tiene una radio con los videos oficiales, carrusel 3D, gráficos y fondo WebGL.",
       en: "A site I built as an (unofficial) tribute to Experimento Negro, a rock band from Santa Fe, and to the voice of Rodrigo \"Negro\" González, also of La Cruda. It's not my band: it's my gift as a fan. It has a radio with the official videos, a 3D carousel, charts and a WebGL background.",
     },
+  },  {
+    id: "peyote",
+    fila: 2,
+    nombre: { es: "Sitio homenaje a El Peyote Asesino", en: "Tribute site to El Peyote Asesino" },
+    url: "https://peyote-asesino.fungirak.com",
+    logo: "/img/logos/peyote.png",
+    industrias: ["musica"],
+    pills: ["Web", "Música", "Radio", "App instalable", "4 épocas"],
+    stack: ["HTML", "CSS", "JavaScript", "WebGL", "YouTube IFrame API", "SVG", "PWA"],
+    color: "#86EC2C",
+    lema: { es: "Un cubo de Rubik demencial: rap blanco desde Villa Española.", en: "A crazy Rubik's cube: white rap from Villa Española." },
+    tagline: { es: "Sitio musical homenaje a la banda uruguaya de rap metal", en: "A music tribute site to the Uruguayan rap metal band" },
+    descripcion: {
+      es: "Un sitio que hice como homenaje (no oficial) a El Peyote Asesino, la banda de Villa Española, Montevideo, que mezcla rap, metal, funk, tango y candombe desde 1994. No es mi banda: es mi regalo como fan. Tiene los tres discos para escuchar tema por tema, la historia con fuentes, datos, mapa de escenarios, videoteca y un sitio que cambia de colores y de letra según la época.",
+      en: "A site I built as an (unofficial) tribute to El Peyote Asesino, the band from Villa Española, Montevideo, mixing rap, metal, funk, tango and candombe since 1994. It's not my band: it's my gift as a fan. It has all three albums to play track by track, a sourced history, charts, a map of venues, a video library and a site that changes colors and type by era.",
+    },
+    datos: [
+      { n: "54", es: "temas para escuchar", en: "songs to play" },
+      { n: "3", es: "discos completos", en: "full albums" },
+      { n: "4", es: "épocas del sitio", en: "site eras" },
+    ],
+    destacados: {
+      es: ["Los tres discos completos, tema por tema", "Toda la tipografía es la familia Rubik", "Cada dato con su fuente"],
+      en: ["All three albums, track by track", "All the type is the Rubik family", "Every fact with its source"],
+    },
   },
+
 ];
 
 export const proyecto = (id) => PROYECTOS.find((p) => p.id === id);

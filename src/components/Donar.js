@@ -49,7 +49,7 @@ export default function Donar({ stats, abrir }) {
               : "Team Joy, MiTour, ECOS, Atalaya, Atlas Fit Pro and the Santa Fe guides are free and ad-free, and except for Team Joy, they work without signing up. I keep them alive on my own time. If one of them helped you, your support pays for servers, domains and coding hours for the next one."}
           </p>
           <div className="contadores">
-            <div><b className="grad-text">8</b><span>{es ? "productos en línea" : "live products"}</span></div>
+            <div><b className="grad-text">10</b><span>{es ? "productos en línea" : "live products"}</span></div>
             <div><b className="grad-text">0</b><span>{es ? "publicidades" : "ads"}</span></div>
             <div><b className="grad-text">{stats?.visitas ? stats.visitas.toLocaleString(lang) : "—"}</b><span>{es ? "visitas a este sitio" : "visits to this site"}</span></div>
           </div>
