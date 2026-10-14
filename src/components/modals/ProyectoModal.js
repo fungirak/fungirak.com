@@ -69,9 +69,9 @@ function TeamJoy({ p, lang }) {
           <p className="cita" style={{ "--c": "#00c853" }}>{es ? "La experiencia lúdica para la oficina." : "The playful experience for the office."}</p>
           <p style={{ margin: 0 }}>
             {es ? (
-              <>🌈 <b>Team Joy</b> es la <b>primera red social para empleados públicos</b>, pensada para revitalizar la vida laboral y combatir el burnout en la Administración Pública de Santa Fe y en el sector privado.</>
+              <>🌈 <b>Team Joy</b> es la <b>red social de cultura laboral para equipos del sector público y privado</b>: creás o te sumás a tu oficina virtual y compartís tu día a día de trabajo. Pensada para revitalizar la vida laboral y combatir el burnout.</>
             ) : (
-              <>🌈 <b>Team Joy</b> is the <b>first social network for public employees</b>, designed to revitalize work life and fight burnout in Santa Fe&apos;s public administration and the private sector.</>
+              <>🌈 <b>Team Joy</b> is the <b>work-culture social network for public and private sector teams</b>: create or join your virtual office and share your workday. Designed to revitalize work life and fight burnout.</>
             )}
           </p>
         </div>

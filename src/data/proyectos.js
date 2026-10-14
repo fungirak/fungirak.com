@@ -27,7 +27,7 @@ export const PROYECTOS = [
     pills: ["App", "Web", "Responsive", "Mercado Pago", "Gamificada"],
     stack: ["React Native", "Expo", "React Native Web", "Mercado Pago"],
     color: "#00C853",
-    tagline: { es: "La primera red social para empleados públicos", en: "The first social network for public employees" },
+    tagline: { es: "Red social de cultura laboral para equipos públicos y privados", en: "Work-culture social network for public and private teams" },
   },
   {
     id: "problematica",
