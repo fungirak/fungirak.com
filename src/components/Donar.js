@@ -5,7 +5,7 @@ import { LINKS } from "@/data/perfil";
 
 const TIERS = [
   { id: "cafe", ico: "☕", es: ["Un café para el Studio", "Una noche más de código para la próxima app, desde Santa Fe."], en: ["A coffee for the studio", "One more night of code for the next app, from Santa Fe."] },
-  { id: "server", ico: "🖥️", es: ["Un mes de servidor", "Que Team Joy, Dertin, Atlas, MiTour y todas las apps del Studio sigan gratis y sin publicidad."], en: ["A month of servers", "Keeping Team Joy, Dertin, Atlas, MiTour and every Studio app free and ad-free."] },
+  { id: "server", ico: "🖥️", es: ["Un mes de servidor", "Que Team Joy, Dertin, Atlas Fitness, MiTour y todas las apps del Studio sigan gratis y sin publicidad."], en: ["A month of servers", "Keeping Team Joy, Dertin, Atlas Fitness, MiTour and every Studio app free and ad-free."] },
   { id: "idea", ico: "🚀", es: ["Una idea nueva al mundo", "El empujón para lanzar el próximo producto del Studio."], en: ["A new idea into the world", "The push to launch the studio's next product."] },
 ];
 
