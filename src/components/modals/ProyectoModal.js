@@ -1,4 +1,5 @@
 "use client";
+import { useFk, botonesApp } from "@/lib/fk-cliente";
 import { useState } from "react";
 import Modal from "../Modal";
 import { proyecto, INDUSTRIAS } from "@/data/proyectos";
@@ -208,6 +209,20 @@ function Generico({ p, lang }) {
   );
 }
 
+// «Abrir» (si ya usás la app o no es de las que entran con FUNGIRAK), «Probar con tu cuenta» (con sesión, app nueva: un clic y adentro),
+// o «Abrir» + «Entrar con FUNGIRAK» (sin sesión: la cuenta te deja adentro de esta y de todas).
+function BotonesApp({ p, ui }) {
+  const yo = useFk();
+  const b = botonesApp(p.url, yo);
+  const estilo = { "--b": p.color === "#E5E5E5" ? "#1f2937" : p.color, "--bd": "rgba(0,0,0,.35)", "--fg": "#fff" };
+  return (
+    <span style={{ display: "inline-flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+      <a className="btn" href={b.abrir} target="_blank" rel="noopener noreferrer" style={estilo}>{yo?.sesion && b.usada === false ? ui.probarCuenta : ui.verSitio} <Flecha width={14} height={14} /></a>
+      {b.entrar && <a className="btn ghost" href={b.entrar} target="_blank" rel="noopener noreferrer">{ui.entrarFk}</a>}
+    </span>
+  );
+}
+
 export default function ProyectoModal({ id, onClose, abrir, stats, onAplauso }) {
   const { lang, ui } = useLang();
   const p = proyecto(id);
@@ -250,11 +265,7 @@ export default function ProyectoModal({ id, onClose, abrir, stats, onAplauso }) 
         {(p.logo || p.url) && (
           <div className="cabeza-proyecto">
             {p.logo && <img src={p.logo} alt={`Logo de ${tx(p.nombre, lang)}`} width={64} height={64} className="logo-real" />}
-            {p.url && (
-              <a className="btn" href={p.url} target="_blank" rel="noopener noreferrer" style={{ "--b": p.color === "#E5E5E5" ? "#1f2937" : p.color, "--bd": "rgba(0,0,0,.35)", "--fg": "#fff" }}>
-                {ui.verSitio} <Flecha width={14} height={14} />
-              </a>
-            )}
+            {p.url && <BotonesApp p={p} ui={ui} />}
           </div>
         )}
         <div className="stack" style={{ marginBottom: 14 }}>

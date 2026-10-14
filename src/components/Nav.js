@@ -75,6 +75,7 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
 
         <div className="nav-tools">
           {herramientas}
+          <fk-barra app="fungirak" modo="portal" />
           <button className="icon-btn hamburger" onClick={() => setDrawer(true)} aria-label={ui.menu} aria-expanded={drawer}>
             <Menu />
           </button>

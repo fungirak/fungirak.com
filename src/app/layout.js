@@ -1,4 +1,5 @@
 import { Unbounded, Poppins, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import "./comunidad.css";
@@ -103,7 +104,7 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: splashScript }} />
         {children}
         <Analytics />
-      </body>
+      <Script src="/fungirak/fk.js" strategy="afterInteractive" /></body>
     </html>
   );
 }

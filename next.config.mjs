@@ -12,9 +12,9 @@ const security = [
       // Next.js inyecta scripts en línea (tema sin parpadeo, datos estructurados, hidratación)
       `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://i.ytimg.com",
+      "img-src 'self' data: blob: https://i.ytimg.com https://cuenta.fungirak.com",
       "font-src 'self'",
-      "connect-src 'self' https://formsubmit.co",
+      "connect-src 'self' https://formsubmit.co https://cuenta.fungirak.com",
       "frame-src https://www.youtube-nocookie.com https://www.youtube.com",
       "media-src 'self' https://www.youtube-nocookie.com",
       "worker-src 'self' blob:",
