@@ -49,7 +49,7 @@ export default function CV() {
           <h2>Productos propios (FUNGIRAK Studio)</h2>
           <ul className="cv-proy">
             {PROYECTOS.filter((p) => p.url).map((p) => (
-              <li key={p.id}><b>{es(p.nombre)}</b>{p.id === "negro" || p.id === "peyote" ? " (sitio homenaje, no oficial)" : ""} — {es(p.tagline)}. <span className="cv-sub">{p.url.replace("https://", "")}</span></li>
+              <li key={p.id}><b>{es(p.nombre)}</b>{p.id === "negro" || p.id === "peyote" ? " (sitio homenaje, no oficial)" : p.id === "cronicas" ? " (videojuego)" : ""} — {es(p.tagline)}. <span className="cv-sub">{p.url.replace("https://", "")}</span></li>
             ))}
           </ul>
         </section>

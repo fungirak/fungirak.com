@@ -45,11 +45,11 @@ export default function Donar({ stats, abrir }) {
           </h2>
           <p>
             {es
-              ? "Team Joy, MiTour, ECOS, Atalaya, Atlas Fit Pro y las guías de Santa Fe son gratis y sin publicidad, y salvo Team Joy, se usan sin registrarte. Los sostengo yo, con mi tiempo. Si alguno te sirvió, tu aporte paga servidores, dominios y horas de código para el próximo."
-              : "Team Joy, MiTour, ECOS, Atalaya, Atlas Fit Pro and the Santa Fe guides are free and ad-free, and except for Team Joy, they work without signing up. I keep them alive on my own time. If one of them helped you, your support pays for servers, domains and coding hours for the next one."}
+              ? "Team Joy y los demás productos del Studio son gratis y sin publicidad, y casi todos se usan sin registrarte. Los sostengo yo, con mi tiempo. Si alguno te sirvió, tu aporte paga servidores, dominios y horas de código para el próximo."
+              : "Team Joy and the rest of the Studio's products are free and ad-free, and almost all of them work without signing up. I keep them alive on my own time. If one of them helped you, your support pays for servers, domains and coding hours for the next one."}
           </p>
           <div className="contadores">
-            <div><b className="grad-text">10</b><span>{es ? "productos en línea" : "live products"}</span></div>
+            <div><b className="grad-text">20</b><span>{es ? "productos en línea" : "live products"}</span></div>
             <div><b className="grad-text">0</b><span>{es ? "publicidades" : "ads"}</span></div>
             <div><b className="grad-text">{stats?.visitas ? stats.visitas.toLocaleString(lang) : "—"}</b><span>{es ? "visitas a este sitio" : "visits to this site"}</span></div>
           </div>

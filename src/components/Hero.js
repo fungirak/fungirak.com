@@ -138,7 +138,7 @@ export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) 
 
           <div className="perfil-stats">
             <div><b className="grad-text">{PERFIL.experiencia}</b><span>{lang === "es" ? "años de exp." : "years exp."}</span></div>
-            <div><b className="grad-text">10</b><span>{lang === "es" ? "productos en línea" : "live products"}</span></div>
+            <div><b className="grad-text">20</b><span>{lang === "es" ? "productos en línea" : "live products"}</span></div>
             <div><b className="grad-text">10</b><span>{lang === "es" ? "certificados" : "certificates"}</span></div>
           </div>
 

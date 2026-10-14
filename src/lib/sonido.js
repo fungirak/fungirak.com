@@ -25,6 +25,16 @@ export const NOTAS = {
   telos: 220.0,
   negro: 196.0,
   peyote: 246.94,
+  mate: 174.61,
+  asador: 130.81,
+  micoteca: 698.46,
+  musgui: 783.99,
+  sinvueltas: 164.81,
+  surco: 392.0,
+  fabrica: 880.0,
+  dertin: 1046.5,
+  cronicas: 1174.66,
+  tribus: 329.63,
 };
 
 export function tocar(freq, { dur = 0.9, tipo = "triangle", vol = 0.12 } = {}) {

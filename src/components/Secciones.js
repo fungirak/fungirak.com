@@ -529,7 +529,7 @@ export function Ruleta({ abrir }) {
 
 // ---------- 5. El estudio en números ----------
 const NUMEROS = [
-  { n: 10, mas: false, es: "productos en línea", en: "live products" },
+  { n: 20, mas: false, es: "productos en línea", en: "live products" },
   { n: 24, mas: false, es: "jurisdicciones del país listas en Team Joy", en: "Argentine jurisdictions ready in Team Joy" },
   { n: 260, mas: true, es: "ministerios que pueden sumarse a Team Joy hoy", en: "ministries that can join Team Joy today" },
   { n: 500, mas: true, es: "secretarías que pueden sumarse a Team Joy hoy", en: "departments that can join Team Joy today" },

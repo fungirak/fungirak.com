@@ -38,6 +38,16 @@ export const PERFIL = {
     { proyecto: "telos", es: "Santa Fe Telo's: la guía al día", en: "Santa Fe Telo's: the guide, up to date" },
     { proyecto: "negro", es: "Experimento Negro: discos y recitales", en: "Experimento Negro: albums and gigs" },
     { proyecto: "peyote", es: "El Peyote Asesino: los tres discos para escuchar", en: "El Peyote Asesino: all three albums to play" },
+    { proyecto: "mate", es: "La Escuela del Mate: el desafío de la semana", en: "The Mate School: this week's challenge" },
+    { proyecto: "asador", es: "La Escuela del Asador: precios del IPCVA al día", en: "The Barbecue School: IPCVA prices, up to date" },
+    { proyecto: "micoteca", es: "Micoteca: qué hongos aparecen este mes", en: "Micoteca: which mushrooms show up this month" },
+    { proyecto: "musgui", es: "Musgui: las misiones de hoy", en: "Musgui: today's missions" },
+    { proyecto: "sinvueltas", es: "Sin Vueltas: trámites y plazos al día", en: "Sin Vueltas: procedures and deadlines, up to date" },
+    { proyecto: "surco", es: "Surco: qué sembrar este mes", en: "Surco: what to sow this month" },
+    { proyecto: "fabrica", es: "Fábrica: ideas que se vuelven sitios", en: "Fábrica: ideas that become websites" },
+    { proyecto: "dertin", es: "Dertin: cartas nuevas para deslizar", en: "Dertin: new cards to swipe" },
+    { proyecto: "cronicas", es: "Las Crónicas de Fungi: nuevos niveles en el espacio", en: "The Chronicles of Fungi: new levels in space" },
+    { proyecto: "tribus", es: "Tribus urbanas: ¿de qué tribu sos?", en: "Urban tribes: which tribe are you?" },
   ],
 };
 
@@ -158,7 +168,7 @@ export const EXPERIENCIA = [
     desde: { es: "Actualidad", en: "Present" },
     logo: "/img/hongo.svg",
     items: [
-      { icono: "🧪", es: "MiTour, ECOS, Atlas Fit Pro, las guías de Santa Fe y sitios homenaje a Experimento Negro, banda de rock de mi ciudad, y a El Peyote Asesino, de Montevideo.", en: "MiTour, ECOS, Atlas Fit Pro, the Santa Fe guides and tribute sites to Experimento Negro, a rock band from my city, and to El Peyote Asesino, from Montevideo." },
+      { icono: "🧪", es: "MiTour, ECOS, Atlas Fit Pro, las escuelas del Mate y del Asador, Micoteca, Musgui, Surco, Sin Vueltas, Fábrica, Dertin, el juego Las Crónicas de Fungi, las guías de Santa Fe, Tribus urbanas y sitios homenaje a Experimento Negro, banda de rock de mi ciudad, y a El Peyote Asesino, de Montevideo.", en: "MiTour, ECOS, Atlas Fit Pro, the Mate and Barbecue schools, Micoteca, Musgui, Surco, Sin Vueltas, Fábrica, Dertin, the game The Chronicles of Fungi, the Santa Fe guides, Urban tribes and tribute sites to Experimento Negro, a rock band from my city, and to El Peyote Asesino, from Montevideo." },
     ],
   },
 ];
@@ -223,6 +233,6 @@ export const TIMELINE = [
   { año: "2023", icono: "🤖", es: "Microsoft Azure AI y Cisco Seguridad. Empiezo la Tecnicatura en la UTN FRSF.", en: "Microsoft Azure AI and Cisco Security. I start the IT Technician degree at UTN FRSF." },
   { año: "2024", icono: "⚡", es: "Rally de Innovación 2024 con Thinkers Group (UTN FRSF, UNL y UCES): pulseras de evacuación inteligentes con RFID. Presento Bro Exist, una app con reconocimiento facial para encontrar a tu \"hermano\" en el mundo.", en: "2024 Innovation Rally with Thinkers Group (UTN FRSF, UNL and UCES): smart evacuation wristbands with RFID. I present Bro Exist, a facial-recognition app to find your \"brother\" around the world." },
   { año: "2025", icono: "🎉", es: "Me recibo en la UTN y lanzo Team Joy.", en: "I graduate from UTN and launch Team Joy." },
-  { año: "2026", icono: "🍄", es: "La UTN FRSF me otorga el título (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro, las guías de Santa Fe y los sitios homenaje a Experimento Negro y El Peyote Asesino.", en: "UTN FRSF grants my degree (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro, the Santa Fe guides and the Experimento Negro and El Peyote Asesino tribute sites." },
+  { año: "2026", icono: "🍄", es: "La UTN FRSF me otorga el título (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro, las escuelas del Mate y del Asador, Micoteca, Musgui, Surco, Sin Vueltas, Fábrica, Dertin, Las Crónicas de Fungi, las guías de Santa Fe, Tribus urbanas y los sitios homenaje a Experimento Negro y El Peyote Asesino.", en: "UTN FRSF grants my degree (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro, the Mate and Barbecue schools, Micoteca, Musgui, Surco, Sin Vueltas, Fábrica, Dertin, The Chronicles of Fungi, the Santa Fe guides, Urban tribes and the Experimento Negro and El Peyote Asesino tribute sites." },
   { año: "→", icono: "✨", es: "Lo que viene: dos libros, un EP y lo que construyamos juntos.", en: "What's next: two books, an EP and whatever we build together." },
 ];
