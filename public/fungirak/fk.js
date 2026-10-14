@@ -8,6 +8,8 @@
 (() => {
   if (customElements.get("fk-barra")) return;
   const CUENTA = (document.querySelector('meta[name="fk-cuenta"]')?.content || "https://cuenta.fungirak.com").replace(/\/$/, "");
+  // los íconos de las apps viven al lado de este archivo (/fungirak/apps/), así la grilla se ve aunque la cuenta no responda
+  const BASE = (() => { try { return new URL(".", document.currentScript.src).href; } catch { return "/fungirak/"; } })();
   const APPS = [
     ["dertin", "Dertin", "https://dertin.fungirak.com", "Afinidades"], ["atlas", "Atlas Fit Pro", "https://atlasfit-pro.fungirak.com", "Entrenamiento"],
     ["mitour", "MiTour", "https://mitour.fungirak.com", "Viajes"], ["atalaya", "Atalaya", "https://atalaya.fungirak.com", "Ciberseguridad"],
@@ -15,7 +17,7 @@
     ["asador", "Escuela del Asador", "https://escueladelasador.fungirak.com", "Asado"], ["surco", "Surco", "https://surco.fungirak.com", "Huerta"],
     ["micoteca", "Micoteca", "https://micoteca.fungirak.com", "Hongos"], ["sinvueltas", "Sin Vueltas", "https://sin-vueltas.fungirak.com", "Trámites"],
     ["cronicas", "Las Crónicas de Fungi", "https://cronicasdefungi.fungirak.com", "Juego 3D"],
-  ].map(([id, nombre, url, tag]) => ({ id, nombre, url, tag, icono: `${CUENTA}/apps/${id}.webp` }));
+  ].map(([id, nombre, url, tag]) => ({ id, nombre, url, tag, icono: `${BASE}apps/${id}.webp` }));
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const guardar = (k, v, store = sessionStorage) => { try { store.setItem(k, v); } catch {} };
   const leer = (k, store = sessionStorage) => { try { return store.getItem(k); } catch { return null; } };
