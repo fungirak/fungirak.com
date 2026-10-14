@@ -24,7 +24,7 @@ export function useFk() {
 export function botonesApp(url, yo) {
   let host = ""; try { host = new URL(url).host; } catch {}
   const id = APPS_FK[host];
-  if (!id) return { abrir: url };
+  if (!id || !yo || yo.caida) return { abrir: url }; // si la cuenta no responde, solo «Abrir»
   const entrar = `${url.replace(/\/$/, "")}/api/fungirak/entrar?volver=/`;
   if (yo?.sesion) return { abrir: entrar, usada: (yo.apps || []).some((a) => a.id === id) };
   return { abrir: url, entrar };

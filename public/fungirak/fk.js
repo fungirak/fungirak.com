@@ -79,7 +79,8 @@
       const y = await yo(); this.y = y;
       const acc = this.shadowRoot.querySelector(".acc");
       const portal = this.getAttribute("modo") === "portal";
-      if (portal) acc.innerHTML = y.sesion
+      if (portal && y.caida) acc.innerHTML = ""; // la cuenta no responde: no ofrecer «Acceder» a una página caída
+      else if (portal) acc.innerHTML = y.sesion
         ? `<button class="ic" aria-label="Tu cuenta FUNGIRAK: @${esc(y.usuario)}" aria-haspopup="true"><span class="av">${avatar(y, 34)}</span></button>`
         : `<a class="btn sec" href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a><a class="btn pri crear" href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta</a><style>@media (max-width: ${(parseInt(this.getAttribute("crear-desde"), 10) || 641) - 1}px) { .crear { display: none } }</style>`; // en pantallas angostas solo «Acceder» (crear está adentro); crear-desde="1500" lo sube en barras cargadas
       else acc.innerHTML = "";
@@ -98,7 +99,7 @@
         embudo("grilla.abierta", this.app);
         const orden = [...APPS.filter((a) => usadas.has(a.id)), ...APPS.filter((a) => !usadas.has(a.id))];
         pan.innerHTML = `<p class="t">${y.sesion ? "Tus apps" : "Apps de FUNGIRAK"}</p><div class="g">${orden.map((a) => `<a class="ap" data-id="${a.id}" href="${y.sesion ? entrarEn(a) : a.url}"><img src="${a.icono}" alt="" width="46" height="46" loading="lazy"><span>${esc(a.nombre)}</span>${y.sesion ? `<small>${usadas.has(a.id) ? "Abrir" : "Probar"}</small>` : ""}</a>`).join("")}</div>
-          <div class="pie">${y.sesion ? `<a href="${CUENTA}/">Administrar tu cuenta</a>` : `<a href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta FUNGIRAK</a><a href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a>`}<a href="https://fungirak.com">fungirak.com</a></div>`;
+          <div class="pie">${y.caida ? "" : y.sesion ? `<a href="${CUENTA}/">Administrar tu cuenta</a>` : `<a href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta FUNGIRAK</a><a href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a>`}<a href="https://fungirak.com">fungirak.com</a></div>`;
         pan.querySelectorAll(".ap").forEach((a) => a.addEventListener("click", () => embudo(y.sesion && !usadas.has(a.dataset.id) ? "grilla.probar" : "grilla.abrir", this.app)));
       } else {
         pan.innerHTML = `<div class="cab"><span class="av">${avatar(y, 44)}</span><div><b>${esc(y.nombre || "@" + y.usuario)}</b><small>@${esc(y.usuario)} · cuenta FUNGIRAK</small></div></div>
