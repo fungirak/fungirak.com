@@ -9,6 +9,24 @@ import { Socials } from "./Hero";
 const JUEGOS = ["cronicas"];
 const SITIOS = ["gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 
+// En las columnas de proyectos, al pasar el mouse (o con el teclado) aparece una tarjetita con el ícono, qué es y la firma del estudio.
+function AppTip({ p, label, href, lang, es }) {
+  const id = `tip-${p.id}`;
+  return (
+    <span className="ft-app">
+      <a href={href} target="_blank" rel="noopener noreferrer" aria-describedby={id}>{label} ↗</a>
+      <span className="ft-tip" role="tooltip" id={id}>
+        {p.logo ? <img src={p.logo} alt="" width="44" height="44" loading="lazy" /> : <span className="ft-tip-ini" style={{ background: p.color }} aria-hidden="true">{label.split(" ").map((w) => w[0]).join("").slice(0, 2)}</span>}
+        <span>
+          <b>{label}</b>
+          {p.tagline && <span className="ft-tip-que">{tx(p.tagline, lang)}</span>}
+          <small>{es ? "Un producto de " : "A product by "}<span className="grad-text">FUNGIRAK Studio</span></small>
+        </span>
+      </span>
+    </span>
+  );
+}
+
 export default function Footer({ abrir, stats }) {
   const { lang, ui } = useLang();
   const es = lang === "es";
@@ -16,8 +34,8 @@ export default function Footer({ abrir, stats }) {
     <div>
       <h3>{titulo}</h3>
       <ul>
-        {items.map(([label, id, href]) => (
-          <li key={label}>{href ? <a href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a> : <button onClick={() => abrir(id)}>{label}</button>}</li>
+        {items.map(([label, id, href, proyecto]) => (
+          <li key={label}>{proyecto ? <AppTip p={proyecto} label={label} href={href} lang={lang} es={es} /> : href ? <a href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a> : <button onClick={() => abrir(id)}>{label}</button>}</li>
         ))}
       </ul>
     </div>
@@ -65,7 +83,7 @@ export default function Footer({ abrir, stats }) {
             ["Apps", (p) => !JUEGOS.includes(p.id) && !SITIOS.includes(p.id)],
             [es ? "Juegos" : "Games", (p) => JUEGOS.includes(p.id)],
             [es ? "Sitios" : "Sites", (p) => SITIOS.includes(p.id)],
-          ].map(([titulo, f]) => <div key={titulo}>{col(titulo, PROYECTOS.filter((p) => p.url && f(p)).map((p) => [tx(p.nombre, lang), null, p.url]))}</div>)}
+          ].map(([titulo, f]) => <div key={titulo}>{col(titulo, PROYECTOS.filter((p) => p.url && f(p)).map((p) => [tx(p.nombre, lang), null, p.url, p]))}</div>)}
         </div>
         {col(es ? "Contacto" : "Contact", [
           [ui.nav.hablemos, "hablemos"],

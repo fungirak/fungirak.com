@@ -1196,6 +1196,25 @@ img {
   gap: 28px;
 }
 
+/* En compu, cada columna toma el ancho de su texto más largo (en los dos idiomas): ningún ítem se parte en dos líneas */
+@media (min-width: 1280px) {
+  .footer-grid {
+    max-width: 1280px;
+    grid-template-columns: minmax(170px, 1fr) repeat(5, auto);
+    column-gap: clamp(16px, 1.7vw, 40px);
+  }
+  .footer-grid h3,
+  .footer li button,
+  .footer li a {
+    white-space: nowrap;
+  }
+  /* el sello arriba y el texto abajo, así la columna no necesita tanto ancho */
+  .footer-grid .seal-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 .footer h3 {
   font-family: var(--font-display);
   font-size: 0.75rem;
@@ -1232,6 +1251,90 @@ img {
 .footer li button:hover,
 .footer li a:hover {
   color: var(--accent);
+}
+
+.ft-app {
+  position: relative;
+  display: inline-block;
+}
+
+.ft-tip {
+  position: absolute;
+  left: -10px;
+  bottom: calc(100% + 10px);
+  z-index: 30;
+  width: 270px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--text-2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.18s, transform 0.18s, visibility 0.18s;
+  pointer-events: none;
+}
+
+.ft-app:hover .ft-tip,
+.ft-app:focus-within .ft-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.ft-tip img,
+.ft-tip-ini {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.ft-tip-ini {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+}
+
+.ft-tip > span {
+  display: grid;
+  gap: 3px;
+}
+
+.ft-tip b {
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.ft-tip small {
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.ft-tip small .grad-text {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .ft-tip {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ft-tip {
+    transition: none;
+  }
 }
 
 .seal-wrap {

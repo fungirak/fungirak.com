@@ -3,6 +3,7 @@
    - app: id de la app ("fungirak" en la portada). entrar: dónde empieza «Entrar con FUNGIRAK» en esta app.
    - local="1": la app ya tiene su propia sesión abierta (entonces no ofrece «Seguir como…»).
    - modo="portal": además muestra tu foto o «Acceder / Crear cuenta» (fungirak.com y apps sin botón propio).
+     crear-desde="1500": ancho mínimo para mostrar también «Crear cuenta» (por defecto 641).
    Lee tu sesión en cuenta.fungirak.com (solo nombre, foto y qué apps usás). Nunca ve tu contraseña ni guarda nada sensible. */
 (() => {
   if (customElements.get("fk-barra")) return;
@@ -80,7 +81,7 @@
       const portal = this.getAttribute("modo") === "portal";
       if (portal) acc.innerHTML = y.sesion
         ? `<button class="ic" aria-label="Tu cuenta FUNGIRAK: @${esc(y.usuario)}" aria-haspopup="true"><span class="av">${avatar(y, 34)}</span></button>`
-        : `<a class="btn sec" href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a>${matchMedia("(max-width: 640px)").matches ? "" : `<a class="btn pri" href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta</a>`}`; // en el celu, solo «Acceder» (crear está adentro)
+        : `<a class="btn sec" href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a><a class="btn pri crear" href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta</a><style>@media (max-width: ${(parseInt(this.getAttribute("crear-desde"), 10) || 641) - 1}px) { .crear { display: none } }</style>`; // en pantallas angostas solo «Acceder» (crear está adentro); crear-desde="1500" lo sube en barras cargadas
       else acc.innerHTML = "";
       acc.querySelector("button")?.addEventListener("click", () => this.abrir(this.abierto === "yo" ? null : "yo"));
       acc.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => embudo(a.classList.contains("pri") ? "boton.crear" : "boton.acceder", this.app)));
