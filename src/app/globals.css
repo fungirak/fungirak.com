@@ -1205,6 +1205,10 @@ img {
   margin: 0 0 12px;
 }
 
+.footer-cats > div + div {
+  margin-top: 20px;
+}
+
 .footer ul {
   list-style: none;
   margin: 0;

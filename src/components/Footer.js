@@ -5,6 +5,10 @@ import { PROYECTOS } from "@/data/proyectos";
 import Sello from "./Sello";
 import { Socials } from "./Hero";
 
+// la columna de proyectos se separa en Apps, Juegos y Sitios (como la franja de los sitios)
+const JUEGOS = ["cronicas"];
+const SITIOS = ["gourmet", "schools", "telos", "negro", "peyote", "tribus"];
+
 export default function Footer({ abrir, stats }) {
   const { lang, ui } = useLang();
   const es = lang === "es";
@@ -56,7 +60,13 @@ export default function Footer({ abrir, stats }) {
           [ui.nav.pasaporte, "pasaporte"],
           [`${ui.terminal} (Ctrl+K)`, "terminal"],
         ])}
-        {col("Apps", PROYECTOS.filter((p) => p.url).map((p) => [tx(p.nombre, lang), null, p.url]))}
+        <div className="footer-cats">
+          {[
+            ["Apps", (p) => !JUEGOS.includes(p.id) && !SITIOS.includes(p.id)],
+            [es ? "Juegos" : "Games", (p) => JUEGOS.includes(p.id)],
+            [es ? "Sitios" : "Sites", (p) => SITIOS.includes(p.id)],
+          ].map(([titulo, f]) => <div key={titulo}>{col(titulo, PROYECTOS.filter((p) => p.url && f(p)).map((p) => [tx(p.nombre, lang), null, p.url]))}</div>)}
+        </div>
         {col(es ? "Contacto" : "Contact", [
           [ui.nav.hablemos, "hablemos"],
           [`💚 ${ui.nav.ayudar}`, "donar"],
