@@ -140,11 +140,11 @@
     const mostrar = () => {
       if (listo) return; listo = true; window.removeEventListener("scroll", alBajar);
       const h = document.createElement("div"); h.id = "fk-cartel";
-      h.attachShadow({ mode: "open" }).innerHTML = `<style>:host{all:initial;position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:2147483000;font:500 14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-        .c{width:min(560px,calc(100vw - 24px));background:#fff;color:#15171c;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.28);padding:16px 18px;display:grid;gap:10px;animation:e .35s ease}
+      h.attachShadow({ mode: "open" }).innerHTML = `<style>:host{all:initial;position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483000;font:500 14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+        .c{box-sizing:border-box;width:min(560px,calc(100vw - 24px));background:#fff;color:#15171c;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.28);padding:16px 18px;display:grid;gap:10px;animation:e .35s ease}
         @media (prefers-color-scheme:dark){.c{background:#1b1e24;color:#eef0f3}}@keyframes e{from{transform:translateY(20px);opacity:0}}
         .t{display:flex;gap:10px;align-items:flex-start}.t b{font-size:16px}.x{margin-left:auto;border:0;background:none;font-size:22px;cursor:pointer;color:inherit;opacity:.6}
-        .i{display:flex;gap:6px;overflow:hidden}.i img{width:30px;height:30px;border-radius:8px;flex:none}
+        .c>*{min-width:0}.i{display:flex;gap:6px;overflow:hidden}.i img{width:30px;height:30px;border-radius:8px;flex:none}
         .f{display:flex;gap:8px;flex-wrap:wrap}.f a{flex:1;min-width:140px;text-align:center;border-radius:12px;padding:10px;font-weight:700;text-decoration:none}
         .p{background:#111;color:#fff}.s{background:rgba(127,127,127,.15);color:inherit}@media (prefers-color-scheme:dark){.p{background:#3CF2A0;color:#06120c}}
         @media (prefers-reduced-motion:reduce){.c{animation:none}}</style>
