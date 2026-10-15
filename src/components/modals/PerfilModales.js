@@ -170,7 +170,9 @@ export function Privacidad({ onClose }) {
                 ["📊", "Cuento visitas, aplausos y pasaportes completos de forma anónima. Nunca guardo tu IP: solo un código irreversible para evitar abusos."],
                 ["📈", "Uso Vercel Web Analytics, que mide visitas sin cookies y sin identificarte."],
                 ["🎬", "El video de fondo se carga desde YouTube en modo de privacidad mejorada."],
+                ["🔑", "Si entrás con tu cuenta FUNGIRAK, la sesión la maneja cuenta.fungirak.com, con su propia política de privacidad: este sitio solo muestra tu usuario, tu foto y las apps que usás, y no guarda nada de eso."],
                 ["🗑️", `Si querés que borre tus datos, escribime a ${LINKS.email}.`],
+                ["⚖️", "Responsable: FUNGIRAK Studio (Santo Tomé, Santa Fe, Argentina), conforme a la Ley 25.326. La Agencia de Acceso a la Información Pública, órgano de control de esa ley, atiende las denuncias y reclamos de quienes resulten afectados en sus derechos por incumplimiento de las normas de protección de datos personales."],
               ]
             : [
                 ["🍪", "This site uses no advertising or tracking cookies."],
@@ -179,7 +181,9 @@ export function Privacidad({ onClose }) {
                 ["📊", "Visits, applause and completed passports are counted anonymously. I never store your IP: only an irreversible code to prevent abuse."],
                 ["📈", "I use Vercel Web Analytics, which measures visits without cookies and without identifying you."],
                 ["🎬", "The background video loads from YouTube in privacy-enhanced mode."],
+                ["🔑", "If you sign in with your FUNGIRAK account, the session is handled by cuenta.fungirak.com under its own privacy policy: this site only shows your username, photo and the apps you use, and stores none of it."],
                 ["🗑️", `If you want your data deleted, write to ${LINKS.email}.`],
+                ["⚖️", "Controller: FUNGIRAK Studio (Santo Tomé, Santa Fe, Argentina), under Argentine Law 25,326. The Agency for Access to Public Information, the supervisory authority of that law, handles complaints from anyone whose personal-data rights are affected."],
               ]
           ).map(([i, t]) => <li key={t}><span>{i}</span><span>{t}</span></li>)}
         </ul>
