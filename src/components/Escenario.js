@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { PROYECTOS, INDUSTRIAS } from "@/data/proyectos";
+import { PROYECTOS, INDUSTRIAS, ORDEN } from "@/data/proyectos";
 import { useLang, tx } from "@/lib/i18n";
 import { Casa, Llave, Persona } from "./Iconos";
 import Micelio from "./Micelio";
@@ -26,7 +26,7 @@ function Card({ p, onOpen, sellado, dim, lit, onHover, idx }) {
   const { lang } = useLang();
   return (
     <button
-      className={`card${p.fila === 2 ? " con-pills" : ""}${p.id === "teamjoy" ? " teamjoy" : ""}${dim ? " dim" : ""}${lit ? " lit" : ""}`}
+      className={`card${p.fila >= 2 ? " con-pills" : ""}${p.id === "teamjoy" ? " teamjoy" : ""}${dim ? " dim" : ""}${lit ? " lit" : ""}`}
       style={{ "--c": p.color, "--i": idx }}
       data-card={p.id}
       onClick={() => onOpen(p.id)}
@@ -42,7 +42,7 @@ function Card({ p, onOpen, sellado, dim, lit, onHover, idx }) {
       </div>
       <div className={`name${tx(p.nombre, lang).length > 22 ? " largo" : ""}`}>{tx(p.nombre, lang)}</div>
       <div className="tag">{tx(p.tagline, lang)}</div>
-      {p.fila === 2 && (
+      {p.fila >= 2 && (
         <div className="pills">
           {p.pills.slice(0, 3).map((x) => (
             <span key={x} className={`pill${x === "+18" ? " adult" : ""}`}>{x}</span>
@@ -90,7 +90,8 @@ export default function Escenario({ onOpen, sellos, onSound }) {
     if (id) onSound?.(id);
   };
 
-  const fila = (n) => PROYECTOS.filter((p) => p.fila === n);
+  const pos = (p) => { const k = ORDEN.indexOf(p.id); return k < 0 ? 99 : k; };
+  const fila = (n) => PROYECTOS.filter((p) => p.fila === n).sort((a, b) => (n === 1 ? 0 : pos(a) - pos(b)));
   const marca = (p) => filtro !== "todas" && !p.industrias.includes(filtro);
   const brilla = (p) => filtro !== "todas" && p.industrias.includes(filtro);
 
@@ -106,17 +107,17 @@ export default function Escenario({ onOpen, sellos, onSound }) {
         ))}
       </div>
 
-      {[1, 2].map((n) => (
+      {[1, 2, 3].map((n) => (
         <div className="fila" key={n}>
           <div className="fila-head">
-            <h2 className="display">{n === 1 ? ui.fila1 : ui.fila2}</h2>
+            <h2 className="display">{n === 1 ? ui.fila1 : n === 2 ? ui.fila2 : ui.fila3}</h2>
             <span className="count" title={lang === "es" ? "Cada card que abrís te da un sello en tu Pasaporte FUNGIRAK" : "Every card you open gives you a stamp in your FUNGIRAK Passport"}>
               ✓ {lang === "es" ? "Abriste" : "Opened"} {fila(n).filter((p) => sellos.includes(p.id)).length} {lang === "es" ? "de" : "of"} {fila(n).length}
             </span>
           </div>
           <div className="cards">
             {fila(n).map((p, idx) => (
-              <Card key={p.id} p={p} idx={idx + (n - 1) * 5} onOpen={onOpen} sellado={sellos.includes(p.id)} dim={marca(p)} lit={brilla(p)} onHover={hoverYSonido} />
+              <Card key={p.id} p={p} idx={idx + (n === 1 ? 0 : n === 2 ? 5 : 17)} onOpen={onOpen} sellado={sellos.includes(p.id)} dim={marca(p)} lit={brilla(p)} onHover={hoverYSonido} />
             ))}
           </div>
         </div>

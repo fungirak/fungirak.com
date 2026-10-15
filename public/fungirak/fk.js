@@ -53,7 +53,7 @@
   .cab .av{width:44px;height:44px}.cab div{min-width:0}.cab b{display:block}.cab small{opacity:.7}
   .pie{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;border-top:1px solid rgba(127,127,127,.25);margin-top:10px;padding-top:10px;font-size:13px}
   .pie a{color:#0f8a5f;font-weight:700;text-decoration:none}@media (prefers-color-scheme:dark){.pie a{color:#3CF2A0}}
-  .t{font-weight:800;font-size:15px;margin:2px 4px 10px}`;
+  .t{font-weight:800;font-size:15px;margin:2px 4px 10px}@media (max-width:560px){:host([modo="portal"]){gap:3px}:host([modo="portal"]) .ic{width:34px;height:34px}:host([modo="portal"]) .btn{padding:7px 11px;font-size:13px}}`;
   const GRILLA = `<svg viewBox="0 0 24 24" aria-hidden="true">${[4, 12, 20].flatMap((y) => [4, 12, 20].map((x) => `<circle cx="${x}" cy="${y}" r="2.2"/>`)).join("")}</svg>`;
 
   class FkBarra extends HTMLElement {

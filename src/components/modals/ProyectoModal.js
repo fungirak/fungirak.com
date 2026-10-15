@@ -280,7 +280,7 @@ export default function ProyectoModal({ id, onClose, abrir, stats, onAplauso }) 
         )}
         <div className="acciones">
           <Aplauso id={p.id} valor={stats?.aplausos?.[p.id]} onAplauso={onAplauso} />
-          {p.fila === 2 && <button className="btn ghost" onClick={() => abrir("quiz")}>🧪 {lang === "es" ? "¿Algo así para vos?" : "Something like this for you?"}</button>}
+          {p.fila >= 2 && <button className="btn ghost" onClick={() => abrir("quiz")}>🧪 {lang === "es" ? "¿Algo así para vos?" : "Something like this for you?"}</button>}
         </div>
       </div>
     </Modal>

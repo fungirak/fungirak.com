@@ -16,6 +16,9 @@ export const INDUSTRIAS = [
   { id: "juegos", es: "Juegos", en: "Games", color: "var(--c-violet)" },
 ];
 
+// Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "fabrica",
+  "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
     id: "teamjoy",
@@ -184,7 +187,7 @@ export const PROYECTOS = [
   },
   {
     id: "gourmet",
-    fila: 2,
+    fila: 3,
     nombre: "Santa Fe Gourmet",
     url: "https://santafe-gourmet.fungirak.com",
     logo: "/img/logos/gourmet.png",
@@ -200,7 +203,7 @@ export const PROYECTOS = [
   },
   {
     id: "schools",
-    fila: 2,
+    fila: 3,
     nombre: "Santa Fe Schools",
     url: "https://santafe-schools.fungirak.com",
     logo: "/img/logos/schools.png",
@@ -216,7 +219,7 @@ export const PROYECTOS = [
   },
   {
     id: "telos",
-    fila: 2,
+    fila: 3,
     nombre: "Santa Fe Telo's",
     url: "https://santafe-telos.fungirak.com",
     logo: "/img/logos/telos.png",
@@ -234,7 +237,7 @@ export const PROYECTOS = [
   },
   {
     id: "negro",
-    fila: 2,
+    fila: 3,
     nombre: { es: "Sitio homenaje a Experimento Negro", en: "Tribute site to Experimento Negro" },
     url: "https://experimento-negro.fungirak.com",
     logo: "/img/logos/negro.svg",
@@ -250,7 +253,7 @@ export const PROYECTOS = [
     },
   },  {
     id: "peyote",
-    fila: 2,
+    fila: 3,
     nombre: { es: "Sitio homenaje a El Peyote Asesino", en: "Tribute site to El Peyote Asesino" },
     url: "https://peyote-asesino.fungirak.com",
     logo: "/img/logos/peyote.png",
@@ -484,7 +487,7 @@ export const PROYECTOS = [
   },
   {
     id: "tribus",
-    fila: 2,
+    fila: 3,
     nombre: "Tribus urbanas",
     url: "https://tribus.fungirak.com",
     logo: "/img/logos/tribus.png",
@@ -510,7 +513,7 @@ export const PROYECTOS = [
   },
   {
     id: "cronicas",
-    fila: 2,
+    fila: 3,
     nombre: "Las Crónicas de Fungi",
     url: "https://cronicasdefungi.fungirak.com",
     logo: "/img/logos/cronicas.png",

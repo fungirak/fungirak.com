@@ -2437,3 +2437,20 @@ img {
 
 /* Barra de la cuenta FUNGIRAK en el menú de arriba (grilla de apps y tu foto o «Acceder») */
 .nav-tools fk-barra { color: inherit; }
+
+/* Barra de arriba en el celu: entra todo (logo, juego, pasaporte, grilla, «Acceder» y menú) sin pisarse ni desbordar */
+@media (max-width: 560px) {
+  .nav { gap: 8px; padding-left: 12px; padding-right: 12px; }
+  .nav-tools { gap: 5px; }
+  .nav-tools .icon-btn { width: 36px; height: 36px; border-radius: 11px; font-size: 0.95rem; }
+  .passport-meter { gap: 5px; padding: 3px 9px 3px 3px; font-size: 0.72rem; }
+  .passport-meter .ring { width: 26px; height: 26px; }
+  .passport-meter .ring span { width: 20px; height: 20px; font-size: 0.72rem; }
+  .nav .brand { gap: 8px; min-width: 0; }
+  .nav .brand img { width: 30px; height: 30px; }
+}
+@media (max-width: 440px) {
+  .nav .brand > span { display: none; } /* en los más angostos queda el hongo solo; el nombre está en el menú */
+}
+/* Los globitos del pie son para el mouse: en el celu no se ven y, aunque estén ocultos, empujaban la página de costado */
+@media (hover: none), (max-width: 700px) { .ft-tip { display: none; } }

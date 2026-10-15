@@ -18,7 +18,7 @@ function pares() {
       if (comun.length || vecinos) out.push({ a: a.id, b: b.id, ind: comun[0] || null, seed: (i * 31 + j * 17) % 100 });
     }
   // Team Joy (el núcleo) se conecta con cada proyecto del estudio
-  PROYECTOS.filter((p) => p.fila === 2).forEach((p, k) => out.push({ a: "teamjoy", b: p.id, ind: null, seed: 50 + k * 7, debil: true }));
+  PROYECTOS.filter((p) => p.fila >= 2).forEach((p, k) => out.push({ a: "teamjoy", b: p.id, ind: null, seed: 50 + k * 7, debil: true }));
   return out;
 }
 
