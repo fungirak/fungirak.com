@@ -2454,3 +2454,33 @@ img {
 }
 /* Los globitos del pie son para el mouse: en el celu no se ven y, aunque estén ocultos, empujaban la página de costado */
 @media (hover: none), (max-width: 700px) { .ft-tip { display: none; } }
+
+/* Página 404 animada (ícono que rebota, aro que gira, adornos que flotan, botón que late) */
+.p404 { --p404: currentColor; text-align: center; max-width: 38rem; margin: 0 auto; padding: clamp(2rem, 6vw, 4.5rem) 1rem; }
+.p404-escena { position: relative; width: 210px; height: 180px; margin: 0 auto .3rem; display: grid; place-items: center; }
+.p404-logo { position: relative; z-index: 1; display: grid; place-items: center; animation: p404-rebota 2.8s cubic-bezier(.3, .7, .4, 1) infinite; }
+.p404-logo img { width: 112px; height: 112px; border-radius: 26%; box-shadow: 0 20px 40px -18px rgb(0 0 0 / .5); }
+.p404-aro { position: absolute; width: 158px; height: 158px; border-radius: 50%; border: 2px dashed color-mix(in srgb, var(--p404) 45%, transparent); animation: p404-gira 22s linear infinite; }
+.p404-flota { position: absolute; font-size: 26px; animation: p404-flota 4.6s ease-in-out infinite; }
+.p404-f1 { left: 0; top: 16px; } .p404-f2 { right: 4px; top: 4px; animation-delay: -1.2s; }
+.p404-f3 { left: 12px; bottom: 2px; animation-delay: -2.4s; } .p404-f4 { right: 0; bottom: 14px; animation-delay: -3.5s; }
+.p404-num { margin: 0; font-weight: 900; font-size: clamp(3.4rem, 12vw, 5.4rem); line-height: 1; letter-spacing: -.04em; background: linear-gradient(120deg, var(--p404), color-mix(in srgb, var(--p404) 35%, #8b5cf6)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.p404 h1 { margin: .4rem 0 .5rem; }
+.p404-txt { margin: 0 auto 1.4rem; max-width: 30rem; opacity: .85; }
+.p404-acc { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: center; }
+.p404-late { animation: p404-late 2.4s ease-in-out infinite; }
+.p404-ayuda { margin-top: 1.8rem; font-size: .86rem; opacity: .72; }
+.p404-ayuda a { color: inherit; font-weight: 700; }
+@keyframes p404-rebota { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-14px) rotate(3deg); } }
+@keyframes p404-gira { to { transform: rotate(360deg); } }
+@keyframes p404-flota { 50% { transform: translateY(-10px) scale(1.08); } }
+@keyframes p404-late { 50% { transform: scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .p404 *, .p404 { animation: none !important; } }
+.p404-btn, .p404-btn2 { display: inline-flex; align-items: center; justify-content: center; padding: .72rem 1.35rem; border-radius: 999px; font-weight: 750; text-decoration: none; }
+.p404-btn { background: var(--p404); color: #fff; box-shadow: 0 10px 24px -12px var(--p404); }
+.p404-btn2 { background: transparent; color: var(--p404); box-shadow: inset 0 0 0 2px var(--p404); }
+.fk-404 { min-height: 100dvh; display: grid; align-content: center; padding: 24px 16px; background: var(--bg); color: var(--text); }
+.fk-404-marca { position: absolute; top: 18px; left: 18px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; font-family: var(--font-display); font-weight: 800; }
+.fk-404-marca small { display: block; font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-3); }
+.fk-404 .p404-logo img { box-shadow: none; }
+.p404 h1 { font-size: clamp(1.7rem, 5vw, 2.8rem); font-weight: 800; line-height: 1.12; }
