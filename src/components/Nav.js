@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { SELLOS, nivelDe } from "@/lib/pasaporte";
@@ -37,6 +37,7 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
 
   const herramientas = (
     <>
+      <button className="icon-btn" onClick={() => { setDrawer(false); abrir("cuenta"); }} aria-label={ui.nav.cuenta} title={ui.nav.cuenta}>👤</button>
       <button className="icon-btn" onClick={() => { setDrawer(false); abrir("juego"); }} aria-label={ui.nav.jugar} title={ui.nav.jugar}>🎮</button>
       <button className="icon-btn hide-m hide-l" onClick={() => ir("donar")} aria-label={ui.nav.ayudar} title={ui.nav.ayudar}>💚</button>
       <button className="passport-meter" onClick={() => { setDrawer(false); abrir("pasaporte"); }} aria-label={`${ui.nav.pasaporte}: ${sellos.length}/${SELLOS.length}`}>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LangCtx, UI, tx } from "@/lib/i18n";
 import { SELLOS, leerSellos, guardarSellos } from "@/lib/pasaporte";
@@ -17,6 +17,7 @@ import Brief from "./modals/Brief";
 import Comunidad from "./Comunidad";
 import Juego from "./modals/Juego";
 import { Pasaporte, Terminal, Quiz, GitHub, Instagram, YouTube } from "./modals/Extras";
+import CuentaModal from "./modals/CuentaModal";
 
 const leer = (k, def) => {
   try {
@@ -237,6 +238,10 @@ export default function Site() {
           />
         );
         break;
+      case "cuenta":
+        vista = <CuentaModal {...comunes} />;
+        break;
+
       case "saber":
         vista = <SaberMas {...comunes} visitante={visitante} />;
         break;

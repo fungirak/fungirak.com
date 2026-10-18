@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 import { createContext, useContext } from "react";
 
 export const UI = {
   es: {
-    nav: { saber: "Saber más", proyectos: "Proyectos", filosofia: "Filosofía", trayectoria: "Trayectoria", comunidad: "Comunidad", pedir: "Pedime algo", jugar: "Jugar", hablemos: "Hablemos", ayudar: "Ayudar", pasaporte: "Pasaporte" },
+    nav: { saber: "Saber más", proyectos: "Proyectos", filosofia: "Filosofía", trayectoria: "Trayectoria", comunidad: "Comunidad", pedir: "Pedime algo", jugar: "Jugar", hablemos: "Hablemos", ayudar: "Ayudar", pasaporte: "Pasaporte", cuenta: "Tu cuenta FUNGIRAK" },
     tema: { claro: "Modo claro", oscuro: "Modo oscuro" },
     sonido: { on: "Sonido activado", off: "Activar modo músico" },
     menu: "Menú",
@@ -42,7 +42,7 @@ export const UI = {
     repos: "repos públicos",
   },
   en: {
-    nav: { saber: "About", proyectos: "Projects", filosofia: "Philosophy", trayectoria: "Journey", comunidad: "Community", pedir: "Request a project", jugar: "Play", hablemos: "Let's talk", ayudar: "Support", pasaporte: "Passport" },
+    nav: { saber: "About", proyectos: "Projects", filosofia: "Philosophy", trayectoria: "Journey", comunidad: "Community", pedir: "Request a project", jugar: "Play", hablemos: "Let's talk", ayudar: "Support", pasaporte: "Passport", cuenta: "Your FUNGIRAK account" },
     tema: { claro: "Light mode", oscuro: "Dark mode" },
     sonido: { on: "Sound on", off: "Turn on musician mode" },
     menu: "Menu",
