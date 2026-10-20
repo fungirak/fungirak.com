@@ -1,4 +1,5 @@
 ﻿"use client";
+import { useCerrarConAtras, useGuardiaSalida } from "@/lib/atras";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LangCtx, UI, tx } from "@/lib/i18n";
 import { SELLOS, leerSellos, guardarSellos } from "@/lib/pasaporte";
@@ -176,6 +177,11 @@ export default function Site() {
     [sellar]
   );
   const cerrar = useCallback(() => setModal(null), []);
+  // «atrás» del celu: cierra la ventana abierta y, en la portada, pide un segundo «atrás» para salir (ver lib/atras.js)
+  const [avisoSalir, setAvisoSalir] = useState(null);
+  const limpiarAviso = useCallback(() => setAvisoSalir(null), []);
+  useCerrarConAtras(!!modal, cerrar);
+  useGuardiaSalida(useCallback(() => setAvisoSalir(Date.now()), []));
 
   // Ctrl+K / Cmd+K abre la terminal
   useEffect(() => {
@@ -314,6 +320,12 @@ export default function Site() {
       <Donar stats={stats} abrir={abrir} />
       <Footer abrir={abrir} stats={stats} />
       {vista}
+      {avisoSalir && (
+        <div className="toast" key={avisoSalir} role="status" onAnimationEnd={(e) => e.target === e.currentTarget && limpiarAviso()}>
+          <span className="ico">👋</span>
+          <span>{lang === "en" ? "Tap back again to exit" : "Tocá atrás otra vez para salir"}</span>
+        </div>
+      )}
       {toast && (
         <div className="toast" key={toast.k} role="status" onAnimationEnd={(e) => e.target === e.currentTarget && setToast(null)}>
           <span className="ico">{toast.s.icono}</span>

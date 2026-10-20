@@ -1,4 +1,5 @@
 ﻿"use client";
+import { useCerrarConAtras } from "@/lib/atras";
 import { useEffect, useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { SELLOS, nivelDe } from "@/lib/pasaporte";
@@ -8,6 +9,7 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
   const { lang, setLang, ui } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [drawer, setDrawer] = useState(false);
+  useCerrarConAtras(drawer, () => setDrawer(false)); // «atrás» del celu cierra el menú
 
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 20);

@@ -1,4 +1,5 @@
 "use client";
+import { useCerrarConAtras } from "@/lib/atras";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Modal from "../Modal";
 import { useLang, tx } from "@/lib/i18n";
@@ -192,6 +193,7 @@ export function Certificados({ onClose }) {
   const es = lang === "es";
   const [i, setI] = useState(0);
   const [zoom, setZoom] = useState(null);
+  useCerrarConAtras(zoom !== null, () => setZoom(null)); // «atrás» cierra la foto ampliada antes que la ventana
   const n = CERTIFICADOS.length;
   const mover = (d) => setI((x) => (x + d + n) % n);
   useEffect(() => {
