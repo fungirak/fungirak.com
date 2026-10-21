@@ -35,6 +35,8 @@ export const NOTAS = {
   dertin: 1046.5,
   cronicas: 1174.66,
   tribus: 329.63,
+  hoy: 523.25,
+  "carta-al-futuro": 587.33,
 };
 
 export function tocar(freq, { dur = 0.9, tipo = "triangle", vol = 0.12 } = {}) {

@@ -38,6 +38,8 @@ export const SELLOS = [
   { id: "quiz", icono: "🧪", glifo: "lupa", es: "Laboratorio", en: "Lab" },
   { id: "huella", icono: "👣", glifo: "corazon", es: "Mi huella", en: "My mark" },
   { id: "idea", icono: "💡", glifo: "foco", es: "Una idea", en: "An idea" },
+  { id: "hoy", icono: "☀️", glifo: "sol", es: "¿Hoy sí o no?", en: "Yes or no today?" },
+  { id: "carta-al-futuro", icono: "✉️", glifo: "sobre", es: "Carta al futuro", en: "Letter to the future" },
   { id: "youtube", icono: "🎬", glifo: "camara", es: "En pantalla", en: "On screen" },
   { id: "juego", icono: "🎮", glifo: "joystick", es: "Gamer", en: "Gamer" },
 ];

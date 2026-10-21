@@ -17,7 +17,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -405,6 +405,58 @@ export const PROYECTOS = [
     destacados: {
       es: ["Asistente que entiende lo que te pasó", "Calculadora de plazos con feriados", "Cada trámite con su fuente oficial"],
       en: ["An assistant that understands what happened", "Deadline calculator with holidays", "Every procedure with its official source"],
+    },
+  },
+  {
+    id: "hoy",
+    fila: 2,
+    nombre: "Hoy",
+    url: "https://hoy.fungirak.com",
+    logo: "/img/logos/hoy.png",
+    industrias: ["comunidad"],
+    pills: ["Web", "App instalable", "Notificaciones", "Comunidad"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "Open-Meteo", "Alertas del SMN", "Web Push", "PWA"],
+    color: "#FFC800",
+    lema: { es: "¿Hoy sí o hoy no?", en: "Today: yes or no?" },
+    tagline: { es: "No te muestra el pronóstico: te responde", en: "It doesn't show the forecast: it answers you" },
+    descripcion: {
+      es: "¿Cuelgo la ropa? ¿Salgo en bici? ¿Asado afuera? Hoy responde más de 80 preguntas de tu día con sí, no o «mejor a la tarde», hora por hora y con el mejor día de la semana. Se ordena solo según la hora, el finde, los feriados y el cielo real, suma las alertas oficiales del SMN y lo que cuenta la gente de tu zona, y te avisa a la mañana.",
+      en: "Should I hang the laundry? Bike to work? Barbecue outside? Hoy answers 80+ questions about your day with yes, no or “better in the afternoon”, hour by hour and with the best day of the week. It sorts itself by time of day, weekends, holidays and the actual sky, adds official weather alerts and what people nearby report, and pings you every morning.",
+    },
+    datos: [
+      { n: "85", es: "preguntas", en: "questions" },
+      { n: "7", es: "días por adelantado", en: "days ahead" },
+      { n: "24", es: "provincias", en: "provinces" },
+    ],
+    destacados: {
+      es: ["Respuestas con el porqué en números", "Reportes de la cuadra y charla de la zona", "Qué me pongo: el muñequito que se viste"],
+      en: ["Answers with the why, in numbers", "Street reports and a neighborhood chat", "What to wear: a little figure that dresses up"],
+    },
+  },
+  {
+    id: "carta-al-futuro",
+    fila: 2,
+    nombre: "Carta al Futuro",
+    url: "https://carta-al-futuro.fungirak.com",
+    logo: "/img/logos/carta-al-futuro.png",
+    industrias: ["comunidad"],
+    pills: ["Web", "App instalable", "Cifrado opcional", "Comunidad"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "Web Crypto", "Web Push", "PWA"],
+    color: "#9775FA",
+    lema: { es: "Escribí hoy, abrila cuando toque.", en: "Write today, open it when it's time." },
+    tagline: { es: "Cartas que se abren el día que elegís", en: "Letters that open on the day you choose" },
+    descripcion: {
+      es: "Escribile a tu yo del futuro o a alguien que querés y elegí cuándo se abre: en un año, en diez o el día que tu hijo cumpla 18. Con cápsulas de grupo para egresados, predicciones que se revisan al llegar la fecha y cifrado opcional con tu clave.",
+      en: "Write to your future self or to someone you love and choose when it opens: in a year, in ten, or on your kid's 18th birthday. With group time capsules, predictions you check when the date arrives, and optional encryption with your own key.",
+    },
+    datos: [
+      { n: "3", es: "tipos de carta", en: "kinds of letter" },
+      { n: "10+", es: "años de espera posibles", en: "years of waiting" },
+      { n: "0", es: "lecturas nuestras (cifradas)", en: "reads by us (encrypted)" },
+    ],
+    destacados: {
+      es: ["Cápsulas de grupo que se abren todas juntas", "Predicciones: ¿le pegaste?", "Cifrado opcional: ni nosotros la leemos"],
+      en: ["Group capsules that open all together", "Predictions: did you get it right?", "Optional encryption: not even we can read it"],
     },
   },
   {
