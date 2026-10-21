@@ -17,7 +17,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -431,6 +431,32 @@ export const PROYECTOS = [
     destacados: {
       es: ["Respuestas con el porqué en números", "Reportes de la cuadra y charla de la zona", "Qué me pongo: el muñequito que se viste"],
       en: ["Answers with the why, in numbers", "Street reports and a neighborhood chat", "What to wear: a little figure that dresses up"],
+    },
+  },
+  {
+    id: "cv",
+    fila: 2,
+    nombre: "CV",
+    url: "https://cv.fungirak.com",
+    logo: "/img/logos/cv.png",
+    industrias: ["comunidad"],
+    pills: ["Web", "App instalable", "Cifrado", "Comunidad"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "AES-256-GCM", "Open-Meteo", "ArgentinaDatos", "Web Push", "PWA"],
+    color: "#FF3E8A",
+    lema: { es: "Tu currículum, sin vueltas.", en: "Your résumé, no fuss." },
+    tagline: { es: "El CV en 10 minutos, y una comunidad que te da una mano", en: "Your CV in 10 minutes, with a community that has your back" },
+    descripcion: {
+      es: "Armá tu CV paso a paso con ideas de tu oficio (y un modo para tu primer empleo), pasale el chequeo de los sistemas de RR. HH., pegá un aviso para ver qué palabras te faltan y sacá la carta de presentación hecha. Seguí tus postulaciones con recordatorio de seguimiento y el pronóstico para el día de la entrevista. En la comunidad pedís una «mirada» a tu CV sin mostrar tus datos y festejás cuando conseguís laburo. Todo cifrado, gratis y sin marcas de agua.",
+      en: "Build your CV step by step with ideas for your trade (and a first-job mode), run it through an applicant-tracking check, paste a job ad to see which keywords you're missing, and get a cover letter drafted. Track your applications with follow-up reminders and the weather for interview day. In the community you ask for a review of your CV without showing your personal data, and celebrate when you land a job. Encrypted, free, no watermarks.",
+    },
+    datos: [
+      { n: "10", es: "rubros con ayuda", en: "trades with tips" },
+      { n: "3", es: "plantillas", en: "templates" },
+      { n: "0", es: "marcas de agua", en: "watermarks" },
+    ],
+    destacados: {
+      es: ["Chequeo de RR. HH. con puntaje y consejos", "Tu CV contra el aviso: qué palabras faltan", "«Pedí una mirada» y el muro «¡Conseguí laburo!»"],
+      en: ["Applicant-tracking check with a score", "Your CV vs. the job ad: missing keywords", "Peer reviews and a “I got the job!” wall"],
     },
   },
   {
