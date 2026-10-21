@@ -18,7 +18,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -585,6 +585,32 @@ export const PROYECTOS = [
     destacados: {
       es: ["El puntaje del día con su porqué", "Bitácora sin señal que aprende tus patrones", "Lugares secretos cifrados"],
       en: ["Today's score with its reasons", "Offline logbook that learns your patterns", "Encrypted secret spots"],
+    },
+  },
+  {
+    id: "escuela-de-mascotas",
+    fila: 2,
+    nombre: "La Escuela de las Mascotas",
+    url: "https://escuela-de-mascotas.fungirak.com",
+    logo: "/img/logos/escuela-de-mascotas.png",
+    industrias: ["educacion", "salud"],
+    pills: ["Web", "App instalable", "Sin cuenta", "Chapita QR"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "Open-Meteo", "Web Audio", "PWA"],
+    color: "#9C6644",
+    lema: { es: "Todo para tu compañero.", en: "Everything for your companion." },
+    tagline: { es: "Elegís tu mascota y la escuela se arma para ella", en: "Pick your pet and the school shapes itself around it" },
+    descripcion: {
+      es: "Perro, gato, conejo, hurón, roedor, ave, peces o tortuga: los colores, las lecciones y las secciones cambian con la especie. Una lección de 3 minutos por día, «¿Puede comer…?» con alimentos de la mesa argentina, libreta sanitaria con recordatorios, peso con gráfico, ración calculada, clicker en el celu y señales de alarma. Y una chapita QR: si tu mascota se pierde, quien la escanea te avisa sin ver tu teléfono.",
+      en: "Dog, cat, rabbit, ferret, rodent, bird, fish or turtle: colors, lessons and sections change with the species. A 3-minute lesson a day, «Can it eat…?» with Argentine table food, a health log with reminders, weight chart, portion calculator, an on-phone clicker and warning signs. And a QR tag: if your pet gets lost, whoever scans it notifies you without seeing your phone.",
+    },
+    datos: [
+      { n: "8", es: "especies", en: "species" },
+      { n: "3 min", es: "la lección del día", en: "daily lesson" },
+      { n: "0", es: "teléfonos a la vista en la chapita", en: "phone numbers shown on the tag" },
+    ],
+    destacados: {
+      es: ["La app cambia con tu especie", "¿Puede comer…? con el porqué", "Chapita QR que te avisa"],
+      en: ["The app changes with your species", "Can it eat…? with the reason", "QR tag that notifies you"],
     },
   },
 

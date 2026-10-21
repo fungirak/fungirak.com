@@ -44,6 +44,7 @@ export const NOTAS = {
   rinde: 783.99,
   "que-hago-hoy": 830.61,
   "escuela-del-pescador": 698.46,
+  "escuela-de-mascotas": 587.33,
   "carta-al-futuro": 587.33,
 };
 
