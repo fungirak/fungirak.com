@@ -43,6 +43,7 @@ export const NOTAS = {
   termometro: 739.99,
   rinde: 783.99,
   "que-hago-hoy": 830.61,
+  "escuela-del-pescador": 698.46,
   "carta-al-futuro": 587.33,
 };
 

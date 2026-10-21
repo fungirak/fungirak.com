@@ -18,7 +18,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -559,6 +559,32 @@ export const PROYECTOS = [
     destacados: {
       es: ["Afiches con filtros útiles", "Prepará tu salida con Santa Fe Gourmet", "Aviso el mismo día"],
       en: ["Posters with useful filters", "Plan your outing with Santa Fe Gourmet", "Same-day reminder"],
+    },
+  },
+  {
+    id: "escuela-del-pescador",
+    fila: 2,
+    nombre: "La Escuela del Pescador",
+    url: "https://escuela-del-pescador.fungirak.com",
+    logo: "/img/logos/escuela-del-pescador.png",
+    industrias: ["turismo", "educacion"],
+    pills: ["Web", "App instalable", "Funciona sin señal", "Bitácora cifrada"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "Open-Meteo", "Service Worker", "PWA"],
+    color: "#1971C2",
+    lema: { es: "¿Sale pesca hoy?", en: "Are they biting today?" },
+    tagline: { es: "El río de cerca: pronóstico de pesca, bitácora, especies y nudos del litoral", en: "The river up close: fishing forecast, logbook, species and knots of the Paraná" },
+    descripcion: {
+      es: "Un puntaje del 1 al 10 para pescar ahora, con el porqué: la tendencia de la presión, el viento, la luna y los horarios solunares, calculados en el celu. La bitácora anota sola el clima de cada salida, anda sin señal y con cinco salidas te muestra tus patrones; con cuenta se guarda cifrada y tus lugares secretos no los ve nadie. Además, diez especies del Paraná con dibujo propio, nudos con cronómetro para practicar y reportes del día de la gente en el agua.",
+      en: "A 1–10 score to fish right now, with the reasons: pressure trend, wind, moon and solunar periods, computed on the phone. The logbook records each trip's weather on its own, works offline and shows your patterns after five trips; with an account it's encrypted and your secret spots stay yours. Plus ten Paraná species with original drawings, knots with a practice timer and same-day reports from people on the water.",
+    },
+    datos: [
+      { n: "10", es: "especies del litoral", en: "river species" },
+      { n: "5", es: "nudos con práctica", en: "knots to practice" },
+      { n: "0", es: "señal para anotar", en: "signal needed to log" },
+    ],
+    destacados: {
+      es: ["El puntaje del día con su porqué", "Bitácora sin señal que aprende tus patrones", "Lugares secretos cifrados"],
+      en: ["Today's score with its reasons", "Offline logbook that learns your patterns", "Encrypted secret spots"],
     },
   },
 
