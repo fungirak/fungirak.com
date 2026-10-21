@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Modal from "../Modal";
 import { useLang, tx } from "@/lib/i18n";
 import { SELLOS, NIVELES, nivelDe } from "@/lib/pasaporte";
+import SelloTinta from "../SelloTinta";
 import { PROYECTOS, proyecto } from "@/data/proyectos";
 import { LINKS, PERFIL, SKILLS, VIDEO, FILOSOFIA } from "@/data/perfil";
 import { Instagram as IgIcon } from "../Iconos";
@@ -17,7 +18,7 @@ export function Pasaporte({ onClose, sellos, visitante, abrir }) {
   const completo = n >= SELLOS.length;
   const faltan = SELLOS.filter((s) => !sellos.includes(s.id));
   return (
-    <Modal onClose={onClose} wide color="#00c853" eyebrow={es ? "Pasaporte FUNGIRAK" : "FUNGIRAK Passport"} titulo={`${nivel.icono} ${ui.nivel}: ${tx(nivel, lang)}`} bajada={prox ? (es ? `Te faltan ${prox.min - n} sellos para ser ${prox.es}.` : `${prox.min - n} stamps to become ${prox.en}.`) : es ? "¡Llegaste al nivel máximo!" : "You reached the top level!"}>
+    <Modal onClose={onClose} wide color="#00c853" eyebrow={es ? "Pasaporte FUNGIRAK" : "FUNGIRAK Passport"} titulo={`${ui.nivel}: ${tx(nivel, lang)}`} bajada={prox ? (es ? `Te faltan ${prox.min - n} sellos para ser ${prox.es}.` : `${prox.min - n} stamps to become ${prox.en}.`) : es ? "¡Llegaste al nivel máximo!" : "You reached the top level!"}>
       <div className="modal-body">
         <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700, fontSize: "0.85rem" }}>
           <span>{n} / {SELLOS.length} {es ? "sellos" : "stamps"}</span>
@@ -27,7 +28,7 @@ export function Pasaporte({ onClose, sellos, visitante, abrir }) {
 
         {completo && (
           <div className="resultado" style={{ marginBottom: 18, textAlign: "center" }}>
-            <div style={{ fontSize: "3rem" }}>🌳🍄🌳</div>
+            <div className="sellos-final" aria-hidden="true"><SelloTinta s={{ id: "completo", glifo: "arbol" }} nombre={es ? "Micelio completo" : "Full mycelium"} tam={88} /></div>
             <b className="display" style={{ fontSize: "1.3rem" }}>
               {es ? `${visitante?.nombre || "Explorador/a"}, recorriste todo el micelio` : `${visitante?.nombre || "Explorer"}, you walked the whole mycelium`}
             </b>
@@ -43,11 +44,9 @@ export function Pasaporte({ onClose, sellos, visitante, abrir }) {
           {SELLOS.map((s) => {
             const ok = sellos.includes(s.id);
             return (
-              <div key={s.id} className={`sello-item${ok ? " ok" : ""}`} title={tx(s, lang)}>
-                <div>
-                  <div className="ico">{s.icono}</div>
-                  {ok ? tx(s, lang) : "?"}
-                </div>
+              <div key={s.id} className={`sello-item${ok ? " ok" : ""}`} title={ok ? tx(s, lang) : "?"}>
+                <SelloTinta s={s} nombre={tx(s, lang)} ok={ok} />
+                <span>{ok ? tx(s, lang) : "?"}</span>
               </div>
             );
           })}

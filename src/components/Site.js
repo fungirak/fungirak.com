@@ -19,6 +19,7 @@ import Comunidad from "./Comunidad";
 import Juego from "./modals/Juego";
 import { Pasaporte, Terminal, Quiz, GitHub, Instagram, YouTube } from "./modals/Extras";
 import CuentaModal from "./modals/CuentaModal";
+import SelloTinta from "./SelloTinta";
 
 const leer = (k, def) => {
   try {
@@ -328,7 +329,7 @@ export default function Site() {
       )}
       {toast && (
         <div className="toast" key={toast.k} role="status" onAnimationEnd={(e) => e.target === e.currentTarget && setToast(null)}>
-          <span className="ico">{toast.s.icono}</span>
+          <span className="ico"><SelloTinta s={toast.s} nombre={toast.s.es} tam={56} /></span>
           <span>
             <b>{UI[lang].sello}</b> {tx(toast.s, lang)} · {sellos.length}/{SELLOS.length}
           </span>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { SELLOS, nivelDe } from "@/lib/pasaporte";
 import { Sol, Luna, Nota, Menu, Cruz } from "./Iconos";
+import { Glifo } from "./SelloTinta";
 
 export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, visitante }) {
   const { lang, setLang, ui } = useLang();
@@ -39,11 +40,11 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
 
   const herramientas = (
     <>
-      <button className="icon-btn" onClick={() => { setDrawer(false); abrir("cuenta"); }} aria-label={ui.nav.cuenta} title={ui.nav.cuenta}>👤</button>
-      <button className="icon-btn" onClick={() => { setDrawer(false); abrir("juego"); }} aria-label={ui.nav.jugar} title={ui.nav.jugar}>🎮</button>
+      <button className="icon-btn hide-cel" onClick={() => { setDrawer(false); abrir("cuenta"); }} aria-label={ui.nav.cuenta} title={ui.nav.cuenta}>👤</button>
+      <button className="icon-btn hide-cel" onClick={() => { setDrawer(false); abrir("juego"); }} aria-label={ui.nav.jugar} title={ui.nav.jugar}>🎮</button>
       <button className="icon-btn hide-m hide-l" onClick={() => ir("donar")} aria-label={ui.nav.ayudar} title={ui.nav.ayudar}>💚</button>
       <button className="passport-meter" onClick={() => { setDrawer(false); abrir("pasaporte"); }} aria-label={`${ui.nav.pasaporte}: ${sellos.length}/${SELLOS.length}`}>
-        <span className="ring" style={{ "--p": pct }}><span>{nivel.icono}</span></span>
+        <span className="ring" style={{ "--p": pct }}><span><Glifo nombre={nivel.glifo} tam={14} /></span></span>
         <span>{sellos.length}/{SELLOS.length}</span>
       </button>
       <button className="icon-btn hide-m" onClick={() => setLang(lang === "es" ? "en" : "es")} aria-label={lang === "es" ? "Switch to English" : "Cambiar a español"}>
@@ -102,6 +103,13 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
                 <span>{i.ico}</span> {i.label}
               </button>
             ))}
+            {/* en el celu la cuenta y el juego no entran arriba: están acá */}
+            <button className="solo-cel" onClick={() => { setDrawer(false); abrir("cuenta"); }}>
+              <span>👤</span> {ui.nav.cuenta}
+            </button>
+            <button className="solo-cel" onClick={() => { setDrawer(false); abrir("juego"); }}>
+              <span>🎮</span> {ui.nav.jugar}
+            </button>
             <button onClick={() => ir("donar")}>
               <span>💚</span> {ui.nav.ayudar}
             </button>

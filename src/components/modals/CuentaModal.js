@@ -54,10 +54,25 @@ export default function CuentaModal({ onClose }) {
         client_id: CLIENTE,
         callback: (r) => mandar(r.credential),
       });
-      window.google.accounts.id.renderButton(caja.current, { theme: "outline", size: "large", width: 300, text: "continue_with" });
+      pintar();
     };
+    // El botón de Google sigue el tema del sitio (claro: borde; oscuro: negro), es redondo como los botones del Studio y ocupa el ancho
+    // de la ventana (entre 220 y 400 px, el máximo que permite Google). Se vuelve a dibujar si cambia el tema o el ancho.
+    const pintar = () => {
+      const c = caja.current;
+      if (!montado || !c || !window.google) return;
+      const oscuro = document.documentElement.dataset.theme === "dark";
+      c.innerHTML = "";
+      window.google.accounts.id.renderButton(c, { theme: oscuro ? "filled_black" : "outline", size: "large", shape: "pill", text: "continue_with",
+        logo_alignment: "center", width: Math.round(Math.max(220, Math.min(400, c.clientWidth || 300))) });
+    };
+    const tema = new MutationObserver(pintar);
+    tema.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    let t;
+    const ancho = () => { clearTimeout(t); t = setTimeout(pintar, 200); };
+    window.addEventListener("resize", ancho);
     document.head.appendChild(s);
-    return () => { montado = false; };
+    return () => { montado = false; tema.disconnect(); window.removeEventListener("resize", ancho); clearTimeout(t); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sesion]);
 
@@ -83,7 +98,7 @@ export default function CuentaModal({ onClose }) {
       {!sesion && !alta && (
         <div>
           {error && <p style={{ color: "var(--peligro, #e5484d)" }}>{error}</p>}
-          {CLIENTE ? <div ref={caja} style={{ display: "flex", justifyContent: "center", margin: "10px 0" }} /> : <p>Entrá desde <a href={`${CUENTA}/entrar?volver=https://fungirak.com`}>cuenta.fungirak.com</a>.</p>}
+          {CLIENTE ? <div ref={caja} className="google-btn" /> : <p>Entrá desde <a href={`${CUENTA}/entrar?volver=https://fungirak.com`}>cuenta.fungirak.com</a>.</p>}
           {busy && <p style={{ textAlign: "center", fontSize: 14 }}>Entrando…</p>}
           <p style={{ fontSize: 13, marginTop: 14, opacity: 0.75 }}>¿Ya tenés cuenta? También podés entrar con usuario y contraseña en <a href={`${CUENTA}/entrar?volver=https://fungirak.com`}>cuenta.fungirak.com</a>.</p>
         </div>

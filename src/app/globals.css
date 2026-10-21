@@ -2484,3 +2484,33 @@ img {
 .fk-404-marca small { display: block; font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-3); }
 .fk-404 .p404-logo img { box-shadow: none; }
 .p404 h1 { font-size: clamp(1.7rem, 5vw, 2.8rem); font-weight: 800; line-height: 1.12; }
+
+/* «Continuar con Google» en la ventana de tu cuenta: ancho de la ventana (tope 400 px de Google), centrado y sin saltos al cargar */
+.google-btn { display: flex; justify-content: center; width: 100%; max-width: 400px; min-height: 44px; margin: 12px auto; border-radius: 999px; color-scheme: normal; }
+.google-btn iframe { border-radius: 999px; }
+
+/* Celu: arriba quedan logo, pasaporte, grilla de apps, «Acceder» y menú; la cuenta y el juego pasan al menú (si no, se pisaban) */
+@media (min-width: 481px) { .drawer .solo-cel { display: none; } }
+@media (max-width: 480px) {
+  .nav-tools .hide-cel { display: none; }
+  .nav .brand img { flex: none; }
+}
+
+/* Pasaporte con sellos de tinta (lib/sello-svg.js), sin emojis: el mismo dibujo que en las apps y en la cuenta FUNGIRAK */
+.sello-tinta { display: block; line-height: 0; --pp-papel: var(--surface); }
+.sello-tinta svg { width: 100%; height: 100%; }
+.sello-svg { --tinta: var(--tinta-c); }
+:root[data-theme="dark"] .sello-svg { --tinta: var(--tinta-o); }
+.sellos .sello-item, .sellos .sello-item.ok { aspect-ratio: auto; border: 0; border-radius: 0; background: none; transform: none; padding: 0; display: grid; justify-items: center; gap: 4px; color: var(--text-3); }
+.sellos .sello-item.ok { color: var(--text); }
+.sellos .sello-item .sello-tinta { width: 92px; height: 92px; color: var(--text-3); }
+.sellos .sello-item > span:last-child { font-size: 0.7rem; line-height: 1.2; text-align: center; }
+.sellos-final { display: flex; justify-content: center; margin-bottom: 6px; }
+.sellos-final .sello-tinta { width: 88px; height: 88px; }
+.passport-meter .ring span { color: var(--c-green-d); }
+:root[data-theme="dark"] .passport-meter .ring span { color: var(--c-green-2); }
+.toast .ico .sello-tinta { width: 56px; height: 56px; }
+.toast .ico:has(.sello-tinta) { width: 56px; height: 56px; background: none; border-radius: 0; }
+.sellos { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 14px 8px; }
+.sellos .sello-item .sello-tinta { width: min(92px, 100%); height: auto; aspect-ratio: 1; }
+@media (max-width: 380px) { .sellos { grid-template-columns: repeat(3, 1fr); } }
