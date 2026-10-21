@@ -9,7 +9,7 @@ export const cuentaUrl = () => (typeof document !== "undefined" && document.quer
 export const APPS_FK = {
   "dertin.fungirak.com": "dertin", "atlasfit-pro.fungirak.com": "atlas", "mitour.fungirak.com": "mitour", "atalaya.fungirak.com": "atalaya",
   "musgui.fungirak.com": "musgui", "escuela-del-mate.fungirak.com": "mate", "escueladelasador.fungirak.com": "asador", "surco.fungirak.com": "surco",
-  "micoteca.fungirak.com": "micoteca", "sin-vueltas.fungirak.com": "sinvueltas", "cronicasdefungi.fungirak.com": "cronicas", "hoy.fungirak.com": "hoy", "cv.fungirak.com": "cv", "preguntas.fungirak.com": "preguntas", "escanea.fungirak.com": "escanea", "pasalo.fungirak.com": "pasalo", "termometro.fungirak.com": "termometro", "carta-al-futuro.fungirak.com": "carta-al-futuro",
+  "micoteca.fungirak.com": "micoteca", "sin-vueltas.fungirak.com": "sinvueltas", "cronicasdefungi.fungirak.com": "cronicas", "hoy.fungirak.com": "hoy", "cv.fungirak.com": "cv", "preguntas.fungirak.com": "preguntas", "escanea.fungirak.com": "escanea", "pasalo.fungirak.com": "pasalo", "termometro.fungirak.com": "termometro", "rinde.fungirak.com": "rinde", "carta-al-futuro.fungirak.com": "carta-al-futuro",
 };
 let pedido = null;
 export function useFk() {

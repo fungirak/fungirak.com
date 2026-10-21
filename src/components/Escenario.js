@@ -18,7 +18,7 @@ function Arte({ p }) {
   if (p.tipo === "libro") return <div className="book" aria-hidden="true">{p.id === "libro-1" ? "I" : "II"}</div>;
   if (p.tipo === "ep") return <div className="vinyl" aria-hidden="true" />;
   if (p.logo) return <img className="logo-real" src={p.logo} alt="" width={76} height={76} loading="lazy" />;
-  const iniciales = { mitour: "✈", ecos: "📡", atalaya: "🛡️", atlas: "💪", gourmet: "☕", schools: "🏫", telos: "🌙", negro: "🌲", peyote: "🌵", mate: "🧉", asador: "🔥", micoteca: "🍄", musgui: "🌿", sinvueltas: "📋", surco: "🌱", fabrica: "🏭", dertin: "⚡", cronicas: "🚀", tribus: "🤘", hoy: "☀", cv: "✎", preguntas: "?", escanea: "⌗", pasalo: "⇄", termometro: "°", "carta-al-futuro": "✉" }[p.id];
+  const iniciales = { mitour: "✈", ecos: "📡", atalaya: "🛡️", atlas: "💪", gourmet: "☕", schools: "🏫", telos: "🌙", negro: "🌲", peyote: "🌵", mate: "🧉", asador: "🔥", micoteca: "🍄", musgui: "🌿", sinvueltas: "📋", surco: "🌱", fabrica: "🏭", dertin: "⚡", cronicas: "🚀", tribus: "🤘", hoy: "☀", cv: "✎", preguntas: "?", escanea: "⌗", pasalo: "⇄", termometro: "°", rinde: "$", "carta-al-futuro": "✉" }[p.id];
   return <div className="monogram" aria-hidden="true">{iniciales}</div>;
 }
 

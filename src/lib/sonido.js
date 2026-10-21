@@ -41,6 +41,7 @@ export const NOTAS = {
   escanea: 659.25,
   pasalo: 698.46,
   termometro: 739.99,
+  rinde: 783.99,
   "carta-al-futuro": 587.33,
 };
 

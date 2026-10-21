@@ -13,11 +13,12 @@ export const INDUSTRIAS = [
   { id: "tech", es: "Redes e IoT", en: "Networks & IoT", color: "var(--c-sky)" },
   { id: "ciberseguridad", es: "Ciberseguridad", en: "Cybersecurity", color: "var(--c-red)" },
   { id: "vivienda", es: "Vivienda", en: "Housing", color: "var(--c-blue)" },
+  { id: "finanzas", es: "Plata y ahorro", en: "Money & savings", color: "var(--c-green)" },
   { id: "juegos", es: "Juegos", en: "Games", color: "var(--c-violet)" },
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -509,7 +510,33 @@ export const PROYECTOS = [
       es: ["Votás sin cuenta y ves los resultados", "Vecinos verificados y ponderación por edad", "La pregunta de tu ciudad la propone la gente"],
       en: ["Vote without an account and see results", "Verified neighbors and age weighting", "Your city's question comes from its people"],
     },
+  },  {
+    id: "rinde",
+    fila: 2,
+    nombre: "Rinde",
+    url: "https://rinde.fungirak.com",
+    logo: "/img/logos/rinde.png",
+    industrias: ["finanzas"],
+    pills: ["Web", "App instalable", "Datos públicos del día", "Sin cuenta"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "ArgentinaDatos", "DolarApi", "PWA"],
+    color: "#0F7B4F",
+    lema: { es: "¿Dónde rinde más tu plata?", en: "Where does your money grow most?" },
+    tagline: { es: "Plazo fijo, fondos, inflación y dólar con los datos de hoy", en: "Fixed deposits, money market funds, inflation and the dollar, with today's data" },
+    descripcion: {
+      es: "Ponés cuánta plata y por cuántos días, y corren en pistas el plazo fijo (tasa por banco del BCRA), el fondo de mercado de dinero que más rindió la última semana (CAFCI), dejarla quieta contra la inflación (INDEC) y el dólar MEP, con un semáforo de riesgo. Sin cuenta. Con cuenta guardás metas de ahorro y te avisa cuando cambia la mejor tasa. No es asesoramiento financiero.",
+      en: "Enter an amount and a number of days, and fixed deposits (BCRA rates by bank), the best money market fund of the week (CAFCI), leaving it idle against inflation (INDEC) and the MEP dollar race side by side, with a risk light. No account needed. With an account you keep savings goals and get alerts when the best rate changes. Not financial advice.",
+    },
+    datos: [
+      { n: "4", es: "pistas en la carrera", en: "lanes in the race" },
+      { n: "30+", es: "bancos comparados", en: "banks compared" },
+      { n: "0", es: "montos públicos", en: "public amounts" },
+    ],
+    destacados: {
+      es: ["Simulás sin cuenta", "Semáforo de riesgo y la inflación como línea roja", "Metas de ahorro con montos privados"],
+      en: ["Simulate without an account", "Risk light and inflation as the red line", "Savings goals with private amounts"],
+    },
   },
+
 
   {
     id: "escanea",
