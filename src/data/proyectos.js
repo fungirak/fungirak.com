@@ -17,7 +17,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -457,6 +457,32 @@ export const PROYECTOS = [
     destacados: {
       es: ["Chequeo de RR. HH. con puntaje y consejos", "Tu CV contra el aviso: qué palabras faltan", "«Pedí una mirada» y el muro «¡Conseguí laburo!»"],
       en: ["Applicant-tracking check with a score", "Your CV vs. the job ad: missing keywords", "Peer reviews and a “I got the job!” wall"],
+    },
+  },
+  {
+    id: "escanea",
+    fila: 2,
+    nombre: "Escaneá",
+    url: "https://escanea.fungirak.com",
+    logo: "/img/logos/escanea.png",
+    industrias: ["gobierno"],
+    pills: ["Web", "App instalable", "Sin servidor para tus documentos", "Funciona sin internet"],
+    stack: ["Next.js 16", "React 19", "Tesseract (WebAssembly)", "Canvas", "IndexedDB", "PDF propio", "PWA"],
+    color: "#0B7285",
+    lema: { es: "Escaneá a PDF sin subir nada.", en: "Scan to PDF without uploading anything." },
+    tagline: { es: "Todo pasa en tu celu: tus documentos nunca salen de ahí", en: "Everything happens on your phone: your documents never leave it" },
+    descripcion: {
+      es: "La cámara del celu a la mayor resolución que permite el navegador, el contorno de la hoja en vivo y disparo automático cuando queda quieta. Endereza, saca sombras, reconoce el texto en español (el PDF se puede buscar y copiar), firma con el dedo y achica el PDF justo para el límite de cada trámite, según lo que cuenta la comunidad en «Qué piden los trámites». También lee QR y te avisa a qué sitio lleva antes de abrirlo.",
+      en: "Your phone's camera at the highest resolution the browser allows, live page edges and auto-capture when it's steady. It straightens, removes shadows, recognizes Spanish text (searchable PDFs), signs with your finger and compresses the PDF to each form's size limit, using what the community reports. It also reads QR codes and shows where they lead before opening.",
+    },
+    datos: [
+      { n: "0", es: "documentos subidos", en: "documents uploaded" },
+      { n: "4", es: "filtros", en: "filters" },
+      { n: "OCR", es: "en español, en el celu", en: "in Spanish, on-device" },
+    ],
+    destacados: {
+      es: ["Bordes automáticos y disparo solo", "Texto buscable en español sin internet", "El tamaño justo para cada trámite"],
+      en: ["Automatic edges and auto-capture", "Searchable Spanish text, offline", "The exact size for each form"],
     },
   },
   {
