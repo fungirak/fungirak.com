@@ -37,6 +37,7 @@ export const NOTAS = {
   tribus: 329.63,
   hoy: 523.25,
   cv: 554.37,
+  preguntas: 622.25,
   "carta-al-futuro": 587.33,
 };
 

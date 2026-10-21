@@ -17,7 +17,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -457,6 +457,32 @@ export const PROYECTOS = [
     destacados: {
       es: ["Chequeo de RR. HH. con puntaje y consejos", "Tu CV contra el aviso: qué palabras faltan", "«Pedí una mirada» y el muro «¡Conseguí laburo!»"],
       en: ["Applicant-tracking check with a score", "Your CV vs. the job ad: missing keywords", "Peer reviews and a “I got the job!” wall"],
+    },
+  },
+  {
+    id: "preguntas",
+    fila: 2,
+    nombre: "Preguntas de a Dos",
+    url: "https://preguntas.fungirak.com",
+    logo: "/img/logos/preguntas.png",
+    industrias: ["comunidad"],
+    pills: ["Web", "App instalable", "Cifrado", "Comunidad"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "AES-256-GCM", "Open-Meteo", "ArgentinaDatos", "Web Push", "PWA"],
+    color: "#FF9F7A",
+    lema: { es: "Una pregunta por día para conocerse más.", en: "One question a day to know each other better." },
+    tagline: { es: "Recién ves la respuesta del otro cuando respondiste vos", en: "You only see their answer after you've answered" },
+    descripcion: {
+      es: "Con tu pareja, tu amiga de siempre o tu vieja: armás una dupla con un link y cada día hay una pregunta nueva. Los dos responden por su lado y la del otro se destapa recién cuando respondiste vos. Paquetes temáticos (infancia, viajes, «¿qué harías si…?», bien de acá, picante +18 que tienen que activar los dos), juegos («¿cuánto me conocés?», «¿quién es más probable…?»), recuerdos de hace un mes y un año, racha compartida y fechas especiales argentinas. La comunidad propone y vota preguntas; las respuestas quedan cifradas y solo entre los dos.",
+      en: "With your partner, your best friend or your mom: you pair up with a link and get a new question every day. Each of you answers separately, and the other's answer is revealed only after you've answered. Themed packs, games, memories from a month and a year ago, a shared streak and Argentine special dates. The community proposes and votes questions; answers stay encrypted and just between the two of you.",
+    },
+    datos: [
+      { n: "270+", es: "preguntas", en: "questions" },
+      { n: "3", es: "tipos de dupla", en: "kinds of pairs" },
+      { n: "2", es: "juegos", en: "games" },
+    ],
+    destacados: {
+      es: ["La respuesta del otro se destapa cuando respondés", "«¿Cuánto me conocés?» y «¿Quién es más probable?»", "Recuerdos: «hace un año respondieron esto»"],
+      en: ["The other's answer unlocks when you answer", "“How well do you know me?” and “Who's more likely?”", "Memories: “a year ago you answered this”"],
     },
   },
   {
