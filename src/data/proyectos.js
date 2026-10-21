@@ -17,7 +17,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -484,7 +484,33 @@ export const PROYECTOS = [
       es: ["Directo y cifrado, sin límite de tamaño", "Mandale a alguien por su usuario", "Ves la lista y aceptás antes de recibir"],
       en: ["Direct and encrypted, no size limit", "Send to someone by username", "See the list and accept before receiving"],
     },
+  },  {
+    id: "termometro",
+    fila: 2,
+    nombre: "Termómetro",
+    url: "https://termometro.fungirak.com",
+    logo: "/img/logos/termometro.png",
+    industrias: ["comunidad"],
+    pills: ["Web", "App instalable", "Vecinos verificados", "Sin elecciones"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "Open-Meteo", "Web Push", "PWA"],
+    color: "#C92A2A",
+    lema: { es: "¿Qué dice tu ciudad hoy?", en: "What does your city think today?" },
+    tagline: { es: "El diario de lo que piensa tu ciudad: una pregunta por día y resultados honestos", en: "The paper of what your city thinks: one question a day and honest results" },
+    descripcion: {
+      es: "Una pregunta del país por día, elegida según el contexto (lunes de transporte, fin de mes y el sueldo, calor o feriado), y la de tu ciudad, que proponen y eligen los vecinos. Votás sin cuenta y ves los resultados en tres miradas: todos, vecinos verificados (cuenta verificada y conexión desde su provincia) y ponderado por edad con el Censo 2022, con su margen de error. Nada de elecciones ni candidatos.",
+      en: "One national question a day, picked by context (Monday commute, month-end salary, heat or holidays), plus your city's own, proposed and chosen by neighbors. Vote without an account and see results three ways: everyone, verified neighbors (verified account connecting from their province) and age-weighted with the 2022 Census, with its margin of error. No elections, no candidates.",
+    },
+    datos: [
+      { n: "1", es: "pregunta del país por día", en: "national question a day" },
+      { n: "30", es: "votos para mostrar una ciudad", en: "votes before a city shows" },
+      { n: "0", es: "encuestas electorales", en: "election polls" },
+    ],
+    destacados: {
+      es: ["Votás sin cuenta y ves los resultados", "Vecinos verificados y ponderación por edad", "La pregunta de tu ciudad la propone la gente"],
+      en: ["Vote without an account and see results", "Verified neighbors and age weighting", "Your city's question comes from its people"],
+    },
   },
+
   {
     id: "escanea",
     fila: 2,
