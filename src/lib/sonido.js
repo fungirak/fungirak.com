@@ -39,6 +39,7 @@ export const NOTAS = {
   cv: 554.37,
   preguntas: 622.25,
   escanea: 659.25,
+  pasalo: 698.46,
   "carta-al-futuro": 587.33,
 };
 

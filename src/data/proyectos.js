@@ -17,7 +17,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -457,6 +457,32 @@ export const PROYECTOS = [
     destacados: {
       es: ["Chequeo de RR. HH. con puntaje y consejos", "Tu CV contra el aviso: qué palabras faltan", "«Pedí una mirada» y el muro «¡Conseguí laburo!»"],
       en: ["Applicant-tracking check with a score", "Your CV vs. the job ad: missing keywords", "Peer reviews and a “I got the job!” wall"],
+    },
+  },
+  {
+    id: "pasalo",
+    fila: 2,
+    nombre: "Pásalo",
+    url: "https://pasalo.fungirak.com",
+    logo: "/img/logos/pasalo.png",
+    industrias: ["comunidad"],
+    pills: ["Web", "App instalable", "Directo (WebRTC)", "Sin límite de tamaño"],
+    stack: ["Next.js 16", "React 19", "WebRTC", "Neon Postgres", "Web Push", "PWA"],
+    color: "#AE3EC9",
+    lema: { es: "De aparato a aparato, directo.", en: "Device to device, direct." },
+    tagline: { es: "Pasate archivos con un código o un QR, sin que pasen por ningún servidor", en: "Send files with a code or a QR, never through a server" },
+    descripcion: {
+      es: "Del celu a la compu o al teléfono de otra persona: elegís los archivos, pasás un código de 6 números o un QR y van directo, cifrados por WebRTC y sin límite de tamaño. El que recibe ve la lista y acepta. Con cuenta, le mandás a cualquiera de FUNGIRAK por su usuario y le llega un aviso al celu. Avisa si estás con datos móviles o poca batería antes de un envío grande.",
+      en: "From your phone to your laptop or someone else's phone: pick files, share a 6-digit code or a QR, and they go straight there, encrypted by WebRTC with no size limit. The receiver sees the list and accepts. With an account, send to anyone on FUNGIRAK by username and they get a push notification.",
+    },
+    datos: [
+      { n: "0", es: "archivos en el servidor", en: "files on the server" },
+      { n: "6", es: "números de código", en: "digit code" },
+      { n: "10'", es: "y la sala se borra", en: "and the room is deleted" },
+    ],
+    destacados: {
+      es: ["Directo y cifrado, sin límite de tamaño", "Mandale a alguien por su usuario", "Ves la lista y aceptás antes de recibir"],
+      en: ["Direct and encrypted, no size limit", "Send to someone by username", "See the list and accept before receiving"],
     },
   },
   {
