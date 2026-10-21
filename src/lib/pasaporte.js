@@ -42,6 +42,7 @@ export const SELLOS = [
   { id: "pasalo", icono: "📲", glifo: "sobre", es: "Pase gol", en: "Assist" },
   { id: "termometro", icono: "🌡️", glifo: "termometro", es: "Vecino que opina", en: "Local voice" },
   { id: "rinde", icono: "🪙", glifo: "moneda", es: "Ahorro con plan", en: "Saver with a plan" },
+  { id: "que-hago-hoy", icono: "🎟️", glifo: "nota", es: "De salida", en: "Night out" },
   { id: "escanea", icono: "📷", glifo: "camara", es: "Escaneado", en: "Scanned" },
   { id: "preguntas", icono: "💬", glifo: "burbuja", es: "De a dos", en: "Two of us" },
   { id: "cv", icono: "📄", glifo: "documento", es: "Tu CV", en: "Your CV" },

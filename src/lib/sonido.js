@@ -42,6 +42,7 @@ export const NOTAS = {
   pasalo: 698.46,
   termometro: 739.99,
   rinde: 783.99,
+  "que-hago-hoy": 830.61,
   "carta-al-futuro": 587.33,
 };
 

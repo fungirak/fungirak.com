@@ -18,7 +18,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -535,7 +535,33 @@ export const PROYECTOS = [
       es: ["Simulás sin cuenta", "Semáforo de riesgo y la inflación como línea roja", "Metas de ahorro con montos privados"],
       en: ["Simulate without an account", "Risk light and inflation as the red line", "Savings goals with private amounts"],
     },
+  },  {
+    id: "que-hago-hoy",
+    fila: 2,
+    nombre: "Qué Hago Hoy",
+    url: "https://que-hago-hoy.fungirak.com",
+    logo: "/img/logos/que-hago-hoy.png",
+    industrias: ["turismo"],
+    pills: ["Web", "App instalable", "Eventos de la ciudad", "Sin cuenta"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "OpenStreetMap", "Open-Meteo", "PWA"],
+    color: "#FFD23F",
+    lema: { es: "La cartelera de la ciudad.", en: "The city's poster wall." },
+    tagline: { es: "Qué hay hoy y este finde en Santa Fe y Santo Tomé", en: "What's on today and this weekend in Santa Fe and Santo Tomé" },
+    descripcion: {
+      es: "Una pared de afiches con los recitales, obras, peñas y ferias que cargan quienes los organizan (los primeros, revisados a mano). Filtrás por hoy, finde, gratis, al aire libre, con chicos o accesible; si llueve, resalta lo bajo techo. Marcás «Me interesa» sin cuenta y, con cuenta, te avisa el mismo día. En cada evento, «Prepará tu salida» sugiere lugares de Santa Fe Gourmet cerca y abiertos.",
+      en: "A wall of posters with the gigs, plays, folk nights and fairs that organizers upload (first ones reviewed by hand). Filter by today, weekend, free, outdoors, with kids or accessible; when it rains, indoor events stand out. Mark «I'm interested» without an account and, with one, get a same-day reminder. Each event suggests nearby open places from Santa Fe Gourmet.",
+    },
+    datos: [
+      { n: "2", es: "ciudades para arrancar", en: "cities to start" },
+      { n: "1,5 km", es: "para comer cerca", en: "radius to eat nearby" },
+      { n: "0", es: "costo para organizar", en: "cost to organizers" },
+    ],
+    destacados: {
+      es: ["Afiches con filtros útiles", "Prepará tu salida con Santa Fe Gourmet", "Aviso el mismo día"],
+      en: ["Posters with useful filters", "Plan your outing with Santa Fe Gourmet", "Same-day reminder"],
+    },
   },
+
 
 
   {
