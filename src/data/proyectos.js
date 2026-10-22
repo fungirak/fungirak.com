@@ -982,3 +982,5 @@ export const PROYECTOS = [
 ];
 
 export const proyecto = (id) => PROYECTOS.find((p) => p.id === id);
+// Productos en línea: todo el catálogo menos libros, EP y lo que no tiene sitio todavía.
+export const PROYECTOS_EN_LINEA = PROYECTOS.filter((p) => !["libro", "ep"].includes(p.tipo) && !p.pausa && p.url).length;

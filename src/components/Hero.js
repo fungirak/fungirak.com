@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLang, tx } from "@/lib/i18n";
 import { LINKS, PERFIL, VIDEO } from "@/data/perfil";
-import { proyecto } from "@/data/proyectos";
+import { proyecto, PROYECTOS_EN_LINEA } from "@/data/proyectos";
 import { Linkedin, Github, Instagram, Youtube, Whatsapp, Mail } from "./Iconos";
 import Escenario from "./Escenario";
 
@@ -138,7 +138,7 @@ export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) 
 
           <div className="perfil-stats">
             <div><b className="grad-text">{PERFIL.experiencia}</b><span>{lang === "es" ? "años de exp." : "years exp."}</span></div>
-            <div><b className="grad-text">20</b><span>{lang === "es" ? "productos en línea" : "live products"}</span></div>
+            <div><b className="grad-text">{PROYECTOS_EN_LINEA}</b><span>{lang === "es" ? "productos en línea" : "live products"}</span></div>
             <div><b className="grad-text">10</b><span>{lang === "es" ? "certificados" : "certificates"}</span></div>
           </div>
 

@@ -46,7 +46,7 @@
 .bit-linea { list-style: none; margin: 0; padding: 0 20px; display: grid; grid-template-columns: repeat(var(--n), minmax(190px, 1fr)); grid-template-rows: var(--fila, 190px) 30px var(--fila, 190px); position: relative; min-width: max-content; }
 .bit-linea::before { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--fila, 190px) + 13px); height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--line-2), var(--c-green)); transform: scaleX(0); transform-origin: left; transition: transform 1.4s var(--ease); }
 .bit.visto .bit-linea::before { transform: scaleX(1); }
-.bit-hito { display: grid; grid-template-rows: var(--fila, 190px) 30px var(--fila, 190px); justify-items: center; grid-row: 1 / 4; scroll-snap-align: center; position: relative; opacity: 0; transition: opacity .5s var(--ease); transition-delay: calc(var(--i) * 110ms + .3s); }
+.bit-hito { display: grid; grid-template-rows: var(--fila, 190px) 30px var(--fila, 190px); justify-items: center; grid-row: 1 / 4; scroll-snap-align: center; position: relative; opacity: 0; transition: opacity .5s var(--ease); transition-delay: min(calc(var(--i) * 110ms + .3s), 1.6s); }
 .bit.visto .bit-hito { opacity: 1; }
 .bit-card { display: grid; gap: 4px; justify-items: center; text-align: center; width: 170px; padding: 12px; border-radius: var(--radius-s); background: var(--glass-strong); border: 1px solid var(--line); box-shadow: var(--shadow); cursor: pointer; color: var(--text); transition: transform .2s var(--ease), border-color .2s; }
 .bit-card:hover { transform: translateY(-3px); border-color: var(--c); }

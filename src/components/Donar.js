@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { LINKS } from "@/data/perfil";
+import { PROYECTOS_EN_LINEA } from "@/data/proyectos";
 
 const TIERS = [
   { id: "cafe", ico: "☕", es: ["Un café para el Studio", "Una noche más de código para la próxima app, desde Santa Fe."], en: ["A coffee for the studio", "One more night of code for the next app, from Santa Fe."] },
@@ -49,7 +50,7 @@ export default function Donar({ stats, abrir }) {
               : "Team Joy and the rest of the Studio's products are free and ad-free, and almost all of them work without signing up. I keep them alive on my own time. If one of them helped you, your support pays for servers, domains and coding hours for the next one."}
           </p>
           <div className="contadores">
-            <div><b className="grad-text">20</b><span>{es ? "productos en línea" : "live products"}</span></div>
+            <div><b className="grad-text">{PROYECTOS_EN_LINEA}</b><span>{es ? "productos en línea" : "live products"}</span></div>
             <div><b className="grad-text">0</b><span>{es ? "publicidades" : "ads"}</span></div>
             <div><b className="grad-text">{stats?.visitas ? stats.visitas.toLocaleString(lang) : "—"}</b><span>{es ? "visitas a este sitio" : "visits to this site"}</span></div>
           </div>

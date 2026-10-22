@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 import { useLang, tx } from "@/lib/i18n";
-import { proyecto } from "@/data/proyectos";
+import { proyecto, PROYECTOS_EN_LINEA } from "@/data/proyectos";
 import { BITACORA } from "@/data/bitacora";
 import { avisarPorMail } from "@/lib/avisoMail";
 import { tocar } from "@/lib/sonido";
@@ -161,7 +161,10 @@ export function Bitacora({ abrir }) {
   const pista = useRef(null);
   const [ref, visto] = useVisto(0.2);
   const [borde, setBorde] = useState({ ini: false, fin: true });
-  const fmt = (f) => new Date(`${f}-15T12:00:00`).toLocaleDateString(lang === "es" ? "es-AR" : "en-US", { month: "short", year: "numeric" });
+  // «AAAA-MM» muestra mes y año; «AAAA-MM-DD» (un lanzamiento por semana) suma el día.
+  const fmt = (f) => f.length > 7
+    ? new Date(`${f}T12:00:00`).toLocaleDateString(lang === "es" ? "es-AR" : "en-US", { day: "numeric", month: "short", year: "numeric" })
+    : new Date(`${f}-15T12:00:00`).toLocaleDateString(lang === "es" ? "es-AR" : "en-US", { month: "short", year: "numeric" });
   useEffect(() => {
     const n = pista.current;
     if (!n) return;
@@ -529,18 +532,26 @@ export function Ruleta({ abrir }) {
 
 // ---------- 5. El estudio en números ----------
 const NUMEROS = [
-  { n: 20, mas: false, es: "productos en línea", en: "live products" },
+  { n: PROYECTOS_EN_LINEA, mas: false, es: "productos en línea", en: "live products" },
   { n: 24, mas: false, es: "jurisdicciones del país listas en Team Joy", en: "Argentine jurisdictions ready in Team Joy" },
+  { n: 3400, mas: true, es: "instituciones educativas en Santa Fe Schools", en: "schools in Santa Fe Schools" },
+  { n: 2300, mas: true, es: "lugares para pescar en el litoral, en la Escuela del Pescador", en: "fishing spots on the Litoral, in the Fishing School" },
+  { n: 400, mas: true, es: "bares, cafés y restós en Santa Fe Gourmet", en: "bars, cafés and restaurants in Santa Fe Gourmet" },
+  { n: 200, mas: false, es: "preguntas en La Gran Trivia", en: "questions in The Great Trivia" },
+  { n: 85, mas: false, es: "preguntas de tu día en Hoy", en: "questions about your day in Hoy" },
+  { n: 56, mas: false, es: "modelos de CV por puesto en CV", en: "résumé templates by job in CV" },
   { n: 260, mas: true, es: "ministerios que pueden sumarse a Team Joy hoy", en: "ministries that can join Team Joy today" },
   { n: 500, mas: true, es: "secretarías que pueden sumarse a Team Joy hoy", en: "departments that can join Team Joy today" },
-  { n: 3400, mas: true, es: "instituciones educativas en Santa Fe Schools", en: "schools in Santa Fe Schools" },
-  { n: 2300, mas: true, es: "destinos para viajar en MiTour", en: "destinations in MiTour" },
   { n: 156, mas: false, es: "temas de ciberseguridad en Atalaya", en: "cybersecurity topics in Atalaya" },
   { n: 54, mas: false, es: "temas para escuchar en el homenaje a El Peyote Asesino", en: "songs to play on the El Peyote Asesino tribute" },
-  { n: 400, mas: true, es: "bares, cafés y restós en Santa Fe Gourmet", en: "bars, cafés and restaurants in Santa Fe Gourmet" },
   { n: 140, mas: true, es: "guías de entrenamiento en Atlas Fit Pro", en: "training guides in Atlas Fit Pro" },
   { n: 188, mas: false, es: "países en el mapa de MiTour", en: "countries on MiTour's map" },
+  { n: 60, mas: false, es: "figuritas del litoral en el álbum de Figus", en: "Litoral stickers in the Figus album" },
+  { n: 32, mas: false, es: "bancos con su tasa de plazo fijo del día en Rinde", en: "banks with today's term deposit rate in Rinde" },
+  { n: 12, mas: false, es: "emergencias paso a paso en Primeros Auxilios", en: "step-by-step emergencies in First Aid" },
+  { n: 8, mas: false, es: "especies en la Escuela de las Mascotas", en: "species in the Pet School" },
 ];
+const NUMEROS_A_LA_VISTA = 8;
 function Contador({ n, activo, lang }) {
   const [v, setV] = useState(0);
   useEffect(() => {
@@ -557,6 +568,7 @@ export function EnNumeros() {
   const { lang } = useLang();
   const es = lang === "es";
   const [ref, visto] = useVisto(0.3);
+  const [todos, setTodos] = useState(false);
   return (
     <section className="band" id="numeros" aria-labelledby="num-t">
       <div className="wrap">
@@ -564,13 +576,18 @@ export function EnNumeros() {
           titulo={es ? <>Lo que hay <span className="grad-text">del otro lado</span>.</> : <>What&apos;s <span className="grad-text">behind it</span>.</>}
           bajada={es ? "Todo gratis, sin publicidad y hecho desde Santo Tomé." : "All free, ad-free and made in Santo Tomé."} />
         <div ref={ref} className="numeros">
-          {NUMEROS.map((x, i) => (
+          {NUMEROS.slice(0, todos ? NUMEROS.length : NUMEROS_A_LA_VISTA).map((x, i) => (
             <div key={i} className="numero" style={{ "--i": i }}>
               <b className="grad-text">{x.mas && "+"}<Contador n={x.n} activo={visto} lang={lang} /></b>
               <span>{x[lang]}</span>
             </div>
           ))}
         </div>
+        {NUMEROS.length > NUMEROS_A_LA_VISTA && (
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 18 }}>
+            <button className="chip" aria-expanded={todos} onClick={() => setTodos(!todos)}>{todos ? (es ? "Ver menos" : "Show less") : (es ? `Ver ${NUMEROS.length - NUMEROS_A_LA_VISTA} números más` : `Show ${NUMEROS.length - NUMEROS_A_LA_VISTA} more`)}</button>
+          </div>
+        )}
       </div>
     </section>
   );

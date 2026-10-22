@@ -19,6 +19,22 @@
     ["cronicas", "Las Crónicas de Fungi", "https://cronicasdefungi.fungirak.com", "Juego 3D"], ["carta-al-futuro", "Carta al Futuro", "https://carta-al-futuro.fungirak.com", "Cartas"],
   ].map(([id, nombre, url, tag]) => ({ id, nombre, url, tag, icono: `${BASE}apps/${id}.webp` }));
   const LOCALES = new Set(APPS.map((a) => a.id));
+  // Con el atributo «categorias» (la portada de fungirak.com): todo el estudio agrupado como la franja «Más de FUNGIRAK Studio».
+  // Lo que no tiene cuenta FUNGIRAK (Team Joy, ECOS, Fábrica y los sitios) se toma de EXTRA, con los íconos del portal.
+  const GRUPOS = [
+    ["Apps", ["teamjoy", "dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "carta-al-futuro", "preguntas", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "voluntarios"]],
+    ["Herramientas", ["ecos", "sinvueltas", "hoy", "cv", "escanea", "pasalo", "fabrica"]],
+    ["Juegos", ["trivia", "figus", "prode", "afinados", "cronicas"]],
+    ["Sitios", ["santafe-oculta", "gourmet", "schools", "telos", "negro", "peyote", "tribus"]],
+  ];
+  const EXTRA = {
+    teamjoy: ["Team Joy", "https://teamjoy.site", "/img/teamjoy-logo-240.webp"], ecos: ["ECOS", "https://ecos-map.fungirak.com", "/img/logos/ecos.png"],
+    fabrica: ["Fábrica", "https://fabrica.fungirak.com", "/img/logos/fabrica.png"], gourmet: ["SF Gourmet", "https://santafe-gourmet.fungirak.com", "/img/logos/gourmet.png"],
+    schools: ["SF Schools", "https://santafe-schools.fungirak.com", "/img/logos/schools.png"], telos: ["SF Telo's", "https://santafe-telos.fungirak.com", "/img/logos/telos.png"],
+    negro: ["Experimento Negro", "https://experimento-negro.fungirak.com", "/img/logos/negro.svg"], peyote: ["Peyote Asesino", "https://peyote-asesino.fungirak.com", "/img/logos/peyote.png"],
+    tribus: ["Tribus urbanas", "https://tribus.fungirak.com", "/img/logos/tribus.png"],
+  };
+
   // La lista de verdad la da la cuenta (cada app nueva aparece sola); el ícono se toma de acá si está y si no, de la cuenta.
   let catalogo = APPS;
   const usarCatalogo = (c) => {
@@ -65,6 +81,8 @@
   .pan{position:absolute;top:calc(100% + 8px);right:0;z-index:2147483000;width:min(340px,calc(100vw - 16px));background:#fff;color:#15171c;border-radius:20px;
     box-shadow:0 12px 40px rgba(0,0,0,.25);padding:14px;max-height:min(520px,80vh);overflow:auto}
   :host([oscuro]) .pan{background:#1b1e24;color:#eef0f3}
+  :host([categorias]) .pan{width:min(420px,calc(100vw - 16px))}.gs{max-height:min(460px,64vh);overflow-y:auto;overscroll-behavior:contain;margin:0 -6px;padding:0 6px;scrollbar-width:thin}.gs .g{max-height:none;overflow:visible;margin:0;padding:0}
+  .gt{margin:12px 4px 4px;font-size:11px;font-weight:800;letter-spacing:.06em;opacity:.7;display:flex;gap:6px;align-items:center}.gt span{font-weight:700;padding:0 6px;border-radius:99px;background:rgba(127,127,127,.18)}
   .pan[hidden]{display:none}.g{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-height:min(372px,58vh);overflow-y:auto;overscroll-behavior:contain;margin:0 -6px;padding:0 6px;scrollbar-width:thin}
   .ap{display:grid;justify-items:center;gap:4px;padding:10px 4px;border-radius:14px;text-decoration:none;text-align:center}.ap:hover,.ap:focus-visible{background:rgba(127,127,127,.14);outline:none}
   .ap img{width:46px;height:46px;border-radius:12px}.ap span{font-size:12px;font-weight:600;line-height:1.2}.ap small{font-size:11px;font-weight:700;color:#0f8a5f}
@@ -121,8 +139,16 @@
       if (que === "apps") {
         embudo("grilla.abierta", this.app);
         const orden = [...catalogo.filter((a) => usadas.has(a.id)), ...catalogo.filter((a) => !usadas.has(a.id))];
-        pan.innerHTML = `<p class="t">${y.sesion ? "Tus apps" : "Apps de FUNGIRAK"}</p><div class="g">${orden.map((a) => `<a class="ap" data-id="${esc(a.id)}" href="${esc(y.sesion ? entrarEn(a) : a.url)}"><img src="${esc(a.icono)}" alt="" width="46" height="46" loading="lazy"><span>${esc(a.nombre)}</span>${y.sesion ? `<small>${usadas.has(a.id) ? "Abrir" : "Probar"}</small>` : ""}</a>`).join("")}</div>
-          <div class="pie">${y.caida ? "" : y.sesion ? `<a href="${CUENTA}/">Administrar tu cuenta</a>` : `<a href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta FUNGIRAK</a><a href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a>`}<a href="https://fungirak.com">fungirak.com</a></div>`;
+        const tarjeta = (a) => `<a class="ap" data-id="${esc(a.id)}" href="${esc(y.sesion && !a.extra ? entrarEn(a) : a.url)}"><img src="${esc(a.icono)}" alt="" width="46" height="46" loading="lazy"><span>${esc(a.nombre)}</span>${y.sesion && !a.extra ? `<small>${usadas.has(a.id) ? "Abrir" : "Probar"}</small>` : ""}</a>`;
+        const porId = new Map(catalogo.map((a) => [a.id, a]));
+        const grupos = this.hasAttribute("categorias")
+          ? GRUPOS.map(([t, ids]) => [t, ids.map((id) => porId.get(id) || (EXTRA[id] && { id, nombre: EXTRA[id][0], url: EXTRA[id][1], icono: EXTRA[id][2], extra: true })).filter(Boolean)])
+          : null;
+        pan.innerHTML = grupos
+          ? `<p class="t">Todo FUNGIRAK Studio</p><div class="gs">${grupos.map(([t, l]) => `<p class="gt">${esc(t)} <span>${l.length}</span></p><div class="g">${l.map(tarjeta).join("")}</div>`).join("")}</div>`
+          : `<p class="t">${y.sesion ? "Tus apps" : "Apps de FUNGIRAK"}</p><div class="g">${orden.map(tarjeta).join("")}</div>`;
+        pan.insertAdjacentHTML("beforeend", `
+<div class="pie">${y.caida ? "" : y.sesion ? `<a href="${CUENTA}/">Administrar tu cuenta</a>` : `<a href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta FUNGIRAK</a><a href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a>`}<a href="https://fungirak.com">fungirak.com</a></div>`);
         pan.querySelectorAll(".ap").forEach((a) => a.addEventListener("click", () => embudo(y.sesion && !usadas.has(a.dataset.id) ? "grilla.probar" : "grilla.abrir", this.app)));
       } else {
         pan.innerHTML = `<div class="cab"><span class="av">${avatar(y, 44)}</span><div><b>${esc(y.nombre || "@" + y.usuario)}</b><small>@${esc(y.usuario)} · cuenta FUNGIRAK</small></div></div>
