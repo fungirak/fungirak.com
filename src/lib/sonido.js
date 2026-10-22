@@ -45,6 +45,11 @@ export const NOTAS = {
   "que-hago-hoy": 830.61,
   "escuela-del-pescador": 698.46,
   "escuela-de-mascotas": 587.33,
+  "primeros-auxilios": 622.25,
+  "trivia": 659.25,
+  "figus": 698.46,
+  "voluntarios": 523.25,
+  "prode": 587.33,
   "carta-al-futuro": 587.33,
 };
 

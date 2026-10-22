@@ -18,7 +18,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -611,6 +611,116 @@ export const PROYECTOS = [
     destacados: {
       es: ["La app cambia con tu especie", "¿Puede comer…? con el porqué", "Chapita QR que te avisa"],
       en: ["The app changes with your species", "Can it eat…? with the reason", "QR tag that notifies you"],
+    },
+  },
+  {
+    id: "primeros-auxilios",
+    fila: 2,
+    nombre: "La Escuela de los Primeros Auxilios",
+    url: "https://primeros-auxilios.fungirak.com",
+    logo: "/img/logos/primeros-auxilios.png",
+    industrias: ["salud", "educacion"],
+    pills: ["Web", "App instalable", "Funciona sin internet", "Sin cuenta"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "PWA"],
+    color: "#087F5B",
+    lema: { es: "Saber qué hacer.", en: "Know what to do." },
+    tagline: { es: "Pasos de a uno, sin señal", en: "Step by step, offline" },
+    descripcion: {
+      es: "Pasos de a uno para los primeros minutos de una emergencia, metrónomo de RCP, curso corto y práctica con escenarios. Todo anda sin señal.",
+      en: "Step-by-step guidance for the first minutes of an emergency, a CPR metronome, a short course and scenario practice. Works offline.",
+    },
+    datos: [],
+    destacados: {
+      es: ["Modo emergencia sin señal", "Metrónomo de RCP", "Curso y escenarios"],
+      en: ["Offline emergency mode", "CPR metronome", "Course and scenarios"],
+    },
+  },
+  {
+    id: "trivia",
+    fila: 2,
+    nombre: "La Gran Trivia",
+    url: "https://trivia.fungirak.com",
+    logo: "/img/logos/trivia.png",
+    industrias: ["juegos", "educacion"],
+    pills: ["Web", "App instalable", "Juego diario", "Sin cuenta"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "PWA"],
+    color: "#7048E8",
+    lema: { es: "Diez preguntas por día.", en: "Ten questions a day." },
+    tagline: { es: "La trivia de cada día", en: "The daily trivia" },
+    descripcion: {
+      es: "Diez preguntas por día, iguales para todo el país: historia, geografía, deportes, cultura y lunfardo. El servidor manda las preguntas de a una y mide el tiempo, así nadie hace trampa. Ranking y podio diario.",
+      en: "Ten questions a day, the same for the whole country. The server sends them one at a time and times you, so nobody cheats. Daily ranking and podium.",
+    },
+    datos: [],
+    destacados: {
+      es: ["Iguales para todo el país", "Anti-trampa en el servidor", "Podio diario"],
+      en: ["Same for the whole country", "Server-side anti-cheat", "Daily podium"],
+    },
+  },
+  {
+    id: "figus",
+    fila: 2,
+    nombre: "Figus",
+    url: "https://figus.fungirak.com",
+    logo: "/img/logos/figus.png",
+    industrias: ["juegos"],
+    pills: ["Web", "App instalable", "Gratis", "Sin cuenta"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "PWA"],
+    color: "#D6336C",
+    lema: { es: "El álbum del litoral.", en: "The Litoral album." },
+    tagline: { es: "¿Me la cambiás?", en: "Swap you for it?" },
+    descripcion: {
+      es: "Un álbum de 60 figuritas propias del litoral (aves, bichos del río, árboles, la mesa, la ciudad y la cultura). Un sobre gratis por día que reparte el servidor, pegado con animación y una mesa de cambios para las repetidas.",
+      en: "A 60-sticker album of the Litoral. A free pack a day dealt by the server, animated sticking and a trading table for duplicates.",
+    },
+    datos: [],
+    destacados: {
+      es: ["Un sobre gratis por día", "Brillantes difíciles", "Mesa de cambios"],
+      en: ["A free pack a day", "Rare shiny stickers", "Trading table"],
+    },
+  },
+  {
+    id: "voluntarios",
+    fila: 2,
+    nombre: "Una Mano",
+    url: "https://voluntarios.fungirak.com",
+    logo: "/img/logos/voluntarios.png",
+    industrias: ["comunidad"],
+    pills: ["Web", "App instalable", "Comunidad", "Gratis"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "PWA"],
+    color: "#2F9E44",
+    lema: { es: "Voluntariado cerca tuyo.", en: "Volunteering near you." },
+    tagline: { es: "Donde dar una mano", en: "Where to lend a hand" },
+    descripcion: {
+      es: "Organizaciones verificadas publican convocatorias de voluntariado; vos elegís las causas que te mueven, te sumás y cada organización certifica tus horas con una constancia verificable.",
+      en: "Verified organizations post volunteering calls; you pick your causes, join, and each organization certifies your hours with a verifiable certificate.",
+    },
+    datos: [],
+    destacados: {
+      es: ["Organizaciones verificadas", "Coincidencias por causa", "Horas certificadas"],
+      en: ["Verified organizations", "Matches by cause", "Certified hours"],
+    },
+  },
+  {
+    id: "prode",
+    fila: 2,
+    nombre: "Prode",
+    url: "https://prode.fungirak.com",
+    logo: "/img/logos/prode.png",
+    industrias: ["juegos"],
+    pills: ["Web", "App instalable", "Sin apuestas", "Ligas privadas"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "PWA"],
+    color: "#0C8599",
+    lema: { es: "La fecha, entre amigos.", en: "The matchday, among friends." },
+    tagline: { es: "El prode de la Liga", en: "The league predictor" },
+    descripcion: {
+      es: "Pronosticá los partidos de la Liga Profesional antes de que empiecen; los puntos se calculan solos cuando terminan. Tabla general y ligas privadas con código. Gratis y sin apuestas.",
+      en: "Predict Argentine league matches before kickoff; points are computed when they end. Overall table and private leagues with a code. Free, no betting.",
+    },
+    datos: [],
+    destacados: {
+      es: ["Fixture real de la Liga", "Puntos al terminar", "Ligas privadas"],
+      en: ["Real league fixture", "Points when matches end", "Private leagues"],
     },
   },
 
