@@ -18,7 +18,7 @@ export const INDUSTRIAS = [
 ];
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
-export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "fabrica",
+export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "afinados", "santafe-oculta", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
 export const PROYECTOS = [
   {
@@ -721,6 +721,50 @@ export const PROYECTOS = [
     destacados: {
       es: ["Fixture real de la Liga", "Puntos al terminar", "Ligas privadas"],
       en: ["Real league fixture", "Points when matches end", "Private leagues"],
+    },
+  },
+  {
+    id: "afinados",
+    fila: 2,
+    nombre: "Afinados",
+    url: "https://afinados.fungirak.com",
+    logo: "/img/logos/afinados.png",
+    industrias: ["musica", "juegos"],
+    pills: ["Web", "App instalable", "Micrófono en el celu", "Sin cuenta"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "PWA"],
+    color: "#C2255C",
+    lema: { es: "Cantá afinado.", en: "Sing in tune." },
+    tagline: { es: "El micrófono abierto", en: "Open mic" },
+    descripcion: {
+      es: "Afinador de voz en vivo, ejercicios con melodías propias y puntaje, y karaoke con tus propias canciones con «quitar voz». Todo se procesa en el celu: el micrófono no se graba ni se manda.",
+      en: "Live voice tuner, exercises with original melodies and scores, and karaoke with your own songs with vocal removal. Everything runs on the phone.",
+    },
+    datos: [],
+    destacados: {
+      es: ["Afinador en vivo", "Ejercicios con puntaje", "Karaoke con tu canción"],
+      en: ["Live tuner", "Scored exercises", "Karaoke with your song"],
+    },
+  },
+  {
+    id: "santafe-oculta",
+    fila: 2,
+    nombre: "Santa Fe Oculta",
+    url: "https://santafe-oculta.fungirak.com",
+    logo: "/img/logos/santafe-oculta.png",
+    industrias: ["turismo"],
+    pills: ["Web", "App instalable", "Sonido 3D", "Sin cuenta"],
+    stack: ["Next.js 16", "React 19", "Neon Postgres", "PWA"],
+    color: "#495057",
+    lema: { es: "La ciudad en capítulos.", en: "The city in chapters." },
+    tagline: { es: "Lo que no se ve", en: "What you don't see" },
+    descripcion: {
+      es: "Paseos por la ciudad de Santa Fe en capítulos que se desbloquean al llegar a cada lugar, con narración y sonido ambiente espacial que gira con la brújula del celu. La ubicación no sale del aparato.",
+      en: "Walks through Santa Fe city in chapters that unlock on arrival, with narration and spatial ambient sound that turns with your phone's compass.",
+    },
+    datos: [],
+    destacados: {
+      es: ["Se abre al llegar", "Sonido 3D", "Ubicación privada"],
+      en: ["Unlocks on arrival", "3D sound", "Private location"],
     },
   },
 

@@ -45,6 +45,8 @@ export const SELLOS = [
   { id: "que-hago-hoy", icono: "🎟️", glifo: "nota", es: "De salida", en: "Night out" },
   { id: "escuela-del-pescador", icono: "🎣", glifo: "pez", es: "En el río", en: "On the river" },
   { id: "escuela-de-mascotas", icono: "🐾", glifo: "casa", es: "En casa", en: "At home" },
+  { id: "afinados", icono: "🎤", glifo: "nota", es: "A coro", en: "In chorus" },
+  { id: "santafe-oculta", icono: "🗺️", glifo: "mapa", es: "De paseo", en: "Out walking" },
   { id: "primeros-auxilios", icono: "⛑️", glifo: "corazon", es: "En guardia", en: "On guard" },
   { id: "trivia", icono: "🎤", glifo: "rayo", es: "Al aire", en: "On air" },
   { id: "figus", icono: "🃏", glifo: "estrella", es: "En el kiosco", en: "At the kiosk" },

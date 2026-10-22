@@ -45,6 +45,8 @@ export const NOTAS = {
   "que-hago-hoy": 830.61,
   "escuela-del-pescador": 698.46,
   "escuela-de-mascotas": 587.33,
+  "afinados": 554.37,
+  "santafe-oculta": 493.88,
   "primeros-auxilios": 622.25,
   "trivia": 659.25,
   "figus": 698.46,
