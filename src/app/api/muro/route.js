@@ -1,9 +1,19 @@
-import { leerMuro, publicarMuro, publicacionesRecientes, accionMuro, hashIp, permitido, mismoOrigen, leerJSON, limpio } from "@/lib/db";
+import { leerMuro, leerComentarios, publicarMuro, publicacionesRecientes, accionMuro, hashIp, permitido, mismoOrigen, leerJSON, limpio } from "@/lib/db";
+import { PROYECTOS } from "@/data/proyectos";
+
+const APPS = new Set(PROYECTOS.filter((p) => p.url).map((p) => p.id)); // las apps que pueden tener comentarios
 import { revisar, segundaOpinion, EMOJIS } from "@/lib/moderacion";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req) {
+  // ?app=<id>: los comentarios de esa app (su card y las respuestas a sus historias)
+  const app = new URL(req.url).searchParams.get("app");
+  if (app) {
+    if (!APPS.has(app)) return Response.json({ comentarios: [] }, { status: 404 });
+    try { return Response.json({ comentarios: await leerComentarios(app) }, { headers: { "Cache-Control": "public, s-maxage=15, stale-while-revalidate=60" } }); }
+    catch (e) { console.error("muro/comentarios", e); return Response.json({ comentarios: [] }); }
+  }
   try {
     return Response.json(await leerMuro(), { headers: { "Cache-Control": "public, s-maxage=15, stale-while-revalidate=60" } });
   } catch (e) {
@@ -33,10 +43,11 @@ export async function POST(req) {
   }
 
   if (b._hp) return Response.json({ ok: true });
-  const tipo = b.tipo === "idea" ? "idea" : "huella";
-  const texto = limpio(b.texto, 400).replace(/\s+/g, " ").slice(0, tipo === "idea" ? 280 : 180);
+  const tipo = b.tipo === "idea" ? "idea" : b.tipo === "comentario" && APPS.has(b.app) ? `com:${b.app}` : "huella";
+  if (b.tipo === "comentario" && !APPS.has(b.app)) return Response.json({ ok: false, error: "error" }, { status: 400 });
+  const texto = limpio(b.texto, 400).replace(/\s+/g, " ").slice(0, tipo === "idea" ? 280 : tipo.startsWith("com:") ? 240 : 180);
   const nombre = limpio(b.nombre, 30) || null;
-  const emoji = EMOJIS.includes(b.emoji) ? b.emoji : "🍄";
+  const emoji = EMOJIS.includes(b.emoji) ? b.emoji : tipo.startsWith("com:") ? "💬" : "🍄";
   if (texto.length < 3) return Response.json({ ok: false, error: "corto" }, { status: 400 });
   const motivo = revisar(`${nombre || ""} ${texto}`);
   if (motivo) return Response.json({ ok: false, error: motivo }, { status: 400 });

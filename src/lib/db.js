@@ -153,6 +153,14 @@ export async function leerMuro() {
   return { huellas, ideas };
 }
 
+// Comentarios de cada app (las cards de la portada y las respuestas a sus historias): viven en el muro con tipo «com:<app>».
+export async function leerComentarios(app) {
+  const tipo = `com:${app}`;
+  if (!sql) return (memoria.muro || []).filter((x) => x.visible && x.tipo === tipo).sort((a, b) => b.id - a.id).slice(0, 40).map(({ ip_hash, reportes, visible, ...p }) => p);
+  await asegurarTablas();
+  return sql`SELECT id, creado, nombre, emoji, texto FROM muro WHERE tipo = ${tipo} AND visible ORDER BY creado DESC LIMIT 40`;
+}
+
 export async function publicarMuro(x) {
   if (!sql) {
     memoria.muro = memoria.muro || [];

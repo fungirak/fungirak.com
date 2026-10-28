@@ -6,6 +6,7 @@ import { SELLOS, leerSellos, guardarSellos } from "@/lib/pasaporte";
 import { NOTAS, tocar, arpegio } from "@/lib/sonido";
 import Nav from "./Nav";
 import Hero from "./Hero";
+import Historias from "./Historias";
 import Donar from "./Donar";
 import { ComoTrabajo, Calculadora, Bitacora, Ruleta, EnNumeros } from "./Secciones";
 import Footer from "./Footer";
@@ -84,6 +85,9 @@ export default function Site() {
     } catch {}
     setDesdeIg(ig);
     let id;
+    let historia = null;
+    try { historia = new URLSearchParams(location.search).get("historia"); } catch {}
+    if (historia !== null) { setPayload(historia || null); setModal("historias"); return; } // fungirak.com/?historia=mate (desde Instagram)
     if (!v || (ig && !v.busca)) id = setTimeout(() => setModal((m) => m || "bienvenida"), ig ? 700 : 1600);
     return () => clearTimeout(id);
   }, []);
@@ -303,6 +307,9 @@ export default function Site() {
       case "youtube":
         vista = <YouTube {...comunes} />;
         break;
+      case "historias":
+        vista = <Historias desde={payload} onClose={cerrar} onAplauso={onAplauso} aplausos={stats?.aplausos} />;
+        break;
       case "instagram":
         vista = <Instagram {...comunes} />;
         break;
@@ -311,7 +318,7 @@ export default function Site() {
   return (
     <LangCtx.Provider value={ctx}>
       <Nav abrir={abrir} tema={tema} setTema={setTema} sonido={sonido} setSonido={setSonido} sellos={sellos} visitante={visitante} />
-      <Hero abrir={abrir} sellos={sellos} onSound={onSound} visitante={visitante} marco={muro.huellas.slice(0, 16).map((h) => h.emoji)} />
+      <Hero abrir={abrir} sellos={sellos} onSound={onSound} aplausos={stats?.aplausos} visitante={visitante} marco={muro.huellas.slice(0, 16).map((h) => h.emoji)} />
       <ComoTrabajo abrir={abrir} />
       <Calculadora abrir={abrir} />
       <Bitacora abrir={abrir} />

@@ -1,6 +1,6 @@
 "use client";
 import { useFk, botonesApp } from "@/lib/fk-cliente";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../Modal";
 import { proyecto, INDUSTRIAS } from "@/data/proyectos";
 import { LINKS } from "@/data/perfil";
@@ -282,7 +282,48 @@ export default function ProyectoModal({ id, onClose, abrir, stats, onAplauso }) 
           <Aplauso id={p.id} valor={stats?.aplausos?.[p.id]} onAplauso={onAplauso} />
           {p.fila >= 2 && <button className="btn ghost" onClick={() => abrir("quiz")}>🧪 {lang === "es" ? "¿Algo así para vos?" : "Something like this for you?"}</button>}
         </div>
+        {p.url && <Comentarios p={p} lang={lang} />}
       </div>
     </Modal>
+  );
+}
+
+// Comentarios de la app: los que dejan en su card y las respuestas a sus historias (pasan la moderación del muro; con 3 reportes se ocultan).
+function Comentarios({ p, lang }) {
+  const es = lang !== "en";
+  const [lista, setLista] = useState(null), [texto, setTexto] = useState(""), [nombre, setNombre] = useState(""), [aviso, setAviso] = useState(""), [enviando, setEnviando] = useState(false);
+  useEffect(() => { fetch(`/api/muro?app=${encodeURIComponent(p.id)}`).then((r) => r.json()).then((d) => setLista(d.comentarios || [])).catch(() => setLista([])); }, [p.id]);
+  const nombreApp = tx(p.nombre, lang);
+  const enviar = async (e) => {
+    e.preventDefault();
+    const t = texto.trim(); if (t.length < 3 || enviando) return;
+    setEnviando(true); setAviso("");
+    try {
+      const r = await fetch("/api/muro", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tipo: "comentario", app: p.id, texto: t, nombre: nombre.trim() || undefined }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) { setAviso(d.error === "links" ? (es ? "Sin links, porfa." : "No links, please.") : d.error === "lenguaje" ? (es ? "Ese lenguaje no va." : "Mind the language.") : d.error === "limite" ? (es ? "Escribiste mucho seguido: probá en un rato." : "Too many in a row: try later.") : (es ? "No se pudo publicar." : "Could not post.")); return; }
+      setLista((l) => [d.item, ...(l || [])]); setTexto("");
+      avisarPorMail(`💬 Comentaron ${nombreApp} en fungirak.com`, { App: nombreApp, Nombre: nombre.trim() || "(sin nombre)", Comentario: t }).catch(() => {});
+    } finally { setEnviando(false); }
+  };
+  const reportar = async (id) => { await fetch("/api/muro", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ accion: "reportar", id }) }).catch(() => {}); setLista((l) => l.filter((x) => x.id !== id)); };
+  return (
+    <section className="comentarios-app">
+      <h3>💬 {es ? "Comentarios" : "Comments"} {lista?.length ? <small>({lista.length})</small> : null}</h3>
+      <form onSubmit={enviar} className="comentar">
+        <input value={nombre} onChange={(e) => setNombre(e.target.value)} maxLength={30} placeholder={es ? "Tu nombre (opcional)" : "Your name (optional)"} aria-label={es ? "Tu nombre" : "Your name"} />
+        <textarea value={texto} onChange={(e) => setTexto(e.target.value)} maxLength={240} rows={2} placeholder={es ? `¿Qué te parece ${nombreApp}?` : `What do you think of ${nombreApp}?`} aria-label={es ? "Tu comentario" : "Your comment"} />
+        <button className="btn" disabled={enviando || texto.trim().length < 3}>{es ? "Comentar" : "Comment"}</button>
+        {aviso && <p className="error" role="alert">{aviso}</p>}
+      </form>
+      {lista === null ? null : lista.length === 0 ? <p className="muted">{es ? "Todavía no hay comentarios: ¡dejá el primero!" : "No comments yet: be the first!"}</p> : (
+        <ul className="lista-comentarios">
+          {lista.map((c) => (
+            <li key={c.id}><b>{c.nombre || (es ? "Alguien" : "Someone")}</b> <span className="muted">· {new Date(c.creado).toLocaleDateString(es ? "es-AR" : "en-US", { day: "numeric", month: "short" })}</span><p>{c.texto}</p>
+              <button type="button" className="reportar" onClick={() => reportar(c.id)} aria-label={es ? "Reportar" : "Report"}>{es ? "Reportar" : "Report"}</button></li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }

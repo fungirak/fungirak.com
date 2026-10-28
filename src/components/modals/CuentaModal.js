@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Modal from "../Modal";
+import { PROYECTOS } from "@/data/proyectos";
+import { botonesApp } from "@/lib/fk-cliente";
+import { useLang, tx } from "@/lib/i18n";
 
 const CUENTA = "https://cuenta.fungirak.com";
 const EDADES = [["13-17", "13-17"], ["18-24", "18-24"], ["25-34", "25-34"], ["35-44", "35-44"], ["45-54", "45-54"], ["55+", "55+"]];
@@ -120,6 +123,26 @@ export default function CuentaModal({ onClose }) {
           <button className="btn" disabled={busy || !edad || !acepto} style={{ width: "100%" }}>{busy ? "Creando…" : "Crear mi cuenta"}</button>
         </form>
       )}
+      {!alta && sesion !== undefined && <AppsCuenta sesion={sesion} />}
     </Modal>
+  );
+}
+
+// Todas las apps del Studio que usan la cuenta FUNGIRAK, con su logo; con sesión, las que ya usás aparecen marcadas.
+const APPS_CUENTA = PROYECTOS.filter((p) => p.url && p.logo && !["libro", "ep"].includes(p.tipo) && p.id !== "telos");
+function AppsCuenta({ sesion }) {
+  const { lang } = useLang();
+  const usadas = APPS_CUENTA.filter((p) => botonesApp(p.url, sesion)?.usada).length;
+  return (
+    <div className="cuenta-apps">
+      <a className="btn cuenta-ir" href={`${CUENTA}/${sesion ? "?seccion=cuenta" : ""}`} target="_blank" rel="noopener">Ir a cuenta.fungirak.com ↗</a>
+      <p className="cuenta-apps-t">{sesion ? `Usás ${usadas} de ${APPS_CUENTA.length} apps con tu cuenta` : `${APPS_CUENTA.length} apps y sitios con una sola cuenta`}</p>
+      <div className="cuenta-apps-grilla">
+        {APPS_CUENTA.map((p) => { const usada = sesion && botonesApp(p.url, sesion)?.usada; return (
+          <a key={p.id} href={p.url} target="_blank" rel="noopener" className={usada ? "usada" : ""} title={tx(p.nombre, lang)}>
+            <img src={p.logo} alt="" width={48} height={48} loading="lazy" /><span>{String(tx(p.nombre, lang)).replace(/^Sitio homenaje a /, "")}</span>{usada && <i aria-label="la usás">✓</i>}
+          </a>); })}
+      </div>
+    </div>
   );
 }

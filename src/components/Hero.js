@@ -86,7 +86,7 @@ export function Socials() {
 // Posición de cada ícono de la comunidad sobre el borde de la tarjeta (en %)
 const BORDE = [[8, 0], [30, 0], [52, 0], [74, 0], [96, 0], [100, 22], [100, 48], [100, 74], [92, 100], [68, 100], [44, 100], [20, 100], [0, 86], [0, 60], [0, 34], [0, 10]];
 
-export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) {
+export default function Hero({ abrir, sellos, onSound, aplausos, visitante, marco = [] }) {
   const { lang, ui } = useLang();
   // Un proyecto distinto cada día (hora de Argentina). El salto es coprimo con la cantidad de proyectos,
   // así pasan todos antes de repetir aunque se sumen nuevos (con 9, un salto de 3 mostraría solo 3).
@@ -108,10 +108,11 @@ export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) 
             </div>
           )}
           <div className="perfil-top">
-            <div className="avatar">
+            <button type="button" className="avatar avatar-historias" onClick={() => abrir("historias")} aria-label={lang === "en" ? `${PERFIL.nombre}: see the stories of every app` : `${PERFIL.nombre}: ver las historias de cada app`}>
               <img src="/img/fotoPerfil-200.webp" alt={`Foto de ${PERFIL.nombre}`} width={92} height={92} />
               <img className="utn" src="/img/update/LogoUTN-68.png" alt="UTN" width={34} height={34} />
-            </div>
+              <span className="hst-chapa" aria-hidden="true">{lang === "en" ? "Stories" : "Historias"}</span>
+            </button>
             <div>
               <h1 className="display">
                 {PERFIL.nombre}
@@ -164,7 +165,7 @@ export default function Hero({ abrir, sellos, onSound, visitante, marco = [] }) 
           </a>
         </aside>
 
-        <Escenario onOpen={(id) => abrir(`proyecto:${id}`)} sellos={sellos} onSound={onSound} />
+        <Escenario onOpen={(id) => abrir(`proyecto:${id}`)} sellos={sellos} onSound={onSound} aplausos={aplausos} />
       </main>
     </>
   );
