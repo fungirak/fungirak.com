@@ -24,8 +24,8 @@
   const GRUPOS = [
     ["Apps", ["teamjoy", "dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "carta-al-futuro", "preguntas", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "voluntarios"]],
     ["Herramientas", ["ecos", "sinvueltas", "hoy", "cv", "escanea", "pasalo", "fabrica"]],
-    ["Juegos", ["trivia", "figus", "prode", "afinados", "cronicas"]],
-    ["Sitios", ["santafe-oculta", "gourmet", "schools", "telos", "negro", "peyote", "tribus"]],
+    ["Juegos", ["trivia", "figus", "prode", "afinados", "cronicas", "santafe-oculta"]],
+    ["Sitios", ["gourmet", "schools", "telos", "negro", "peyote", "tribus"]],
   ];
   const EXTRA = {
     teamjoy: ["Team Joy", "https://teamjoy.site", "/img/teamjoy-logo-240.webp"], ecos: ["ECOS", "https://ecos-map.fungirak.com", "/img/logos/ecos.png"],
