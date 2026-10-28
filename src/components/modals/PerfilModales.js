@@ -165,7 +165,8 @@ export function Privacidad({ onClose }) {
         <ul className="lista-emoji">
           {(es
             ? [
-                ["🍪", "Este sitio no usa cookies de publicidad ni de seguimiento."],
+                ["🍪", "Este sitio no usa cookies de publicidad. Las de medición de Google Analytics se cargan solo si las aceptás en el cartel: si decís que no, todo funciona igual."],
+                ["📊", "Google Analytics (Google LLC, EE. UU.) recibe las páginas que visitás, el tiempo, la ciudad aproximada y el tipo de dispositivo, sin tu nombre ni tu mail y sin usos publicitarios. Sus cookies duran hasta 13 meses; tu elección, 6 meses en todos los sitios de fungirak.com. Al aceptar consentís esa transferencia a EE. UU. (art. 12, Ley 25.326). La cambiás cuando quieras desde «Cookies», al pie."],
                 ["📱", "Tu nombre, tu pasaporte de sellos y tus preferencias (tema, idioma, sonido) se guardan solo en tu dispositivo."],
                 ["✉️", "Si me escribís desde «Hablemos», guardo tu nombre, tu contacto y tu mensaje solamente para responderte. No los comparto ni los vendo. El aviso me llega por email a través de FormSubmit."],
                 ["📊", "Cuento visitas, aplausos y pasaportes completos de forma anónima. Nunca guardo tu IP: solo un código irreversible para evitar abusos."],
@@ -176,7 +177,8 @@ export function Privacidad({ onClose }) {
                 ["⚖️", "Responsable: FUNGIRAK Studio (provincia de Santa Fe, Argentina), conforme a la Ley 25.326. La Agencia de Acceso a la Información Pública, órgano de control de esa ley, atiende las denuncias y reclamos de quienes resulten afectados en sus derechos por incumplimiento de las normas de protección de datos personales."],
               ]
             : [
-                ["🍪", "This site uses no advertising or tracking cookies."],
+                ["🍪", "This site uses no advertising cookies. Google Analytics measurement cookies load only if you accept them in the banner: if you say no, everything works the same."],
+                ["📊", "Google Analytics (Google LLC, US) receives the pages you visit, time spent, approximate city and device type, never your name or email and never for advertising. Its cookies last up to 13 months; your choice, 6 months across all fungirak.com sites. By accepting you consent to that transfer to the US (art. 12, Argentine Law 25,326). Change it anytime from «Cookies» in the footer."],
                 ["📱", "Your name, stamp passport and preferences (theme, language, sound) are stored only on your device."],
                 ["✉️", "If you write to me through «Let's talk», I keep your name, contact and message only to reply. I never share or sell them. The notice reaches me by email via FormSubmit."],
                 ["📊", "Visits, applause and completed passports are counted anonymously. I never store your IP: only an irreversible code to prevent abuse."],

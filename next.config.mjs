@@ -10,11 +10,11 @@ const security = [
     value: [
       "default-src 'self'",
       // Next.js inyecta scripts en línea (tema sin parpadeo, datos estructurados, hidratación)
-      `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
+      `script-src 'self' https://cuenta.fungirak.com https://www.googletagmanager.com 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://i.ytimg.com https://cuenta.fungirak.com",
+      "img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com data: blob: https://i.ytimg.com https://cuenta.fungirak.com",
       "font-src 'self'",
-      "connect-src 'self' https://formsubmit.co https://cuenta.fungirak.com",
+      "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://formsubmit.co https://cuenta.fungirak.com",
       "frame-src https://www.youtube-nocookie.com https://www.youtube.com",
       "media-src 'self' https://www.youtube-nocookie.com",
       "worker-src 'self' blob:",

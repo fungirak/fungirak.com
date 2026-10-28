@@ -35,7 +35,7 @@ export default function Footer({ abrir, stats }) {
       <h3>{titulo}</h3>
       <ul>
         {items.map(([label, id, href, proyecto]) => (
-          <li key={label}>{proyecto ? <AppTip p={proyecto} label={label} href={href} lang={lang} es={es} /> : href ? <a href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a> : <button onClick={() => abrir(id)}>{label}</button>}</li>
+          <li key={label}>{proyecto ? <AppTip p={proyecto} label={label} href={href} lang={lang} es={es} /> : href ? <a href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a> : <button onClick={() => (id === "cookies" ? window.fkCookies?.abrir() : abrir(id))}>{label}</button>}</li>
         ))}
       </ul>
     </div>
@@ -92,6 +92,7 @@ export default function Footer({ abrir, stats }) {
           ["WhatsApp", null, `https://wa.me/${LINKS.whatsapp}`],
           [ui.cv, null, "/cv"],
           [ui.agendar, null, "/api/vcard"],
+          ["Cookies", "cookies"],
           [es ? "Política de privacidad" : "Privacy policy", "privacidad"],
         ])}
       </div>
