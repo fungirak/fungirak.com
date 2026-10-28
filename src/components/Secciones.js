@@ -253,12 +253,13 @@ export function Bitacora({ abrir }) {
 
 // ---------- 4. La ruleta del micelio ----------
 // Sólo etiquetas: QUÉ sale y con qué probabilidad lo decide el servidor (/api/ruleta).
-const GAJOS = ["d10", "nada", "d15", "otro", "sorteo", "nada", "d20", "otro"];
+const GAJOS = ["d10", "nada", "d15", "otro", "sorteo", "mes", "d20", "otro"];
 const ETIQ = {
   d10: { es: "10% OFF", en: "10% OFF", c: "var(--c-green)" },
   d15: { es: "15% OFF", en: "15% OFF", c: "var(--c-blue)" },
   d20: { es: "20% OFF", en: "20% OFF", c: "var(--c-rose)" },
   sorteo: { es: "Sorteo sitio", en: "Giveaway", c: "var(--c-amber)" },
+  mes: { es: "1 mes de plan", en: "1 month plan", c: "#c99a06" },
   otro: { es: "Otro giro", en: "Spin again", c: "var(--c-violet)" },
   nada: { es: "Esta vez no", en: "Not this time", c: "var(--c-navy)" },
 };
@@ -267,7 +268,9 @@ const PREMIO_TXT = {
   d15: { es: "15% de descuento en tu proyecto", en: "15% off your project" },
   d20: { es: "20% de descuento en tu proyecto", en: "20% off your project" },
   sorteo: { es: "Entrás al sorteo de un sitio web gratis", en: "You're in the free website giveaway" },
+  mes: { es: "1 mes gratis del plan FUNGIRAK en todas las apps", en: "1 free month of the FUNGIRAK plan in every app" },
 };
+const CUENTA_PLAN = "https://cuenta.fungirak.com/?seccion=plan";
 const leer = (k) => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } };
 // Sonidos de la ruleta (Web Audio, sin archivos): ganar = arpegio alegre, otro giro = dos notas, nada = tono suave
 const SONIDO = {
@@ -286,6 +289,13 @@ function dispositivo() {
 
 // Qué hacer con el premio (se muestra al ganar y al volver a ver el cupón)
 function Instrucciones({ premio, es }) {
+  if (premio === "mes") return (
+    <ol className="reclamo-pasos">
+      <li>{es ? "Copiá tu código (también te llega por email)." : "Copy your code (you'll also get it by email)."}</li>
+      <li>{es ? <>Entrá a <a href={CUENTA_PLAN}>cuenta.fungirak.com</a> (si no tenés cuenta, crearla es gratis) y en <b>Tu plan</b> pegalo en <b>Tenés un código de regalo</b>.</> : <>Go to <a href={CUENTA_PLAN}>cuenta.fungirak.com</a> (signing up is free) and paste it in <b>Your plan</b> › gift code.</>}</li>
+      <li>{es ? "Listo: 30 días del plan FUNGIRAK en todas las apps del Studio." : "Done: 30 days of the FUNGIRAK plan in every Studio app."}</li>
+    </ol>
+  );
   return premio === "sorteo" ? (
     <p>{es ? "Ya estás participando. Cuando haga el sorteo te aviso a tu email. Guardá tu número por las dudas." : "You're in. When I run the giveaway I'll email you. Keep your number just in case."}</p>
   ) : (
@@ -323,7 +333,9 @@ function Reclamo({ premio, token, onListo, onClose, onUsar, es }) {
       // Aviso a Gabriel + copia automática al visitante (respuesta automática de FormSubmit al campo "email")
       avisarPorMail(`🎡 fungirak.com · Premio de la ruleta: ${j.codigo}`, {
         Premio: txt, Codigo: j.codigo, Vence: fechaAR(j.vence), Nombre: nombre || "-", email,
-        _autoresponse: j.premio === "sorteo"
+        _autoresponse: j.premio === "mes"
+          ? `${hola} Ganaste 1 mes gratis del plan FUNGIRAK en la ruleta de fungirak.com. Tu código: ${j.codigo} (válido hasta el ${fechaAR(j.vence)}). Para usarlo, entrá a cuenta.fungirak.com, andá a «Tu plan» y pegalo en «Tenés un código de regalo»: son 30 días del plan en todas las apps del Studio. — Gabriel · fungirak.com`
+          : j.premio === "sorteo"
           ? `${hola} Ya estás participando del sorteo de un sitio web gratis de FUNGIRAK Studio. Tu número: ${j.codigo}. Cuando haga el sorteo te aviso a este email. — Gabriel · fungirak.com`
           : `${hola} Ganaste ${txt} en la ruleta de fungirak.com. Tu código: ${j.codigo} (válido hasta el ${fechaAR(j.vence)}). Para usarlo, entrá a fungirak.com, tocá "Pedime algo" y contame tu proyecto mencionando el código (si pedís desde el mismo dispositivo, ya va cargado). El descuento se aplica en tu presupuesto. — Gabriel · fungirak.com`,
       });
@@ -338,7 +350,8 @@ function Reclamo({ premio, token, onListo, onClose, onUsar, es }) {
           <div className="reclamo">
             <div className="cupon"><code>{cupon.codigo}</code><button className="btn small ghost" onClick={copiar}>{copiado ? (es ? "Copiado ✓" : "Copied ✓") : (es ? "Copiar" : "Copy")}</button></div>
             <Instrucciones premio={cupon.premio} es={es} />
-            {cupon.premio !== "sorteo" && <div className="acciones"><button className="btn amber" onClick={() => onUsar(cupon.codigo)}>🎟️ {es ? "Usar mi descuento" : "Use my discount"}</button></div>}
+            {cupon.premio === "mes" ? <div className="acciones"><a className="btn amber" href={CUENTA_PLAN}>✦ {es ? "Canjear mi mes" : "Redeem my month"}</a></div>
+              : cupon.premio !== "sorteo" && <div className="acciones"><button className="btn amber" onClick={() => onUsar(cupon.codigo)}>🎟️ {es ? "Usar mi descuento" : "Use my discount"}</button></div>}
             <small className="aviso-nota">{es ? `Te mandamos una copia a ${email}. Válido hasta el ${fechaAR(cupon.vence)}. Un premio por persona.` : `We sent a copy to ${email}. Valid until ${fechaAR(cupon.vence)}. One prize per person.`}</small>
           </div>
         ) : (

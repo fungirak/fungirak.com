@@ -1,5 +1,7 @@
 import "server-only";
-import { neon } from "@neondatabase/serverless";
+import { neon, neonConfig } from "@neondatabase/serverless";
+// Solo para pruebas locales: si existe NEON_FETCH_ENDPOINT, las consultas van a esa base de prueba (en producción no está).
+if (process.env.NEON_FETCH_ENDPOINT) neonConfig.fetchEndpoint = process.env.NEON_FETCH_ENDPOINT;
 import { createHash } from "node:crypto";
 
 // Base Neon (capa gratuita). Si todavía no está conectada, se usa memoria del servidor

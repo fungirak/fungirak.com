@@ -65,6 +65,7 @@ export default function Panel() {
               <p className="pg-n">{a.emoji} <b>{a.nombre}</b>{a.pendientes > 0 && <span className="pg-badge">{a.pendientes} para revisar</span>}</p>
               {a.ok ? <>
                 <dl><div><dt>cuentas</dt><dd>{num(a.cuentas)}</dd></div><div><dt>nuevas 7 días</dt><dd>{num(a.nuevas7 ?? a.nuevasHoy)}</dd></div><div><dt>activas 7 días</dt><dd>{num(a.activas7)}</dd></div></dl>
+                {a.nota && <p className="pg-nota" style={{ margin: 0, fontSize: ".8rem", opacity: .8 }}>{a.nota}</p>}
                 {a.dias?.length > 0 && <Mini dias={a.dias} />}
               </> : <p className="adm-err">{a.codigo === 404 ? "Panel todavía sin publicar" : a.error}</p>}
               <a className="adm-b adm-b2" href={`${a.url}/admin`} target="_blank" rel="noopener noreferrer">Abrir su panel →</a>

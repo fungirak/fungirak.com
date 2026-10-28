@@ -11,6 +11,24 @@ const APPS = [
   { id: "mitour", nombre: "MiTour", url: "https://mitour.fungirak.com", tipo: "kit", emoji: "✈️" },
   { id: "dertin", nombre: "Dertin", url: "https://dertin.fungirak.com", tipo: "dertin", emoji: "💞" },
   { id: "atlas", nombre: "Atlas Fit Pro", url: "https://atlasfit-pro.fungirak.com", tipo: "atlas", emoji: "🏋️" },
+  // las del molde nuevo: su panel da el uso de los últimos 30 días (personas, cuentas y visitas)
+  { id: "cv", nombre: "CV", url: "https://cv.fungirak.com", tipo: "molde", emoji: "📄" },
+  { id: "preguntas", nombre: "Preguntas de a Dos", url: "https://preguntas.fungirak.com", tipo: "molde", emoji: "💬" },
+  { id: "escanea", nombre: "Escaneá", url: "https://escanea.fungirak.com", tipo: "molde", emoji: "📄" },
+  { id: "pasalo", nombre: "Pásalo", url: "https://pasalo.fungirak.com", tipo: "molde", emoji: "📲" },
+  { id: "termometro", nombre: "Termómetro", url: "https://termometro.fungirak.com", tipo: "molde", emoji: "🌡️" },
+  { id: "rinde", nombre: "Rinde", url: "https://rinde.fungirak.com", tipo: "molde", emoji: "🪙" },
+  { id: "que-hago-hoy", nombre: "Qué Hago Hoy", url: "https://que-hago-hoy.fungirak.com", tipo: "molde", emoji: "🎟️" },
+  { id: "pescador", nombre: "La Escuela del Pescador", url: "https://escuela-del-pescador.fungirak.com", tipo: "molde", emoji: "🎣" },
+  { id: "mascotas", nombre: "La Escuela de las Mascotas", url: "https://escuela-de-mascotas.fungirak.com", tipo: "molde", emoji: "🐾" },
+  { id: "auxilios", nombre: "Primeros Auxilios", url: "https://primeros-auxilios.fungirak.com", tipo: "molde", emoji: "⛑️" },
+  { id: "trivia", nombre: "La Gran Trivia", url: "https://trivia.fungirak.com", tipo: "molde", emoji: "🎤" },
+  { id: "figus", nombre: "Figus", url: "https://figus.fungirak.com", tipo: "molde", emoji: "🃏" },
+  { id: "voluntarios", nombre: "Una Mano", url: "https://voluntarios.fungirak.com", tipo: "molde", emoji: "🤝" },
+  { id: "prode", nombre: "Prode", url: "https://prode.fungirak.com", tipo: "molde", emoji: "⚽" },
+  { id: "afinados", nombre: "Afinados", url: "https://afinados.fungirak.com", tipo: "molde", emoji: "🎶" },
+  { id: "oculta", nombre: "Santa Fe Oculta", url: "https://santafe-oculta.fungirak.com", tipo: "molde", emoji: "🗺️" },
+  { id: "hoy", nombre: "Hoy", url: "https://hoy.fungirak.com", tipo: "molde", emoji: "☀️" },
 ];
 const CORREO = "https://correo.fungirak.com/api/admin";
 const intentos = new Map(); // freno por conexión: así nadie usa el panel para probar contraseñas contra todas las apps
@@ -37,6 +55,12 @@ async function app(a, llave) {
     if (!r.ok) return { ...a, ok: false, error: r.error, codigo: r.codigo };
     const o = r.d;
     return { ...a, ok: true, cuentas: o.players, nuevas7: null, nuevasHoy: o.new_today, activas7: o.active_7d, pendientes: (o.reports_open || 0) + (o.msg_reports_7d || 0), extra: o };
+  }
+  if (a.tipo === "molde") {
+    const r = await pedir(`${a.url}/api/admin/uso`, llave);
+    if (!r.ok) return { ...a, ok: false, error: r.error, codigo: r.codigo };
+    const t = r.d.total || {};
+    return { ...a, ok: true, cuentas: t.cuentas, nuevas7: null, activas7: null, pendientes: null, dias: r.d.dias || [], nota: `En 30 días: ${t.personas || 0} personas, ${t.visitas || 0} visitas`, extra: t };
   }
   const r = await pedir(`${a.url}/api/admin?vista=numeros`, llave);
   if (!r.ok) return { ...a, ok: false, error: r.error, codigo: r.codigo };

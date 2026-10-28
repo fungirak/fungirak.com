@@ -62,6 +62,7 @@ export default function Footer({ abrir, stats }) {
           [ui.nav.trayectoria, "trayectoria"],
           [es ? "Constelación de skills" : "Skills constellation", "skills"],
           [ui.quiz, "quiz"],
+          [es ? "Plan FUNGIRAK (todas las apps)" : "FUNGIRAK plan (all apps)", null, "https://cuenta.fungirak.com/planes"],
         ])}
         {col(es ? "Mi recorrido" : "My path", [
           [es ? "Experiencia laboral" : "Work experience", "experiencia"],
