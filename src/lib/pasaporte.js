@@ -19,6 +19,7 @@ export const SELLOS = [
   { id: "telos", icono: "🌙", glifo: "luna", es: "Telo's", en: "Telo's" },
   { id: "negro", icono: "🌲", glifo: "arbol", es: "Bosque Negro", en: "Black Forest" },
   { id: "peyote", icono: "🌵", glifo: "montana", es: "Villa Española", en: "Villa Española" },
+  { id: "loquero", icono: "🩺", glifo: "corazon", es: "Historia clínica", en: "Medical record" },
   { id: "mate", icono: "🧉", glifo: "mate", es: "La ronda", en: "The round" },
   { id: "asador", icono: "🔥", glifo: "llama", es: "El asador", en: "The grill master" },
   { id: "micoteca", icono: "🍄", glifo: "hongo", es: "Micoteca", en: "Micoteca" },

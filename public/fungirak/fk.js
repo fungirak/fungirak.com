@@ -25,13 +25,13 @@
     ["Apps", ["teamjoy", "dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "carta-al-futuro", "preguntas", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "voluntarios"]],
     ["Herramientas", ["ecos", "sinvueltas", "hoy", "cv", "escanea", "pasalo", "fabrica"]],
     ["Juegos", ["trivia", "figus", "prode", "afinados", "cronicas", "santafe-oculta"]],
-    ["Sitios", ["gourmet", "schools", "telos", "negro", "peyote", "tribus"]],
+    ["Sitios", ["gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"]],
   ];
   const EXTRA = {
     teamjoy: ["Team Joy", "https://teamjoy.site", "/img/teamjoy-logo-240.webp"], ecos: ["ECOS", "https://ecos-map.fungirak.com", "/img/logos/ecos.png"],
     fabrica: ["Fábrica", "https://fabrica.fungirak.com", "/img/logos/fabrica.png"], gourmet: ["SF Gourmet", "https://santafe-gourmet.fungirak.com", "/img/logos/gourmet.png"],
     schools: ["SF Schools", "https://santafe-schools.fungirak.com", "/img/logos/schools.png"], telos: ["SF Telo's", "https://santafe-telos.fungirak.com", "/img/logos/telos.png"],
-    negro: ["Experimento Negro", "https://experimento-negro.fungirak.com", "/img/logos/negro.svg"], peyote: ["Peyote Asesino", "https://peyote-asesino.fungirak.com", "/img/logos/peyote.png"],
+    negro: ["Experimento Negro", "https://experimento-negro.fungirak.com", "/img/logos/negro.svg"], peyote: ["Peyote Asesino", "https://peyote-asesino.fungirak.com", "/img/logos/peyote.png"], loquero: ["Loquero", "https://loquero.fungirak.com", "/img/logos/loquero.png"],
     tribus: ["Tribus urbanas", "https://tribus.fungirak.com", "/img/logos/tribus.png"],
   };
 

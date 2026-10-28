@@ -13,6 +13,7 @@ export const BITACORA = [
   { fecha: "2026-10", proyecto: "atalaya", es: "Aprender ciberseguridad desde arriba, en comunidad", en: "Learning cybersecurity from above, as a community" },
   { fecha: "2026-10-13", proyecto: "peyote", es: "Homenaje a El Peyote Asesino, rap blanco de Montevideo", en: "A tribute to El Peyote Asesino, white rap from Montevideo" },
   { fecha: "2026-10-20", proyecto: "mate", es: "La Escuela del Mate: del yerbal a la ronda", en: "The Mate School: from the yerba field to the round" },
+  { fecha: "2026-10-27", proyecto: "loquero", es: "Homenaje a Loquero, punk de Mar del Plata", en: "A tribute to Loquero, punk from Mar del Plata" },
   { fecha: "2026-10-27", proyecto: "asador", es: "La Escuela del Asador: el atlas 3D de la carne", en: "The Barbecue School: the 3D atlas of beef" },
   { fecha: "2026-11-03", proyecto: "micoteca", es: "Micoteca: los hongos de Argentina en un atlas", en: "Micoteca: Argentina's mushrooms in an atlas" },
   { fecha: "2026-11-10", proyecto: "musgui", es: "Musgui: una mascota de frasco que crece con tus hábitos", en: "Musgui: a pet in a jar that grows with your habits" },

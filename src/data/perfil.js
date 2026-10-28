@@ -38,6 +38,7 @@ export const PERFIL = {
     { proyecto: "telos", es: "Santa Fe Telo's: la guía al día", en: "Santa Fe Telo's: the guide, up to date" },
     { proyecto: "negro", es: "Experimento Negro: discos y recitales", en: "Experimento Negro: albums and gigs" },
     { proyecto: "peyote", es: "El Peyote Asesino: los tres discos para escuchar", en: "El Peyote Asesino: all three albums to play" },
+    { proyecto: "loquero", es: "Loquero: la historia clínica de una banda", en: "Loquero: the medical record of a band" },
     { proyecto: "mate", es: "La Escuela del Mate: el desafío de la semana", en: "The Mate School: this week's challenge" },
     { proyecto: "asador", es: "La Escuela del Asador: precios del IPCVA al día", en: "The Barbecue School: IPCVA prices, up to date" },
     { proyecto: "micoteca", es: "Micoteca: qué hongos aparecen este mes", en: "Micoteca: which mushrooms show up this month" },

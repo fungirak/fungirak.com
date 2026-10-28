@@ -19,7 +19,7 @@ export const INDUSTRIAS = [
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
 export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "afinados", "santafe-oculta", "fabrica",
-  "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "tribus"];
+  "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"];
 export const PROYECTOS = [
   {
     id: "teamjoy",
@@ -276,6 +276,32 @@ export const PROYECTOS = [
     destacados: {
       es: ["Los tres discos completos, tema por tema", "Toda la tipografía es la familia Rubik", "Cada dato con su fuente"],
       en: ["All three albums, track by track", "All the type is the Rubik family", "Every fact with its source"],
+    },
+  },
+  {
+    id: "loquero",
+    fila: 3,
+    nombre: { es: "Sitio homenaje a Loquero", en: "Tribute site to Loquero" },
+    url: "https://loquero.fungirak.com",
+    logo: "/img/logos/loquero.png",
+    industrias: ["musica"],
+    pills: ["Web", "Música", "Radio", "App instalable", "6 épocas"],
+    stack: ["HTML", "CSS", "JavaScript", "Canvas", "YouTube IFrame API", "PWA"],
+    color: "#2BD96B",
+    lema: { es: "La historia clínica de una banda punk.", en: "The medical record of a punk band." },
+    tagline: { es: "Sitio musical homenaje a la banda punk de Mar del Plata", en: "A music tribute site to the punk band from Mar del Plata" },
+    descripcion: {
+      es: "Un sitio que hice como homenaje (no oficial) a Loquero, la banda punk de Mar del Plata que toca desde 1991: casetes, psiquiátricos, Cemento, Chile, Europa y Fantasy, contados como una historia clínica. Un electrocardiograma verde neón late al ritmo del tema que suena. No es mi banda: es mi regalo como fan.",
+      en: "A site I built as an (unofficial) tribute to Loquero, the punk band from Mar del Plata playing since 1991: tapes, psychiatric wards, Cemento, Chile, Europe and Fantasy, told as a medical record. A neon-green ECG beats to the tempo of the song that's playing. It's not my band: it's my gift as a fan.",
+    },
+    datos: [
+      { n: "173", es: "temas en la radio", en: "songs on the radio" },
+      { n: "6", es: "épocas del sitio", en: "site eras" },
+      { n: "35", es: "años de historia", en: "years of history" },
+    ],
+    destacados: {
+      es: ["La historia contada como historia clínica", "El electrocardiograma late al tema que suena", "Fechas dudosas marcadas con sus fuentes"],
+      en: ["The story told as a medical record", "The ECG beats to the song that's playing", "Doubtful dates flagged with their sources"],
     },
   },
   {

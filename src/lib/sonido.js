@@ -25,6 +25,7 @@ export const NOTAS = {
   telos: 220.0,
   negro: 196.0,
   peyote: 246.94,
+  loquero: 277.18,
   mate: 174.61,
   asador: 130.81,
   micoteca: 698.46,

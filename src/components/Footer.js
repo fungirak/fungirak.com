@@ -7,7 +7,7 @@ import { Socials } from "./Hero";
 
 // la columna de proyectos se separa en Apps, Juegos y Sitios (como la franja de los sitios)
 const JUEGOS = ["cronicas"];
-const SITIOS = ["gourmet", "schools", "telos", "negro", "peyote", "tribus"];
+const SITIOS = ["gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"];
 
 // En las columnas de proyectos, al pasar el mouse (o con el teclado) aparece una tarjetita con el ícono, qué es y la firma del estudio.
 function AppTip({ p, label, href, lang, es }) {
