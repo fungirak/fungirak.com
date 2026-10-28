@@ -135,6 +135,11 @@
       const pan = this.shadowRoot.querySelector(".pan"), b = this.shadowRoot.querySelector(".ic");
       this.abierto = que; pan.hidden = !que; b.setAttribute("aria-expanded", que === "apps" ? "true" : "false");
       if (!que) return;
+      // En el celu el botón no queda pegado al borde: si el panel (alineado a la derecha del botón) se escapa por la izquierda,
+      // se corre a la derecha lo justo para entrar en la pantalla con 8 px de margen.
+      pan.style.right = "0px";
+      const ancho = pan.getBoundingClientRect().width, caja = this.getBoundingClientRect(), sobra = ancho - (caja.right - 8);
+      if (sobra > 0) pan.style.right = `${-Math.max(0, Math.min(sobra, window.innerWidth - 8 - caja.right))}px`;
       const y = this.y || { sesion: false }, usadas = new Set((y.apps || []).map((a) => a.id));
       if (que === "apps") {
         embudo("grilla.abierta", this.app);
