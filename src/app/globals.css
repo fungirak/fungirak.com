@@ -2608,6 +2608,7 @@ img {
 .lista-comentarios li { padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--surface) 85%, var(--accent) 15%); font-size: 14px; position: relative; }
 .lista-comentarios li p { margin: 4px 0 0; }
 .lista-comentarios .reportar { position: absolute; top: 8px; right: 10px; border: 0; background: none; color: var(--muted, #888); font-size: 11px; cursor: pointer; opacity: .7; }
+.card.con-likes .pills, .card.con-likes:not(.con-pills) .tag { padding-right: 46px; }
 .card-likes { position: absolute; z-index: 3; right: 10px; bottom: 10px; padding: 4px 9px; border-radius: 999px; background: rgba(0,0,0,.55); color: #fff; font: 700 12px/1 var(--font-body); }
 /* «Tu cuenta»: todas las apps con su logo y el botón a cuenta.fungirak.com */
 .cuenta-apps { margin-top: 20px; }

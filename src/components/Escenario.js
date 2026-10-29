@@ -26,7 +26,7 @@ function Card({ p, onOpen, sellado, dim, lit, onHover, idx, likes = 0 }) {
   const { lang } = useLang();
   return (
     <button
-      className={`card${p.fila >= 2 ? " con-pills" : ""}${p.id === "teamjoy" ? " teamjoy" : ""}${dim ? " dim" : ""}${lit ? " lit" : ""}`}
+      className={`card${p.fila >= 2 ? " con-pills" : ""}${p.id === "teamjoy" ? " teamjoy" : ""}${dim ? " dim" : ""}${lit ? " lit" : ""}${likes > 0 ? " con-likes" : ""}`}
       style={{ "--c": p.color, "--i": idx }}
       data-card={p.id}
       onClick={() => onOpen(p.id)}
