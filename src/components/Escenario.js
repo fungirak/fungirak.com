@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { fondoDe } from "@/data/cards-fondo";
 import { PROYECTOS, INDUSTRIAS, ORDEN, ORDEN_FILAS } from "@/data/proyectos";
 import { useLang, tx } from "@/lib/i18n";
 import { Casa, Llave, Persona } from "./Iconos";
@@ -24,10 +25,11 @@ function Arte({ p }) {
 
 function Card({ p, onOpen, sellado, dim, lit, onHover, idx, likes = 0 }) {
   const { lang } = useLang();
+  const fondo = fondoDe(p.id);
   return (
     <button
-      className={`card${p.fila >= 2 ? " con-pills" : ""}${p.id === "teamjoy" ? " teamjoy" : ""}${dim ? " dim" : ""}${lit ? " lit" : ""}${likes > 0 ? " con-likes" : ""}`}
-      style={{ "--c": p.color, "--i": idx }}
+      className={`card${p.fila >= 2 ? " con-pills" : ""}${p.id === "teamjoy" ? " teamjoy" : ""}${dim ? " dim" : ""}${lit ? " lit" : ""}${likes > 0 ? " con-likes" : ""}${fondo ? (fondo.tono ? " con-fondo" : " con-fondo blanco") : ""}`}
+      style={{ "--c": fondo?.tono || p.color, "--i": idx, ...(fondo && { "--tapiz": fondo.tapiz }) }}
       data-card={p.id}
       onClick={() => onOpen(p.id)}
       onMouseEnter={() => onHover(p.id)}
@@ -35,6 +37,7 @@ function Card({ p, onOpen, sellado, dim, lit, onHover, idx, likes = 0 }) {
       onFocus={() => onHover(p.id)}
       onBlur={() => onHover(null)}
     >
+      {fondo && <span className="card-fondo" aria-hidden="true"><span /></span>}
       {p.badge && <span className="badge">{tx(p.badge, lang)}</span>}
       {sellado && <span className="stamped" title="✓">✓</span>}
       {likes > 0 && <span className="card-likes" title={lang === "es" ? "Aplausos y me gusta de sus historias" : "Claps and story likes"}>❤️ {likes}</span>}

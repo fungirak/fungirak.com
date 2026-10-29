@@ -2620,3 +2620,19 @@ img {
 .cuenta-apps-grilla img { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
 .cuenta-apps-grilla a.usada img { box-shadow: 0 0 0 2px var(--accent); }
 .cuenta-apps-grilla i { position: absolute; top: 4px; right: 10px; font-style: normal; background: var(--accent); color: #fff; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: grid; place-items: center; }
+
+/* Fondo propio de cada card (src/data/cards-fondo.js): degradado suave de su tono desde arriba y papel tapiz de dibujitos
+   en diagonal que se esfuma antes del texto. Se mueve despacito solo al pasar el mouse. */
+.card-fondo { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none;
+  background: linear-gradient(170deg, color-mix(in srgb, var(--c) 18%, transparent) 0%, color-mix(in srgb, var(--c) 8%, transparent) 40%, transparent 68%); }
+.card-fondo > span { position: absolute; inset: 0; opacity: .47; background-image: var(--tapiz); background-size: 54px 54px;
+  -webkit-mask-image: linear-gradient(180deg, #000 28%, transparent 60%); mask-image: linear-gradient(180deg, #000 28%, transparent 60%);
+  transition: background-position 6s linear; }
+.card:hover .card-fondo > span { background-position: 120px -60px; }
+.card.con-fondo .art, .card.con-fondo .name, .card.con-fondo .tag, .card.con-fondo .pills { position: relative; }
+.card.blanco .card-fondo { background: none; }
+:root[data-theme="dark"] .card-fondo { background: linear-gradient(170deg, color-mix(in srgb, var(--c) 24%, transparent) 0%, color-mix(in srgb, var(--c) 10%, transparent) 42%, transparent 70%); }
+:root[data-theme="dark"] .card-fondo > span { opacity: .59; }
+:root[data-theme="dark"] .card.blanco .card-fondo { background: none; }
+:root[data-theme="dark"] .card.blanco .card-fondo > span { opacity: .47; }
+@media (prefers-reduced-motion: reduce) { .card-fondo > span { transition: none; } }
