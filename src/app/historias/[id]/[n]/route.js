@@ -3,13 +3,23 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { APPS_HISTORIAS, portadaDe, propiasDe, nombreDe, logoDe, colorDe, fuentesDe } from "@/data/historias";
+import { APPS_HISTORIAS, portadaDe, propiasDe, nombreDe, logoDe, colorDe, fuentesDe, trazoDe } from "@/data/historias";
+import { tileDe } from "@/data/cards-fondo";
 
 export const dynamic = "force-dynamic"; // la caché la dan los encabezados (un día en el CDN)
 // el color de la app, más claro arriba y más oscuro abajo (sin irse a negro)
 const mezcla = (hex, con, k) => { const a = hex.replace("#", ""); return "#" + [0, 2, 4].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - k) + con * k).toString(16).padStart(2, "0")).join(""); };
 const claro = (c) => mezcla(c, 255, 0.22), oscuro = (c) => mezcla(c, 0, 0.45);
 const W = 1080, H = 1920;
+// El papel tapiz de la app (los mismos dibujitos de su card) como una imagen del tamaño de la historia.
+// Satori no repite fondos: el SVG trae su propio <pattern>.
+export function tapizSVG(p, W, H, op) {
+  const t = tileDe(p.id, trazoDe(p));
+  if (!t) return null;
+  const adentro = t.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><defs><pattern id="t" width="158" height="158" patternUnits="userSpaceOnUse"><g transform="scale(2.2)">${adentro}</g></pattern></defs><rect width="100%" height="100%" fill="url(#t)" opacity="${op}"/></svg>`;
+  return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
+}
 const COL = { display: "flex", flexDirection: "column", alignItems: "center" }; // el generador no apila los fragmentos: cada grupo va en su columna
 const fuentes = new Map();
 // Google Fonts sin «user-agent» responde TTF, que es lo que entiende el generador de imágenes
@@ -45,6 +55,7 @@ export async function GET(_req, { params }) {
     : <div style={{ width: t, height: t, borderRadius: t * 0.23, background: "rgba(255,255,255,.95)", color: c, display: "flex", alignItems: "center", justifyContent: "center", fontSize: t * 0.5, fontFamily: "T" }}>{nombre[0]}</div>;
   const ojo = (t) => <div style={{ fontSize: 34, letterSpacing: 9, opacity: 0.8, fontFamily: "B", marginBottom: 30 }}>{t}</div>;
   const frase = (t, tam = 72) => <div style={{ fontSize: tam, lineHeight: 1.22, fontFamily: "T", textAlign: "center", maxWidth: 900 }}>{t}</div>;
+  const blanco = p.id === "teamjoy";
   let cuerpo;
   if (!s) cuerpo = <div style={COL}>{icono(300)}<div style={{ fontSize: 96, fontFamily: "T", marginTop: 56, textAlign: "center", lineHeight: 1.05 }}>{nombre}</div>
     <div style={{ fontSize: 34, letterSpacing: 8, opacity: 0.85, fontFamily: "B", margin: "22px 0 70px" }}>FROM FUNGIRAK</div>{frase(portada.frase, 66)}
@@ -53,10 +64,13 @@ export async function GET(_req, { params }) {
   else if (s.tipo === "pills") cuerpo = <div style={COL}>{ojo(s.ojo)}<div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 24, maxWidth: 920 }}>{s.items.map((x) => <div key={x} style={{ padding: "22px 38px", borderRadius: 999, background: "rgba(255,255,255,.16)", border: "3px solid rgba(255,255,255,.4)", fontSize: 44, fontFamily: "B" }}>{x}</div>)}</div></div>;
   else if (s.tipo === "entrar") cuerpo = <div style={COL}>{icono(250)}<div style={{ marginTop: 60, display: "flex" }}>{frase(s.texto, 76)}</div>
     {s.sub ? <div style={{ fontSize: 38, opacity: 0.92, fontFamily: "B", marginTop: 40, textAlign: "center", maxWidth: 880, lineHeight: 1.45 }}>{s.sub}</div> : null}
-    <div style={{ marginTop: 56, padding: "34px 56px", borderRadius: 999, background: "#fff", color: "#111", fontSize: 46, fontFamily: "B" }}>{p.url.replace("https://", "")}</div></div>;
+    <div style={{ marginTop: 56, padding: "34px 56px", borderRadius: 999, background: blanco ? "#1f2937" : "#fff", color: blanco ? "#fff" : "#111", fontSize: 46, fontFamily: "B" }}>{p.url.replace("https://", "")}</div></div>;
   else cuerpo = <div style={COL}>{s.emoji ? <div style={{ fontSize: 130, marginBottom: 30 }}>{s.emoji}</div> : null}{ojo(s.ojo)}{frase(s.texto, 78)}{s.sub && s.sub !== s.texto ? <div style={{ fontSize: 40, opacity: 0.88, fontFamily: "B", marginTop: 40, textAlign: "center", maxWidth: 860, lineHeight: 1.4 }}>{s.sub}</div> : null}</div>;
+  const fondo = blanco ? "#ffffff" : p.id === "dertin" ? "linear-gradient(180deg, #26262e 0%, #0b0b10 48%, #000 100%)" : `linear-gradient(180deg, ${claro(c)} 0%, ${c} 46%, ${oscuro(c)} 100%)`;
+  const tapiz = tapizSVG(p, W, H, blanco ? 0.4 : p.id === "dertin" ? 0.22 : 0.17);
   return new ImageResponse(
-    <div style={{ width: W, height: H, display: "flex", flexDirection: "column", color: "#fff", fontFamily: "B", background: `linear-gradient(180deg, ${claro(c)} 0%, ${c} 46%, ${oscuro(c)} 100%)` }}>
+    <div style={{ width: W, height: H, display: "flex", flexDirection: "column", position: "relative", color: blanco ? "#1f2937" : "#fff", fontFamily: "B", background: fondo }}>
+      {tapiz ? <img alt="" src={tapiz} width={W} height={H} style={{ position: "absolute", left: 0, top: 0 }} /> : null}
       <div style={{ display: "flex", alignItems: "center", gap: 22, padding: "70px 80px 0", fontSize: 36 }}>
         {k === 0 ? null : icono(84)}<div style={{ fontFamily: "T", fontSize: 40 }}>{k === 0 ? "fungirak" : nombre}</div>
       </div>

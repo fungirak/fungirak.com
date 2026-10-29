@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { PERFIL } from "@/data/perfil";
 import { avisarPorMail } from "@/lib/avisoMail";
-import { APPS_HISTORIAS, portadaDe, propiasDe, nombreDe, logoDe, colorDe, inicioDeHoy, fuentesDe, hojaFuentes } from "@/data/historias";
+import { fondoDe } from "@/data/cards-fondo";
+import { APPS_HISTORIAS, portadaDe, propiasDe, nombreDe, logoDe, colorDe, trazoDe, inicioDeHoy, fuentesDe, hojaFuentes } from "@/data/historias";
 
 const DURA = 6500; // ms por historia
 
@@ -134,7 +135,8 @@ export default function Historias({ desde = null, onClose, onAplauso, aplausos =
   };
   const color = colorDe(p);
   const fu = fuentesDe(p);
-  const estilo = { "--c": color, ...(fu ? { "--hd": `'${fu[0]}', var(--font-display)`, "--hb": `'${fu[1]}', var(--font-body)` } : {}) };
+  const blanco = p.id === "teamjoy"; // Team Joy: fondo blanco con dibujitos de colores, como su card (las demás: su tono + dibujitos blancos)
+  const estilo = { "--c": color, "--tapiz": fondoDe(p.id, trazoDe(p))?.tapiz || "none", ...(fu ? { "--hd": `'${fu[0]}', var(--font-display)`, "--hb": `'${fu[1]}', var(--font-body)` } : {}) };
   const barras = dentro === null ? [0] : propias.map((_, i) => i);
   const actual = dentro === null ? 0 : dentro;
   const portada = portadaDe(p, lang);
@@ -149,7 +151,7 @@ export default function Historias({ desde = null, onClose, onAplauso, aplausos =
         </button>); })}
       <button type="button" className="hst-flecha izq" aria-label={es ? "Anterior" : "Previous"} onClick={anterior}>‹</button>
       <button type="button" className="hst-flecha der" aria-label={es ? "Siguiente" : "Next"} onClick={siguiente}>›</button>
-      <div className="hst-cel" style={estilo} onPointerDown={abajo} onPointerUp={arriba} onPointerCancel={() => clearTimeout(toque.current.largo)}>
+      <div className={`hst-cel${blanco ? " blanco" : ""}`} data-app={p.id} style={estilo} onPointerDown={abajo} onPointerUp={arriba} onPointerCancel={() => clearTimeout(toque.current.largo)}>
         <div className="hst-fondo" aria-hidden="true"><span /><span /><span /></div>
         <div className="hst-barras" aria-hidden="true">
           {barras.map((i) => <i key={i}><b style={{ transform: `scaleX(${i < actual ? 1 : i === actual ? prog : 0})` }} /></i>)}

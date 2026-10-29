@@ -3,6 +3,7 @@
 // Cada día arranca con otra app, en orden (no al azar), así en un mes pasan todas.
 import { PROYECTOS, ORDEN, ORDEN_HISTORIAS } from "./proyectos";
 import { conDemos } from "./historias-demos";
+import { tonoDe } from "./cards-fondo";
 import { TEXTOS } from "./historias-textos";
 // (copia de tx de lib/i18n: aquel archivo es solo del navegador y este también lo usa el servidor para las imágenes)
 const tx = (v, lang) => (v && typeof v === "object" && !Array.isArray(v) ? v[lang] ?? v.es : v);
@@ -39,12 +40,16 @@ export const APPS_HISTORIAS = PROYECTOS.filter((p) => !FUERA.has(p.id) && !p.pau
 const frase = (t) => { const s = String(t || "").trim(); const m = s.match(/^(.{20,170}?[.!?])(\s|$)/); return m ? m[1] : s.slice(0, 170); };
 
 // La de presentación: el lema (o el tagline) como frase central.
-export const portadaDe = (p, lang) => ({ frase: tx(p.lema, lang) || tx(p.tagline, lang) || "", sub: tx(p.lema, lang) ? tx(p.tagline, lang) || "" : "" });
+// Que ninguna frase termine con una palabra sola en el último renglón: las dos últimas van unidas (espacio que no corta).
+export const sinViuda = (t) => (typeof t === "string" ? t.replace(/\s+(\S+)\s*$/, "\u00A0$1") : t);
+const pulir = (x) => ({ ...x, ...(x.texto && { texto: sinViuda(x.texto) }), ...(x.sub && { sub: sinViuda(x.sub) }) });
+export const portadaDe = (p, lang) => ({ frase: sinViuda(tx(p.lema, lang) || tx(p.tagline, lang) || ""), sub: sinViuda(tx(p.lema, lang) ? tx(p.tagline, lang) || "" : "") });
 
 // La promo de la quinta: gratis para siempre, lo que suma el plan FUNGIRAK y la prueba de 30 días.
 const PRECIO = "$4.990";
 // Las 5 propias: 1 el gancho, 2 la comunidad, 3 lo mejor, 4 un número (o lo mejor) y 5 la promo con el botón para entrar.
-export function propiasDe(p, lang) {
+export function propiasDe(p, lang) { return propiasCrudas(p, lang).map(pulir); }
+function propiasCrudas(p, lang) {
   const es = lang !== "en";
   const t = es ? TEXTOS[p.id] : null;
   if (t) {
@@ -73,10 +78,16 @@ export function propiasDe(p, lang) {
 }
 
 export const nombreDe = (p, lang) => String(tx(p.nombre, lang)).replace(/^Sitio homenaje a /, "").replace(/^Tribute site to /, "");
+// Color de los dibujitos del papel tapiz de las historias: blancos sobre el tono; Dertin, verde lima; Team Joy, surtidos.
+export const trazoDe = (p) => (p.id === "teamjoy" ? null : p.id === "dertin" ? "#C6F432" : "#ffffff");
 export const logoDe = (p) => LOGOS[p.id] || p.logo || "/icons/icon-192.png";
 // Un color de fondo que siempre deje leer texto blanco (los muy claros, como el gris de Experimento Negro, se oscurecen).
+// Dertin va en negro (su verde propio no queda bien de fondo); Team Joy, en blanco con dibujitos de colores (ver .hst-cel.blanco).
+// Las demás usan el mismo tono propio de su card en fungirak.com (src/data/cards-fondo.js), oscurecido si hace falta para el texto blanco.
+const COLOR_FIJO = { dertin: "#0b0b10", teamjoy: "#ffffff" };
 export function colorDe(p) {
-  const c = String(p.color || "#0b0d12").replace("#", "");
+  if (COLOR_FIJO[p.id]) return COLOR_FIJO[p.id];
+  const c = String(tonoDe(p.id) || p.color || "#0b0d12").replace("#", "");
   const [r, g, b] = [0, 2, 4].map((i) => parseInt(c.slice(i, i + 2), 16) || 0);
   const luz = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   const f = luz > 0.62 ? 0.42 : luz > 0.5 ? 0.62 : 1; // oscurecer los claros

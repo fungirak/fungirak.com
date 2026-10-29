@@ -53,15 +53,23 @@ const SURTIDOS = ["#FF5B3A", "#3B82F6", "#FFC800", "#8B5CF6"];
 const LUGAR = [[4, 4], [40, 4], [22, 38], [58, 38]];
 const hechos = new Map();
 
-// { tono, tapiz } para el style de la card; tapiz es un url(...) con el SVG de 72 × 72 que se repite.
-export function fondoDe(id) {
-  if (hechos.has(id)) return hechos.get(id);
+// El dibujo de 72 × 72 que se repite. trazo: un color para todos, o null para el tono de la app (Team Joy: surtidos).
+export function tileDe(id, trazo = null) {
   const f = FONDO[id];
   if (!f) return null;
   const [tono, glifos] = f;
-  const trazos = glifos.map((g, i) => `<g transform="translate(${LUGAR[i].join(",")}) rotate(-20 12 12) scale(.7)"><path d="${GLIFOS[g]}" fill="none" stroke="${tono || SURTIDOS[i]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>`).join("");
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72">${trazos}</svg>`;
-  const r = { tono, tapiz: `url("data:image/svg+xml,${encodeURIComponent(svg)}")` };
-  hechos.set(id, r);
+  const trazos = glifos.map((g, i) => `<g transform="translate(${LUGAR[i].join(",")}) rotate(-20 12 12) scale(.7)"><path d="${GLIFOS[g]}" fill="none" stroke="${trazo || tono || SURTIDOS[i]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>`).join("");
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72">${trazos}</svg>`;
+}
+export const tonoDe = (id) => FONDO[id]?.[0] ?? null;
+
+// { tono, tapiz } para el style de la card; tapiz es un url(...) con el SVG que se repite. Con trazo, los dibujitos van de ese color.
+export function fondoDe(id, trazo = null) {
+  const k = `${id}|${trazo || ""}`;
+  if (hechos.has(k)) return hechos.get(k);
+  const svg = tileDe(id, trazo);
+  if (!svg) return null;
+  const r = { tono: tonoDe(id), tapiz: `url("data:image/svg+xml,${encodeURIComponent(svg)}")` };
+  hechos.set(k, r);
   return r;
 }

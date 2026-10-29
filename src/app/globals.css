@@ -776,6 +776,11 @@ img {
   display: none;
 }
 
+/* En la compu las categorías no se cortan: bajan a un segundo renglón si no entran */
+@media (min-width: 900px) {
+  .filtros { flex-wrap: wrap; overflow: visible; -webkit-mask: none; mask: none; }
+}
+
 .fila {
   position: relative;
   z-index: 1;
@@ -2648,3 +2653,33 @@ img {
 .hst-tel { flex: 1 1 0; min-height: 0; width: 100%; display: flex; justify-content: center; margin-top: 10px; }
 .hst-tel video { height: 100%; max-width: 100%; border-radius: 30px; border: 7px solid #0b0b0f; background: #0b0b0f; object-fit: cover;
   box-shadow: 0 22px 50px -14px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.14); }
+
+/* Barra de scroll fina y con el verde del Studio (Firefox: scrollbar-*; Chrome, Edge y Safari: ::-webkit-scrollbar) */
+html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green) 75%, transparent) transparent; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--c-green) 70%, transparent); border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background-color: var(--c-green); }
+
+/* Historias de Dertin en negro, con brillos de sus colores */
+.hst-cel[data-app="dertin"] { background: radial-gradient(120% 80% at 50% 0%, #24242c 0%, #0b0b10 48%, #000 100%); }
+.hst-cel[data-app="dertin"] .hst-fondo span:nth-child(1) { background: #C6F432; opacity: .16; }
+.hst-cel[data-app="dertin"] .hst-fondo span:nth-child(2) { background: #FF4F9A; opacity: .16; }
+/* Historias de Team Joy en blanco con su papel tapiz de dibujitos de colores */
+.hst-cel.blanco { background: #fff; color: #1f2937; }
+/* Papel tapiz de cada app (como en sus cards): dibujitos en diagonal, tenues, que se mueven despacito */
+.hst-cel::before { content: ""; position: absolute; inset: -60px; background-image: var(--tapiz, none); background-size: 54px 54px; opacity: .16; pointer-events: none; animation: hst-tapiz 40s linear infinite; }
+.hst-cel[data-app="dertin"]::before { opacity: .2; }
+.hst-cel.blanco::before { opacity: .4; }
+@keyframes hst-tapiz { to { transform: translate(54px, -54px); } }
+@media (prefers-reduced-motion: reduce) { .hst-cel::before { animation: none; } }
+.hst-cel.blanco .hst-fondo { display: none; }
+.hst-cel.blanco .hst-frase, .hst-cel.blanco .hst-nombre { text-shadow: none; }
+.hst-cel.blanco .hst-barras i { background: rgba(31,41,55,.18); }
+.hst-cel.blanco .hst-barras b { background: #1f2937; }
+.hst-cel.blanco .hst-x { color: #1f2937; background: rgba(31,41,55,.08); }
+.hst-cel.blanco .hst-mas { background: #1f2937; color: #fff; }
+.hst-cel.blanco .hst-responder { border-color: rgba(31,41,55,.35) !important; color: #1f2937 !important; }
+.hst-cel.blanco .hst-like svg { stroke: #1f2937; filter: none; }
+.hst-cel.blanco .hst-like.si svg { stroke: #ff3040; }
+.hst-sub { text-wrap: pretty; }
