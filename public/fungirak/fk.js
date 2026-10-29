@@ -28,6 +28,8 @@
     ["Juegos", ["cronicas", "prode", "afinados", "santafe-oculta", "trivia", "figus"]],
     ["Sitios", ["sinvueltas", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"]],
   ];
+  // Orden de las historias de fungirak.com: lo usa la tira de íconos del cartel «Una cuenta para todas las apps».
+  const ORDEN = ["teamjoy", "dertin", "cronicas", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "afinados", "santafe-oculta", "fabrica", "ecos"];
   const EXTRA = {
     teamjoy: ["Team Joy", "https://teamjoy.site", "/img/teamjoy-logo-240.webp"], ecos: ["ECOS", "https://ecos-map.fungirak.com", "/img/logos/ecos.png"],
     fabrica: ["Fábrica", "https://fabrica.fungirak.com", "/img/logos/fabrica.png"], gourmet: ["SF Gourmet", "https://santafe-gourmet.fungirak.com", "/img/logos/gourmet.png"],
@@ -42,6 +44,11 @@
     if (!Array.isArray(c) || !c.length) return;
     catalogo = c.filter((a) => a && a.id && /^https:\/\//.test(a.url || "")).map((a) => ({ id: String(a.id), nombre: String(a.nombre || a.id), url: a.url, tag: a.tag || "",
       icono: LOCALES.has(a.id) ? `${BASE}apps/${a.id}.webp` : String(a.icono || "") }));
+  };
+  const enOrden = () => {
+    const porId = new Map(catalogo.map((a) => [a.id, a]));
+    const lista = ORDEN.map((id) => porId.get(id) || (EXTRA[id] && { id, icono: EXTRA[id][2] })).filter(Boolean);
+    return [...lista, ...catalogo.filter((a) => !ORDEN.includes(a.id))];
   };
   // Claro u oscuro: el que eligió el sitio (data-theme / data-tema en <html>) y, si no dice nada, el del sistema.
   const SISTEMA = matchMedia("(prefers-color-scheme: dark)");
@@ -202,7 +209,7 @@
         .p{background:#111;color:#fff}.s{background:rgba(127,127,127,.15);color:inherit}:host([oscuro]) .p{background:#3CF2A0;color:#06120c}
         @media (prefers-reduced-motion:reduce){.c{animation:none}}</style>
         <div class="c" role="dialog" aria-label="Cuenta FUNGIRAK"><div class="t"><div><b>Una cuenta para todas las apps de FUNGIRAK</b><div style="opacity:.75">Entrás una vez y abrís cualquiera con un clic.</div></div><button class="x" aria-label="Cerrar">×</button></div>
-        <div class="i" aria-hidden="true">${catalogo.map((a) => `<img src="${esc(a.icono)}" alt="" width="30" height="30" loading="lazy">`).join("")}</div>
+        <div class="i" aria-hidden="true">${enOrden().map((a) => `<img src="${esc(a.icono)}" alt="" width="30" height="30" loading="lazy">`).join("")}</div>
         <div class="f"><a class="p" href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta gratis</a><a class="s" href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Ya tengo cuenta</a></div></div>`;
       h.shadowRoot.querySelector(".x").addEventListener("click", () => { guardar("fk.cartel", String(Date.now() + 7 * 864e5), localStorage); embudo("cartel.cerrado", app); h.remove(); });
       h.shadowRoot.querySelectorAll("a").forEach((x) => x.addEventListener("click", () => embudo("cartel.click", app)));
