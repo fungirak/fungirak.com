@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "Gabriel Lazzarini · fungirak · Desarrollador Full Stack";
+export const alt = "Gabriel Lazzarini · fungirak · Desarrollador de Software";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -17,7 +17,7 @@ export default async function Image() {
         <div style={{ display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
           <div style={{ fontSize: 28, color: "#00e676", letterSpacing: 6, fontWeight: 700 }}>FUNGIRAK STUDIO</div>
           <div style={{ fontSize: 76, fontWeight: 800, lineHeight: 1, letterSpacing: -3 }}>Gabriel Lazzarini</div>
-          <div style={{ fontSize: 36, color: "#c3c8e8" }}>Desarrollador de Software Full Stack</div>
+          <div style={{ fontSize: 36, color: "#c3c8e8" }}>Desarrollador de Software</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 18 }}>
             {pills.map((p) => (
               <div key={p} style={{ padding: "8px 20px", borderRadius: 999, background: "rgba(0,230,118,.15)", border: "2px solid rgba(0,230,118,.5)", fontSize: 24 }}>{p}</div>

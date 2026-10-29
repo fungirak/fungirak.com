@@ -16,7 +16,7 @@ const DESC =
 
 export const metadata = {
   metadataBase: new URL(SITE),
-  title: { default: "Gabriel Lazzarini · fungirak · Desarrollador Full Stack", template: "%s · fungirak" },
+  title: { default: "Gabriel Lazzarini · fungirak · Desarrollador de Software", template: "%s · fungirak" },
   description: DESC,
   keywords: ["Gabriel Lazzarini", "fungirak", "desarrollador full stack", "full stack developer Argentina", "Santa Fe", "Team Joy", "FUNGIRAK Studio", "Next.js", "React", "Java Spring Boot", "freelance developer"],
   authors: [{ name: "Gabriel Lazzarini", url: SITE }],
@@ -27,7 +27,7 @@ export const metadata = {
     type: "profile",
     url: SITE,
     siteName: "fungirak.com",
-    title: "Gabriel Lazzarini · Desarrollador Full Stack",
+    title: "Gabriel Lazzarini · Desarrollador de Software",
     description: "El CV interactivo de fungirak: proyectos, filosofía y un pasaporte para explorar. Desde Santa Fe, para el mundo.",
     locale: "es_AR",
     alternateLocale: ["en_US"],
