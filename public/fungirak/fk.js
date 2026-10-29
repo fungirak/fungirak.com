@@ -89,9 +89,9 @@
   .pan{position:absolute;top:calc(100% + 8px);right:0;z-index:2147483000;width:min(340px,calc(100vw - 16px));background:#fff;color:#15171c;border-radius:20px;
     box-shadow:0 12px 40px rgba(0,0,0,.25);padding:14px;max-height:min(520px,80vh);overflow:auto}
   :host([oscuro]) .pan{background:#1b1e24;color:#eef0f3}
-  :host([categorias]) .pan{width:min(420px,calc(100vw - 16px))}.gs{max-height:min(460px,64vh);overflow-y:auto;overscroll-behavior:contain;margin:0 -6px;padding:0 6px;scrollbar-width:thin}.gs .g{max-height:none;overflow:visible;margin:0;padding:0}
+  :host([categorias]) .pan{width:min(420px,calc(100vw - 16px))}:host([categorias]) .pan:not([hidden]){display:flex;flex-direction:column;overflow:hidden}.gs{flex:1 1 auto;min-height:0;max-height:min(460px,64vh);overflow-y:auto;overscroll-behavior:contain;margin:0 -6px;padding:0 6px;scrollbar-width:thin;scrollbar-color:#3CF2A0 transparent}.gs::-webkit-scrollbar,.g::-webkit-scrollbar{width:6px}.gs::-webkit-scrollbar-thumb,.g::-webkit-scrollbar-thumb{background:#3CF2A0;border-radius:6px}.gs::-webkit-scrollbar-track,.g::-webkit-scrollbar-track{background:transparent}.gs .g{max-height:none;overflow:visible;margin:0;padding:0}
   .gt{margin:12px 4px 4px;font-size:11px;font-weight:800;letter-spacing:.06em;opacity:.7;display:flex;gap:6px;align-items:center}.gt span{font-weight:700;padding:0 6px;border-radius:99px;background:rgba(127,127,127,.18)}
-  .pan[hidden]{display:none}.g{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-height:min(372px,58vh);overflow-y:auto;overscroll-behavior:contain;margin:0 -6px;padding:0 6px;scrollbar-width:thin}
+  .pan[hidden]{display:none}.g{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-height:min(372px,58vh);overflow-y:auto;overscroll-behavior:contain;margin:0 -6px;padding:0 6px;scrollbar-width:thin;scrollbar-color:#3CF2A0 transparent}
   .ap{display:grid;justify-items:center;gap:4px;padding:10px 4px;border-radius:14px;text-decoration:none;text-align:center}.ap:hover,.ap:focus-visible{background:rgba(127,127,127,.14);outline:none}
   .ap img{width:46px;height:46px;border-radius:12px}.ap span{font-size:12px;font-weight:600;line-height:1.2}.ap small{font-size:11px;font-weight:700;color:#0f8a5f}
   :host([oscuro]) .ap small{color:#3CF2A0}
