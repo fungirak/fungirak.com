@@ -59,7 +59,7 @@ function propiasCrudas(p, lang) {
       { tipo: "destacado", ojo: "EN COMUNIDAD", emoji: "👥", texto: t.comunidad },
       { tipo: "destacado", ojo: "ADEMÁS", texto: t.f[0] },
       dato ? { tipo: "dato", n: dato.n, texto: tx(dato, lang) } : { tipo: "destacado", ojo: "Y TAMBIÉN", texto: t.f[1] },
-      { tipo: "entrar", texto: "Gratis para siempre.", sub: `Con el plan FUNGIRAK (desde ${PRECIO} por mes, una sola suscripción para todas las apps) sumás ${t.plan}. Y al crear tu cuenta, 30 días de Personal gratis.`, boton: `Abrir ${nombreDe(p, lang)}` },
+      { tipo: "entrar", texto: "Gratis para siempre.", sub: `Con el plan FUNGIRAK (desde ${PRECIO} por mes, una sola suscripción para todas las apps) sumás ${t.plan}. Y al crear tu cuenta, probás el plan completo 30 días gratis, sin pagar nada.`, boton: `Abrir ${nombreDe(p, lang)}` },
     ]);
   }
   const que = { tipo: "que", ojo: es ? "QUÉ ES" : "WHAT IT IS", texto: tx(p.tagline, lang) || frase(tx(p.descripcion, lang)), sub: frase(tx(p.descripcion, lang)) };
