@@ -8,8 +8,8 @@ import { tileDe } from "@/data/cards-fondo";
 
 export const dynamic = "force-dynamic"; // la caché la dan los encabezados (un día en el CDN)
 // el color de la app, más claro arriba y más oscuro abajo (sin irse a negro)
-const mezcla = (hex, con, k) => { const a = hex.replace("#", ""); return "#" + [0, 2, 4].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - k) + con * k).toString(16).padStart(2, "0")).join(""); };
-const claro = (c) => mezcla(c, 255, 0.22), oscuro = (c) => mezcla(c, 0, 0.45);
+export const mezcla = (hex, con, k) => { const a = hex.replace("#", ""); return "#" + [0, 2, 4].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - k) + con * k).toString(16).padStart(2, "0")).join(""); };
+export const claro = (c) => mezcla(c, 255, 0.22), oscuro = (c) => mezcla(c, 0, 0.45);
 const W = 1080, H = 1920;
 // El papel tapiz de la app (los mismos dibujitos de su card) como una imagen del tamaño de la historia.
 // Satori no repite fondos: el SVG trae su propio <pattern>.
@@ -30,13 +30,14 @@ export const pie = (abajo, blanco) => (
   </div>
 );
 // Los emojis que flotan alrededor del texto (los mismos del visor), afuera del texto: arriba a la izquierda, arriba a la derecha y abajo.
-export const decos = (lista = [], W, H) => [[0.08, 0.24, -12, 132], [0.8, 0.3, 10, 116], [0.16, 0.72, 6, 124]].slice(0, lista.length).map(([x, y, g, t], i) => (
+const LUGARES = [[0.08, 0.24, -12, 132], [0.8, 0.3, 10, 116], [0.16, 0.72, 6, 124]];
+export const decos = (lista = [], W, H, lugares = LUGARES) => lugares.slice(0, lista.length).map(([x, y, g, t], i) => (
   <div key={i} style={{ position: "absolute", left: Math.round(W * x), top: Math.round(H * y), fontSize: t, transform: `rotate(${g}deg)`, display: "flex" }}>{lista[i]}</div>
 ));
-const COL = { display: "flex", flexDirection: "column", alignItems: "center" }; // el generador no apila los fragmentos: cada grupo va en su columna
+export const COL = { display: "flex", flexDirection: "column", alignItems: "center" }; // el generador no apila los fragmentos: cada grupo va en su columna
 const fuentes = new Map();
 // Google Fonts sin «user-agent» responde TTF, que es lo que entiende el generador de imágenes
-async function fuente(nombre, peso) {
+export async function fuente(nombre, peso) {
   const k = `${nombre}:${peso}`;
   if (!fuentes.has(k)) fuentes.set(k, (async () => {
     const css = await (await fetch(`https://fonts.googleapis.com/css2?family=${encodeURIComponent(nombre).replace(/%20/g, "+")}:wght@${peso}`, { signal: AbortSignal.timeout(6000) })).text();
@@ -45,7 +46,7 @@ async function fuente(nombre, peso) {
   })().catch(() => null));
   return fuentes.get(k);
 }
-async function logo(p) {
+export async function logo(p) {
   const l = logoDe(p);
   try {
     if (l.startsWith("/")) { const b = await readFile(join(process.cwd(), "public", l)); return `data:image/${l.endsWith(".svg") ? "svg+xml" : "png"};base64,${b.toString("base64")}`; }
