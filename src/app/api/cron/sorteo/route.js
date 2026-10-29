@@ -15,6 +15,8 @@ async function borrarVencidos() {
   await sql`DELETE FROM mensajes WHERE creado < now() - interval '24 months'`.catch(() => {});
   await sql`DELETE FROM ruleta_cupones WHERE creado < now() - interval '26 months'`.catch(() => {});
   await sql`DELETE FROM concurso_ideas WHERE creado < now() - interval '26 months'`.catch(() => {});
+  // el mail de quien ganó solo hace falta para que no vuelva a participar: terminado el programa (última edición 05/10/2028) se borra a los 6 meses
+  await sql`UPDATE sorteo_resultados SET email = '' WHERE email <> '' AND now() > '2029-04-05'::date`.catch(() => {});
 }
 
 async function avisarCambio() {
