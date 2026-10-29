@@ -252,8 +252,10 @@ export function Bitacora({ abrir }) {
 }
 
 // ---------- 4. La ruleta del micelio ----------
-// Sólo etiquetas: QUÉ sale y con qué probabilidad lo decide el servidor (/api/ruleta).
-const GAJOS = ["d10", "nada", "d15", "otro", "sorteo", "mes", "d20", "otro"];
+// «La ruleta de los que vuelven»: el premio no es al azar, lo decide el servidor según cuántos días distintos volviste
+// (/api/ruleta). La escalera se muestra acá mismo: día 1, día 2, día 3 y del cuarto en adelante.
+const GAJOS = ["d10", "d15", "mes", "d20", "d10", "d15", "mes", "d20"];
+const ESCALERA = [["d10", 1], ["d15", 2], ["mes", 3], ["d20", 4]];
 const ETIQ = {
   d10: { es: "10% OFF", en: "10% OFF", c: "var(--c-green)" },
   d15: { es: "15% OFF", en: "15% OFF", c: "var(--c-blue)" },
@@ -297,7 +299,7 @@ function Instrucciones({ premio, es }) {
     </ol>
   );
   return premio === "sorteo" ? (
-    <p>{es ? "Ya estás participando. Cuando haga el sorteo te aviso a tu email. Guardá tu número por las dudas." : "You're in. When I run the giveaway I'll email you. Keep your number just in case."}</p>
+    <p>{es ? <>El sorteo ahora es un concurso de ideas: mandá tu idea en <a href="/sorteo">fungirak.com/sorteo</a> con este mismo email.</> : <>The giveaway is now an ideas contest: send your idea at <a href="/sorteo">fungirak.com/sorteo</a> with this same email.</>}</p>
   ) : (
     <ol className="reclamo-pasos">
       <li>{es ? "Copiá tu código (también te llega por email)." : "Copy your code (you'll also get it by email)."}</li>
@@ -315,7 +317,7 @@ function Reclamo({ premio, token, onListo, onClose, onUsar, es }) {
   const [copiado, setCopiado] = useState(false);
   const ERR = {
     email: es ? "Revisá el email." : "Check your email.",
-    "email-usado": es ? "Ese email ya ganó un premio este mes." : "That email already won this month.",
+    "email-usado": es ? "Ese email ya tiene un premio igual o mejor este mes." : "That email already has an equal or better prize this month.",
     "ya-reclamado": es ? "Este premio ya se reclamó." : "This prize was already claimed.",
     "giro-invalido": es ? "El premio venció. Girá de nuevo mañana." : "The prize expired. Spin again tomorrow.",
   };
@@ -361,7 +363,7 @@ function Reclamo({ premio, token, onListo, onClose, onUsar, es }) {
             <div className="campo"><label htmlFor="rl-nom">{es ? "Tu nombre (opcional)" : "Your name (optional)"}</label><input id="rl-nom" autoComplete="given-name" maxLength={60} value={nombre} onChange={(e) => setNombre(e.target.value)} /></div>
             {estado && estado !== "enviando" && <p className="aviso-err">{ERR[estado] || (es ? "No se pudo guardar. Probá de nuevo." : "Couldn't save it. Try again.")}</p>}
             <div className="acciones"><button className="btn amber" disabled={estado === "enviando"}>{estado === "enviando" ? (es ? "Guardando…" : "Saving…") : (es ? "Guardar mi premio" : "Save my prize")}</button></div>
-            <small className="aviso-nota">{es ? "Sólo lo uso para tu premio y el sorteo. Nada de spam." : "Only used for your prize and the giveaway. No spam."}</small>
+            <small className="aviso-nota">{es ? "Sólo lo uso para tu premio. Nada de spam." : "Only used for your prize. No spam."}</small>
           </form>
         )}
       </div>
@@ -369,20 +371,20 @@ function Reclamo({ premio, token, onListo, onClose, onUsar, es }) {
   );
 }
 
-// Los 12 sorteos como sellitos: punteados y vacíos hasta que se sortean; ahí se "estampan" con 🏆 y el código ganador
+// Las 12 ediciones del concurso como sellitos: punteados y vacíos hasta que hay ganadora; ahí se "estampan" con 🏆 y su código
 function Sellos({ st, es }) {
   const ganado = Object.fromEntries((st.ganadores || []).map((g) => [g.fecha, g.codigo]));
   const corto = (f) => new Date(`${f}T12:00:00-03:00`).toLocaleDateString(es ? "es-AR" : "en-US", { month: "short", year: "2-digit" }).replace(".", "");
   return (
-    <ol className="sellos" aria-label={es ? "Sorteos" : "Draws"}>
+    <ol className="sellos" aria-label={es ? "Ediciones" : "Editions"}>
       {st.fechas.map((f, i) => {
         const g = ganado[f];
         const cls = g ? "hecho" : f === st.proximo ? "prox" : "";
         return (
           <li key={f} className={`sello ${cls}`} style={{ "--i": i }} title={g ? `${es ? "Ganó" : "Winner"} ${g}` : corto(f)}>
-            <span className="sello-ico">{g ? "🏆" : f === st.proximo ? "🎟️" : i + 1}</span>
+            <span className="sello-ico">{g ? "🏆" : f === st.proximo ? "💡" : i + 1}</span>
             <span className="sello-fecha">{corto(f)}</span>
-            {g && <span className="sello-cod">{g.replace("SORTEO-", "")}</span>}
+            {g && <span className="sello-cod">{g.replace(/^(SORTEO|IDEA)-/, "")}</span>}
           </li>
         );
       })}
@@ -390,8 +392,8 @@ function Sellos({ st, es }) {
   );
 }
 
-// Próximo sorteo del sitio (datos públicos de /api/sorteo) con cuenta regresiva y link a las bases
-function ProximoSorteo({ es }) {
+// Próxima edición del concurso de ideas (datos públicos de /api/sorteo) con cuenta regresiva y link para mandar la idea
+function ProximoConcurso({ es }) {
   const [st, setSt] = useState(null);
   useEffect(() => {
     fetch("/api/sorteo").then((r) => r.json()).then((j) => {
@@ -403,10 +405,10 @@ function ProximoSorteo({ es }) {
   const fecha = new Date(`${st.proximo}T12:00:00-03:00`).toLocaleDateString(es ? "es-AR" : "en-US", { day: "numeric", month: "long", year: "numeric" });
   return (
     <div className="rul-sorteo">
-      <span className="rul-sorteo-ojo">🎟️ {es ? "Próximo sorteo de un sitio web" : "Next website giveaway"}</span>
+      <span className="rul-sorteo-ojo">💡 {es ? "Concurso de ideas: un sitio web gratis" : "Ideas contest: a free website"}</span>
       <b>{fecha}</b>
-      <span>{dias === 0 ? (es ? "¡Es hoy!" : "It's today!") : es ? `Faltan ${dias} días · ${st.participaciones ? `${st.participaciones} ${st.participaciones === 1 ? "participación" : "participaciones"}` : "¡Sé el primero en participar!"}` : `${dias} days to go · ${st.participaciones ? `${st.participaciones} ${st.participaciones === 1 ? "entry" : "entries"}` : "Be the first to enter!"}`}</span>
-      <small>{es ? "Un ganador cada dos meses. Tus participaciones se acumulan para los próximos sorteos." : "One winner every two months. Your entries carry over to the next draws."} <a href="/sorteo">{es ? "Bases y condiciones" : "Terms"}</a></small>
+      <span>{dias === 0 ? (es ? "¡Cierra hoy!" : "Closes today!") : es ? `Faltan ${dias} días · ${st.ideas ? `${st.ideas} ${st.ideas === 1 ? "idea" : "ideas"}` : "¡Mandá la primera idea!"}` : `${dias} days to go · ${st.ideas ? `${st.ideas} ${st.ideas === 1 ? "idea" : "ideas"}` : "Send the first idea!"}`}</span>
+      <small>{es ? "Cada dos meses gana la mejor idea (originalidad, utilidad, impacto y claridad). Gratis." : "Every two months the best idea wins (originality, usefulness, impact and clarity). Free."} <a href="/sorteo">{es ? "Mandá tu idea" : "Send your idea"}</a></small>
       <Sellos st={st} es={es} />
     </div>
   );
@@ -421,6 +423,7 @@ export function Ruleta({ abrir }) {
   const [token, setToken] = useState(null);
   const [modal, setModal] = useState(false);
   const [guardado, setGuardado] = useState(null);
+  const [hoy, setHoy] = useState(null); // { dia, premio }: qué le toca hoy a esta persona (lo dice el servidor)
   useEffect(() => {
     const g = leer("fgk-ruleta");
     if (!g || g.dia !== hoyAR()) return;
@@ -434,6 +437,7 @@ export function Ruleta({ abrir }) {
     // El servidor manda: si dice que puede girar, se olvida lo anotado en el dispositivo (salvo un premio ganado)
     fetch(`/api/ruleta?dispositivo=${encodeURIComponent(dispositivo())}`).then((r) => r.json()).then((j) => {
       if (j.error) return;
+      if (j.premio) setHoy({ dia: j.dia, premio: j.premio });
       if (j.puede === false) setEstado((e) => (e === "listo" ? "ya" : e));
       else if (!leer("fgk-ruleta")?.cupon) { try { localStorage.removeItem("fgk-ruleta"); } catch {} setGuardado(null); setEstado((e) => (e === "ya" || e === "nada" ? "listo" : e)); }
     }).catch(() => {});
@@ -476,12 +480,12 @@ export function Ruleta({ abrir }) {
     }, 4300);
   };
   const msg = {
-    listo: es ? "Un giro por día. ¡Probá tu suerte!" : "One spin a day. Try your luck!",
+    listo: hoy ? (es ? `Día ${hoy.dia}: hoy te toca ${ETIQ[hoy.premio].es}` : `Day ${hoy.dia}: today you get ${ETIQ[hoy.premio].en}`) : (es ? "Un giro por día." : "One spin a day."),
     girando: es ? "Girando…" : "Spinning…",
-    invita: es ? "¡Te toca a vos! 🎡" : "Your turn! 🎡",
+    invita: hoy ? (es ? `¡Día ${hoy.dia}! Hoy te toca ${ETIQ[hoy.premio].es} 🎡` : `Day ${hoy.dia}! Today you get ${ETIQ[hoy.premio].en} 🎡`) : (es ? "¡Te toca a vos! 🎡" : "Your turn! 🎡"),
     otro: es ? "¡Otro giro! Dale de nuevo 🍀" : "Spin again! Go 🍀",
     nada: es ? "Esta vez no 😅 Volvé mañana." : "Not this time 😅 Come back tomorrow.",
-    ya: es ? "Ya giraste hoy. ¡Volvé mañana!" : "You already spun today. Come back tomorrow!",
+    ya: es ? "Ya giraste hoy. Volvé mañana: tu premio sube." : "You already spun today. Come back tomorrow: your prize goes up.",
     error: es ? "La ruleta se está preparando. Probá en un rato." : "The wheel is warming up. Try again soon.",
     gano: es ? "¡Ganaste! Guardá tu premio." : "You won! Save your prize.",
   }[estado === "listo" && intro === "lista" ? "invita" : estado];
@@ -491,12 +495,12 @@ export function Ruleta({ abrir }) {
       <div className="wrap ruleta">
         <div>
           <Cabeza id="rul-t" ojo={es ? "La ruleta del micelio" : "The mycelium wheel"}
-            titulo={es ? <>Girá y <span className="grad-text">probá tu suerte</span>.</> : <>Spin and <span className="grad-text">try your luck</span>.</>}
-            bajada={es ? "Podés ganar hasta 20% off en tu sitio o app, o entrar al sorteo de un sitio web gratis. Un giro por día." : "You could win up to 20% off your website or app, or a spot in the free website giveaway. One spin a day."} />
+            titulo={es ? <>Volvé y <span className="grad-text">tu premio crece</span>.</> : <>Come back and <span className="grad-text">your prize grows</span>.</>}
+            bajada={es ? "La ruleta de los que vuelven: no es suerte. Cada día distinto que girás, sube tu premio, y siempre ganás algo. Un giro por día." : "The comeback wheel: it's not luck. Every different day you spin, your prize goes up, and you always win something. One spin a day."} />
           <ul className="rul-premios">
-            {["d20", "d15", "d10", "sorteo", "otro"].map((p) => <li key={p} style={{ "--c": ETIQ[p].c }}><i />{ETIQ[p][lang]}</li>)}
+            {ESCALERA.map(([p, d]) => <li key={p} style={{ "--c": ETIQ[p].c }}><i />{es ? `Día ${d}${d === 4 ? " en adelante" : ""}: ` : `Day ${d}${d === 4 ? "+" : ""}: `}{ETIQ[p][lang]}</li>)}
           </ul>
-          <ProximoSorteo es={es} />
+          <ProximoConcurso es={es} />
         </div>
         <div className="rul-zona">
           <div ref={zona} className={`rul-rueda-wrap ${no ? "no" : ""}`} key={no} onClick={() => { if (estado === "ya") setNo((x) => x + 1); }}>
@@ -524,7 +528,7 @@ export function Ruleta({ abrir }) {
           ) : (
             <button className="btn amber pulse" disabled={!puede} onClick={girar}>🎡 {estado === "otro" ? (es ? "Girar otra vez" : "Spin again") : (es ? "Girar la ruleta" : "Spin the wheel")}</button>
           )}
-          <small className="rul-legal"><a href="/sorteo">{es ? "Bases y condiciones" : "Terms"}</a> · {es ? "Cada giro es al azar: no siempre hay premio. Descuentos válidos por 60 días para proyectos nuevos, no acumulables. El sorteo da una chance de ganar, no un sitio asegurado. Un premio por persona por mes." : "Each spin is random: there isn't always a prize. Discounts valid for 60 days on new projects, not combinable. The giveaway is a chance to win, not a guaranteed site. One prize per person per month."}</small>
+          <small className="rul-legal"><a href="/sorteo">{es ? "Bases y condiciones" : "Terms"}</a> · {es ? "No es al azar: el premio depende de cuántos días distintos volviste. Descuentos válidos por 60 días para proyectos nuevos, no acumulables. Un premio vigente por persona por mes (si subís de escalón, reemplaza al anterior)." : "Not random: the prize depends on how many different days you came back. Discounts valid for 60 days on new projects, not combinable. One active prize per person per month (moving up replaces the previous one)."}</small>
         </div>
       </div>
       {modal && premio && (guardado?.cupon ? (

@@ -17,3 +17,13 @@
 .sorteo-fechas li.prox { border-color: var(--c-amber); }
 .sorteo-fechas li.hecho { opacity: .7; }
 .sorteo-fechas li b { color: var(--accent); font-size: .8rem; }
+/* Formulario del concurso de ideas */
+.concurso-form { display: grid; gap: 12px; margin: 14px 0 6px; padding: 18px; border: 1px solid var(--line-2); border-radius: 18px; background: var(--surface); }
+.concurso-form label { display: grid; gap: 6px; font-weight: 700; font-size: .92rem; color: var(--text); }
+.concurso-form input:not([type="checkbox"]), .concurso-form textarea { font: inherit; font-weight: 400; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--bg); color: var(--text); }
+.concurso-form small { color: var(--text-3); font-weight: 400; justify-self: end; }
+.concurso-check { display: flex !important; align-items: center; gap: 8px; font-weight: 600 !important; }
+.concurso-hp { position: absolute; left: -9999px; width: 1px; height: 1px; }
+.concurso-err { color: var(--c-rose) !important; font-weight: 700; }
+.concurso-btn { justify-self: start; padding: 12px 20px; border-radius: 14px; border: 0; background: var(--c-amber); color: #1a1205; font-weight: 800; cursor: pointer; }
+.concurso-btn:disabled { opacity: .6; }

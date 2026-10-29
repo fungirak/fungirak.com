@@ -48,7 +48,7 @@ function TeamJoy({ p, lang }) {
         ["💰", "Finanzas sociales", "Colectas y campañas de donación, integradas con Mercado Pago."],
         ["🤝", "Compras grupales", "Propuestas con votación y transferencia de pagos al instante."],
         ["🎉", "Eventos", "Almuerzos, after offices y eventos en un toque."],
-        ["🗳️", "Interacción", "Encuestas, preguntas y sorteos."],
+        ["🗳️", "Interacción", "Encuestas, preguntas y concursos."],
         ["🏅", "Gamificación", "Ganá coins e insignias, comprá y vendé stickers para tu perfil."],
         ["🔄", "Conexión diaria", "Rutinas (historias) y metas del día (estados)."],
       ]
