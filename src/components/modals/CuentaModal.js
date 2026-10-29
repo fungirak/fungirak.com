@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Modal from "../Modal";
-import { PROYECTOS } from "@/data/proyectos";
+import { PROYECTOS, ORDEN_FILAS, ORDEN_HISTORIAS } from "@/data/proyectos";
 import { botonesApp } from "@/lib/fk-cliente";
 import { useLang, tx } from "@/lib/i18n";
 
@@ -87,13 +87,13 @@ export default function CuentaModal({ onClose }) {
 
   return (
     <Modal onClose={onClose} color="#3CF2A0" eyebrow="FUNGIRAK Studio" titulo="Tu cuenta" bajada="Una sola cuenta para todas las apps del Studio. Entrá con Google sin salir de acá.">
+      {!alta && sesion !== undefined && <AppsCuenta sesion={sesion} />}
       {sesion === undefined && <p>Cargando…</p>}
       {sesion && !alta && (
         <div>
           <p><b>Estás entrado como @{sesion.usuario}</b>{sesion.nombre ? ` (${sesion.nombre})` : ""}.</p>
           <p style={{ marginTop: 8 }}>Con esta misma cuenta entrás a las {sesion.total} apps del Studio con «Seguir como…».</p>
           <div style={{ display: "flex", gap: 10, marginTop: 18, flexWrap: "wrap" }}>
-            <a className="btn" href={`${CUENTA}/?seccion=cuenta`} target="_blank" rel="noopener">Abrir mi cuenta</a>
             <button className="btn ghost" onClick={salir} disabled={busy}>{busy ? "Saliendo…" : "Salir"}</button>
           </div>
         </div>
@@ -123,19 +123,20 @@ export default function CuentaModal({ onClose }) {
           <button className="btn" disabled={busy || !edad || !acepto} style={{ width: "100%" }}>{busy ? "Creando…" : "Crear mi cuenta"}</button>
         </form>
       )}
-      {!alta && sesion !== undefined && <AppsCuenta sesion={sesion} />}
     </Modal>
   );
 }
 
 // Todas las apps del Studio que usan la cuenta FUNGIRAK, con su logo; con sesión, las que ya usás aparecen marcadas.
-const APPS_CUENTA = PROYECTOS.filter((p) => p.url && p.logo && !["libro", "ep"].includes(p.tipo) && p.id !== "telos");
+// Orden: el de las historias (Team Joy primero) y después el resto como en las filas de la portada.
+const PUESTO = [...new Set([...ORDEN_HISTORIAS, ...ORDEN_FILAS.flat()])];
+const APPS_CUENTA = PROYECTOS.filter((p) => p.url && p.logo && !["libro", "ep"].includes(p.tipo) && p.id !== "telos")
+  .sort((a, b) => (PUESTO.indexOf(a.id) + 1 || 999) - (PUESTO.indexOf(b.id) + 1 || 999));
 function AppsCuenta({ sesion }) {
   const { lang } = useLang();
   const usadas = APPS_CUENTA.filter((p) => botonesApp(p.url, sesion)?.usada).length;
   return (
     <div className="cuenta-apps">
-      <a className="btn cuenta-ir" href={`${CUENTA}/${sesion ? "?seccion=cuenta" : ""}`} target="_blank" rel="noopener">Ir a cuenta.fungirak.com ↗</a>
       <p className="cuenta-apps-t">{sesion ? `Usás ${usadas} de ${APPS_CUENTA.length} apps con tu cuenta` : `${APPS_CUENTA.length} apps y sitios con una sola cuenta`}</p>
       <div className="cuenta-apps-grilla">
         {APPS_CUENTA.map((p) => { const usada = sesion && botonesApp(p.url, sesion)?.usada; return (
@@ -143,6 +144,7 @@ function AppsCuenta({ sesion }) {
             <img src={p.logo} alt="" width={48} height={48} loading="lazy" /><span>{String(tx(p.nombre, lang)).replace(/^Sitio homenaje a /, "")}</span>{usada && <i aria-label="la usás">✓</i>}
           </a>); })}
       </div>
+      <a className="btn cuenta-ir" href={`${CUENTA}/${sesion ? "?seccion=cuenta" : ""}`} target="_blank" rel="noopener">Ir a cuenta.fungirak.com ↗</a>
     </div>
   );
 }

@@ -31,7 +31,9 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
   const ir = (id) => {
     setDrawer(false);
     if (id === "proyectos") abrir("proyectos");
-    else if (id === "donar" || id === "comunidad") document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    // Al cerrar el menú se hace un «atrás» en el historial (ver lib/atras.js) y el celu devuelve la página a donde estaba,
+    // cortando el desplazamiento: por eso se baja recién cuando el menú ya se cerró.
+    else if (id === "donar" || id === "comunidad") setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }), drawer ? 300 : 0);
     else abrir(id);
   };
 

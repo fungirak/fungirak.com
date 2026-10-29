@@ -31,7 +31,7 @@
   // Orden de las historias de fungirak.com: lo usa la tira de íconos del cartel «Una cuenta para todas las apps».
   const ORDEN = ["teamjoy", "dertin", "cronicas", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "afinados", "santafe-oculta", "fabrica", "ecos"];
   const EXTRA = {
-    teamjoy: ["Team Joy", "https://teamjoy.site", "/img/teamjoy-logo-240.webp"], ecos: ["ECOS", "https://ecos-map.fungirak.com", "/img/logos/ecos.png"],
+    teamjoy: ["Team Joy", "https://teamjoy.site", "/img/logos/teamjoy.png"], ecos: ["ECOS", "https://ecos-map.fungirak.com", "/img/logos/ecos.png"],
     fabrica: ["Fábrica", "https://fabrica.fungirak.com", "/img/logos/fabrica.png"], gourmet: ["SF Gourmet", "https://santafe-gourmet.fungirak.com", "/img/logos/gourmet.png"],
     schools: ["SF Schools", "https://santafe-schools.fungirak.com", "/img/logos/schools.png"], telos: ["SF Telo's", "https://santafe-telos.fungirak.com", "/img/logos/telos.png"],
     negro: ["Experimento Negro", "https://experimento-negro.fungirak.com", "/img/logos/negro.svg"], peyote: ["Peyote Asesino", "https://peyote-asesino.fungirak.com", "/img/logos/peyote.png"], loquero: ["Loquero", "https://loquero.fungirak.com", "/img/logos/loquero.png"],
@@ -142,6 +142,7 @@
     abrir(que) {
       const pan = this.shadowRoot.querySelector(".pan"), b = this.shadowRoot.querySelector(".ic");
       this.abierto = que; pan.hidden = !que; b.setAttribute("aria-expanded", que === "apps" ? "true" : "false");
+      velo(!!que, this);
       if (!que) return;
       // En el celu el botón no queda pegado al borde: si el panel (alineado a la derecha del botón) se escapa por la izquierda,
       // se corre a la derecha lo justo para entrar en la pantalla con 8 px de margen.
@@ -157,8 +158,10 @@
         const grupos = this.hasAttribute("categorias")
           ? GRUPOS.map(([t, ids]) => [t, ids.map((id) => porId.get(id) || (EXTRA[id] && { id, nombre: EXTRA[id][0], url: EXTRA[id][1], icono: EXTRA[id][2], extra: true })).filter(Boolean)])
           : null;
+        // La pill de «Apps» cuenta todas las apps (escuelas, herramientas y juegos también son apps); los sitios no.
+        const apps = grupos ? grupos.filter(([t]) => t !== "Sitios").reduce((n, [, l]) => n + l.length, 0) : 0;
         pan.innerHTML = grupos
-          ? `<p class="t">Todo FUNGIRAK Studio</p><div class="gs">${grupos.map(([t, l]) => `<p class="gt">${esc(t)} <span>${l.length}</span></p><div class="g">${l.map(tarjeta).join("")}</div>`).join("")}</div>`
+          ? `<p class="t">Todo FUNGIRAK Studio</p><div class="gs">${grupos.map(([t, l]) => `<p class="gt">${esc(t)} <span>${t === "Apps" ? apps : l.length}</span></p><div class="g">${l.map(tarjeta).join("")}</div>`).join("")}</div>`
           : `<p class="t">${y.sesion ? "Tus apps" : "Apps de FUNGIRAK"}</p><div class="g">${orden.map(tarjeta).join("")}</div>`;
         pan.insertAdjacentHTML("beforeend", `
 <div class="pie">${y.caida ? "" : y.sesion ? `<a href="${CUENTA}/">Administrar tu cuenta</a>` : `<a href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta FUNGIRAK</a><a href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a>`}<a href="https://fungirak.com">fungirak.com</a></div>`);
@@ -190,6 +193,20 @@
     h.shadowRoot.querySelector(".x").addEventListener("click", () => { guardar("fk.seguir.no", "1"); h.remove(); });
     h.shadowRoot.querySelector("a").addEventListener("click", () => embudo("seguir.click", a.id));
     setTimeout(() => { document.body.appendChild(h); embudo("seguir.visto", a.id); }, 1200);
+  }
+
+  // Velo con desenfoque detrás del panel abierto. Va en el <body> (no adentro de la barra: si un padre tiene blur o transform,
+  // un «fixed» quedaría encerrado en él) y justo debajo de la capa de la barra, para que el panel quede nítido arriba.
+  function velo(prender, barra) {
+    let v = document.getElementById("fk-velo");
+    if (!prender) { if (v) { v.style.opacity = "0"; setTimeout(() => { if (v.style.opacity === "0") v.remove(); }, 200); } return; }
+    let z = 0;
+    for (let n = barra; n && n !== document.body; n = n.parentElement || n.getRootNode().host) {
+      const zi = parseInt(getComputedStyle(n).zIndex, 10); if (!isNaN(zi)) z = zi;
+    }
+    if (!v) { v = document.createElement("div"); v.id = "fk-velo"; v.setAttribute("aria-hidden", "true"); document.body.appendChild(v); }
+    v.style.cssText = `position:fixed;inset:0;z-index:${Math.max(1, z - 1)};background:rgba(10,12,16,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;transition:opacity .2s`;
+    requestAnimationFrame(() => { v.style.opacity = "1"; });
   }
 
   // Tira de íconos que se desliza: con el dedo en el celu; con la ruedita o arrastrando con el mouse en la compu.

@@ -252,6 +252,16 @@ export const TIMELINE = [
   { año: "2023", icono: "🤖", es: "Microsoft Azure AI y Cisco Seguridad. Empiezo la Tecnicatura en la UTN FRSF.", en: "Microsoft Azure AI and Cisco Security. I start the IT Technician degree at UTN FRSF." },
   { año: "2024", icono: "⚡", es: "Rally de Innovación 2024 con Thinkers Group (UTN FRSF, UNL y UCES): pulseras de evacuación inteligentes con RFID. Presento Bro Exist, una app con reconocimiento facial para encontrar a tu \"hermano\" en el mundo.", en: "2024 Innovation Rally with Thinkers Group (UTN FRSF, UNL and UCES): smart evacuation wristbands with RFID. I present Bro Exist, a facial-recognition app to find your \"brother\" around the world." },
   { año: "2025", icono: "🎉", es: "Me recibo en la UTN y lanzo Team Joy.", en: "I graduate from UTN and launch Team Joy." },
-  { año: "2026", icono: "🍄", es: "La UTN FRSF me otorga el título (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro, las escuelas del Mate y del Asador, Micoteca, Musgui, Surco, Sin Vueltas, Fábrica, Dertin, Las Crónicas de Fungi, las guías de Santa Fe, Tribus urbanas y los sitios homenaje a Experimento Negro y El Peyote Asesino.", en: "UTN FRSF grants my degree (Res. 068/2026). FUNGIRAK Studio: MiTour, ECOS, Atalaya, Atlas Fit Pro, the Mate and Barbecue schools, Micoteca, Musgui, Surco, Sin Vueltas, Fábrica, Dertin, The Chronicles of Fungi, the Santa Fe guides, Urban tribes and the Experimento Negro and El Peyote Asesino tribute sites." },
+  { año: "2026", icono: "🍄", es: "La UTN FRSF me otorga el título (Res. 068/2026) y nace FUNGIRAK Studio.", en: "UTN FRSF grants my degree (Res. 068/2026) and FUNGIRAK Studio is born.",
+    // Paradas del mismo año: puntitos más chicos sobre la línea. Primero las apps más importantes, los sitios al final.
+    sub: [
+      { icono: "⚡", es: "Team Joy sigue creciendo y llegan Dertin, Las Crónicas de Fungi y Atlas Fit Pro.", en: "Team Joy keeps growing, and Dertin, The Chronicles of Fungi and Atlas Fit Pro arrive." },
+      { icono: "🧭", es: "MiTour, Atalaya, Musgui, Surco, Micoteca y Carta al Futuro.", en: "MiTour, Atalaya, Musgui, Surco, Micoteca and Carta al Futuro." },
+      { icono: "🧉", es: "Las escuelas: del Mate, del Asador, del Pescador, de las Mascotas y de los Primeros Auxilios.", en: "The schools: Mate, Barbecue, Fishing, Pets and First Aid." },
+      { icono: "☀️", es: "Para todos los días: Hoy, Preguntas de a Dos, Termómetro, Rinde, Qué Hago Hoy y Una Mano. Y las herramientas Pásalo, Escaneá y CV.", en: "For every day: Hoy, Preguntas de a Dos, Termómetro, Rinde, Qué Hago Hoy and Una Mano. Plus the Pásalo, Escaneá and CV tools." },
+      { icono: "🎮", es: "Juegos: Prode, Afinados, Santa Fe Oculta, La Gran Trivia y Figus.", en: "Games: Prode, Afinados, Santa Fe Oculta, La Gran Trivia and Figus." },
+      { icono: "🏭", es: "La Fábrica de sitios, ECOS y una sola cuenta FUNGIRAK para todas las apps.", en: "The site Factory, ECOS and a single FUNGIRAK account for every app." },
+      { icono: "🌐", es: "Sitios: Sin Vueltas, las guías de Santa Fe, Tribus urbanas y los homenajes a Experimento Negro, El Peyote Asesino y Loquero.", en: "Sites: Sin Vueltas, the Santa Fe guides, Urban tribes and the tributes to Experimento Negro, El Peyote Asesino and Loquero." },
+    ] },
   { año: "→", icono: "✨", es: "Lo que viene: dos libros, un EP y lo que construyamos juntos.", en: "What's next: two books, an EP and whatever we build together." },
 ];

@@ -61,13 +61,19 @@ export function Trayectoria({ onClose, abrir }) {
     <Modal onClose={onClose} color="#22b8cf" eyebrow={es ? "Trayectoria" : "Journey"} titulo={es ? <>De Santo Tomé <span className="grad-text">al mundo</span></> : <>From Santo Tomé <span className="grad-text">to the world</span></>} label={es ? "Trayectoria" : "Journey"} bajada={es ? "Bajá despacio: cada año se enciende." : "Scroll slowly: every year lights up."}>
       <div className="modal-body">
         <ol className="timeline" ref={lista}>
-          {TIMELINE.map((t) => (
+          {TIMELINE.map((t) => [
             <li key={t.año + t.es}>
               <span className="dot">{t.icono}</span>
               <b>{t.año}</b>
               <p>{tx(t, lang)}</p>
-            </li>
-          ))}
+            </li>,
+            ...(t.sub || []).map((x) => (
+              <li key={x.es} className="sub">
+                <span className="dot" aria-hidden="true" />
+                <p><span aria-hidden="true">{x.icono}</span> {tx(x, lang)}</p>
+              </li>
+            )),
+          ])}
         </ol>
         <div className="acciones">
           <button className="btn blue" onClick={() => abrir("experiencia")}>🏛️ {es ? "Experiencia" : "Experience"}</button>
