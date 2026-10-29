@@ -1,6 +1,7 @@
 // Tarea diaria (Vercel Cron, mediodía de Argentina): si hoy es fecha de sorteo y todavía no se hizo, sortea solo
 // y avisa por email al ganador y a Gabriel. No necesita clave: no se puede sortear antes de la fecha ni repetirla.
 import { sortear, FECHAS } from "@/lib/sorteo";
+import { sql } from "@/lib/db";
 
 export const maxDuration = 30;
 const hoy = () => new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10);
@@ -17,7 +18,16 @@ async function mail(to, subject, html, replyTo) {
 }
 const caja = (cuerpo) => `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;padding:24px;border-radius:18px;background:#0a0d1f;color:#f4f6ff">${cuerpo}<p style="color:#9298bf;font-size:12px;margin-top:22px">FUNGIRAK Studio · fungirak.com · <a href="https://fungirak.com/sorteo" style="color:#9298bf">Bases del sorteo</a></p></div>`;
 
+// Plazos de la política (cuenta.fungirak.com/legal/sitios): mensajes de «Hablemos», 24 meses; mails de la ruleta, 26 meses
+// (las participaciones del sorteo valen 24). Los ganadores quedan en sorteo_resultados para no volver a participar.
+async function borrarVencidos() {
+  if (!sql) return;
+  await sql`DELETE FROM mensajes WHERE creado < now() - interval '24 months'`.catch(() => {});
+  await sql`DELETE FROM ruleta_cupones WHERE creado < now() - interval '26 months'`.catch(() => {});
+}
+
 export async function GET() {
+  await borrarVencidos();
   const fecha = hoy();
   if (!FECHAS.includes(fecha)) return Response.json({ ok: true, hoy: fecha, sorteo: "no es fecha" });
   const r = await sortear(fecha).catch((e) => ({ error: String(e.message || e) }));

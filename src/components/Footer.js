@@ -94,6 +94,7 @@ export default function Footer({ abrir, stats }) {
           [ui.agendar, null, "/api/vcard"],
           ["Cookies", "cookies"],
           [es ? "Política de privacidad" : "Privacy policy", "privacidad"],
+          [es ? "Términos y privacidad completos" : "Terms and full privacy policy", null, "https://cuenta.fungirak.com/legal/sitios"],
         ])}
       </div>
 
