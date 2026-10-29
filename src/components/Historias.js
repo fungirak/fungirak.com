@@ -193,7 +193,7 @@ export default function Historias({ desde = null, onClose, onAplauso, aplausos =
             </form>
           )}
           {resp === null && <>
-            <button type="button" className={`hst-like${dioLike ? " si" : ""}`} onClick={darLike} aria-pressed={dioLike} aria-label={es ? "Me gusta" : "Like"}>{dioLike ? "❤️" : "🤍"}<small>{aplausos?.[p.id] || 0}</small></button>
+            <button type="button" className={`hst-like${dioLike ? " si" : ""}`} onClick={darLike} aria-pressed={dioLike} aria-label={es ? "Me gusta" : "Like"}><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M12 20.6 10.6 19.3C5.6 14.8 2.3 11.8 2.3 8.1 2.3 5.1 4.6 2.8 7.6 2.8c1.7 0 3.3.8 4.4 2.1 1.1-1.3 2.7-2.1 4.4-2.1 3 0 5.3 2.3 5.3 5.3 0 3.7-3.3 6.7-8.3 11.2L12 20.6z" /></svg><small>{aplausos?.[p.id] || 0}</small></button>
             <button type="button" className="hst-icon" onClick={compartir} aria-label={es ? "Compartir" : "Share"}>📤</button>
           </>}
         </footer>
