@@ -2,6 +2,7 @@
 // Se arman solas con la ficha de cada proyecto (lema, números, destacados, descripción): si se suma una app, aparece sola.
 // Cada día arranca con otra app, en orden (no al azar), así en un mes pasan todas.
 import { PROYECTOS, ORDEN, ORDEN_HISTORIAS } from "./proyectos";
+import { conDemos } from "./historias-demos";
 import { TEXTOS } from "./historias-textos";
 // (copia de tx de lib/i18n: aquel archivo es solo del navegador y este también lo usa el servidor para las imágenes)
 const tx = (v, lang) => (v && typeof v === "object" && !Array.isArray(v) ? v[lang] ?? v.es : v);
@@ -48,13 +49,13 @@ export function propiasDe(p, lang) {
   const t = es ? TEXTOS[p.id] : null;
   if (t) {
     const dato = (p.datos || [])[0];
-    return [
+    return conDemos(p.id, [
       { tipo: "destacado", ojo: "LO MEJOR", texto: t.gancho },
       { tipo: "destacado", ojo: "EN COMUNIDAD", emoji: "👥", texto: t.comunidad },
       { tipo: "destacado", ojo: "ADEMÁS", texto: t.f[0] },
       dato ? { tipo: "dato", n: dato.n, texto: tx(dato, lang) } : { tipo: "destacado", ojo: "Y TAMBIÉN", texto: t.f[1] },
       { tipo: "entrar", texto: "Gratis para siempre.", sub: `Con el plan FUNGIRAK (desde ${PRECIO} por mes, una sola suscripción para todas las apps) sumás ${t.plan}. Y al crear tu cuenta, 30 días de Personal gratis.`, boton: `Abrir ${nombreDe(p, lang)}` },
-    ];
+    ]);
   }
   const que = { tipo: "que", ojo: es ? "QUÉ ES" : "WHAT IT IS", texto: tx(p.tagline, lang) || frase(tx(p.descripcion, lang)), sub: frase(tx(p.descripcion, lang)) };
   const datos = (p.datos || []).slice(0, 2).map((d) => ({ tipo: "dato", n: d.n, texto: tx(d, lang) }));

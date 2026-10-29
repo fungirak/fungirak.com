@@ -46,14 +46,18 @@ export default function Historias({ desde = null, onClose, onAplauso, aplausos =
   const fn = useRef({});
   useEffect(() => { fn.current = { siguiente, anterior, onClose }; });
 
-  // el reloj de cada historia
+  // el reloj de cada historia (en las que muestran la app funcionando, manda el video: termina cuando termina)
   const avance = useRef(0);
+  const video = useRef(null);
   useEffect(() => { avance.current = 0; }, [idx, dentro]);
   useEffect(() => {
     if (pausa) return;
     let raf, ultimo = performance.now();
     const paso = (t) => {
-      avance.current = Math.min(1, avance.current + (t - ultimo) / DURA); ultimo = t;
+      const v = video.current;
+      if (v) { if (v.duration) avance.current = v.ended ? 1 : v.currentTime / v.duration; }
+      else avance.current = Math.min(1, avance.current + (t - ultimo) / DURA);
+      ultimo = t;
       setProg(avance.current);
       if (avance.current >= 1) { avance.current = 0; fn.current.siguiente(); }
       raf = requestAnimationFrame(paso);
@@ -69,6 +73,7 @@ export default function Historias({ desde = null, onClose, onAplauso, aplausos =
     const antes = document.body.style.overflow; document.body.style.overflow = "hidden";
     return () => { removeEventListener("keydown", k); document.body.style.overflow = antes; };
   }, []);
+  useEffect(() => { const v = video.current; if (!v) return; if (pausa) v.pause(); else v.play().catch(() => {}); }, [pausa, idx, dentro]);
   useEffect(() => { const img = new Image(); img.src = logoDe(APPS_HISTORIAS[(idx + 1) % N]); }, [idx, N]);
   // la tipografía de cada app (y la de la que viene), desde Google Fonts, una sola vez
   useEffect(() => {
@@ -168,6 +173,17 @@ export default function Historias({ desde = null, onClose, onAplauso, aplausos =
             </>
           ) : slide.tipo === "dato" ? (
             <><p className="hst-ojo">{es ? "EN NÚMEROS" : "BY THE NUMBERS"}</p><p className="hst-numero">{slide.n}</p><p className="hst-frase">{slide.texto}</p></>
+          ) : slide.tipo === "demo" ? (
+            <>
+              <p className="hst-ojo">{slide.ojo}</p>
+              <p className="hst-frase hst-demo-t">{slide.texto}</p>
+              <div className="hst-tel">
+                <video ref={video} muted playsInline autoPlay preload="auto" poster={`${slide.video}.jpg`} aria-label={`${nombre}: ${slide.texto}`}>
+                  <source src={`${slide.video}.webm`} type="video/webm" />
+                  <source src={`${slide.video}.mp4`} type="video/mp4" />
+                </video>
+              </div>
+            </>
           ) : slide.tipo === "pills" ? (
             <><p className="hst-ojo">{slide.ojo}</p><div className="hst-pills">{slide.items.map((x, i) => <span key={x} style={{ animationDelay: `${0.15 + i * 0.08}s` }}>{x}</span>)}</div></>
           ) : slide.tipo === "entrar" ? (
