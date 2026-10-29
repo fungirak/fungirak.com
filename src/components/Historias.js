@@ -164,6 +164,7 @@ export default function Historias({ desde = null, onClose, onAplauso, aplausos =
         </header>
 
         <div className="hst-cuerpo" key={`${idx}-${dentro}`} aria-live="polite">
+          {slide?.deco?.map((e, i) => <span key={e} className={`hst-deco d${i}`} aria-hidden="true">{e}</span>)}
           {dentro === null ? (
             <>
               <img className="hst-icono" src={logoDe(p)} alt="" width={132} height={132} />

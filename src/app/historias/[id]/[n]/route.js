@@ -20,6 +20,19 @@ export function tapizSVG(p, W, H, op) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><defs><pattern id="t" width="158" height="158" patternUnits="userSpaceOnUse"><g transform="scale(2.2)">${adentro}</g></pattern></defs><rect width="100%" height="100%" fill="url(#t)" opacity="${op}"/></svg>`;
   return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 }
+// El pie de cada imagen: fungirak.com, abajo FUNGIRAK STUDIO, y el honguito chiquito en gris (la marca).
+const HONGO = `data:image/svg+xml;base64,${Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.5 12.2C3.5 7.5 7.3 3.6 12 3.6s8.5 3.9 8.5 8.6z" fill="#9aa0a8"/><path d="M9.6 12.6h4.8v5.6a2.4 2.4 0 0 1-4.8 0z" fill="#9aa0a8"/><circle cx="8.6" cy="8.9" r="1.1" fill="#fff" opacity=".7"/><circle cx="13.6" cy="7" r="1.2" fill="#fff" opacity=".7"/><circle cx="16.4" cy="10" r=".9" fill="#fff" opacity=".7"/></svg>').toString("base64")}`;
+export const pie = (abajo, blanco) => (
+  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, padding: `0 0 ${abajo}px`, fontFamily: "B", color: blanco ? "#4b5563" : "#fff" }}>
+    <img alt="" src={HONGO} width={46} height={46} style={{ opacity: 0.9, marginBottom: 4 }} />
+    <div style={{ fontSize: 34, opacity: 0.92, letterSpacing: 1 }}>fungirak.com</div>
+    <div style={{ fontSize: 24, opacity: 0.7, letterSpacing: 7 }}>FUNGIRAK STUDIO</div>
+  </div>
+);
+// Los emojis que flotan alrededor del texto (los mismos del visor), afuera del texto: arriba a la izquierda, arriba a la derecha y abajo.
+export const decos = (lista = [], W, H) => [[0.08, 0.24, -12, 132], [0.8, 0.3, 10, 116], [0.16, 0.72, 6, 124]].slice(0, lista.length).map(([x, y, g, t], i) => (
+  <div key={i} style={{ position: "absolute", left: Math.round(W * x), top: Math.round(H * y), fontSize: t, transform: `rotate(${g}deg)`, display: "flex" }}>{lista[i]}</div>
+));
 const COL = { display: "flex", flexDirection: "column", alignItems: "center" }; // el generador no apila los fragmentos: cada grupo va en su columna
 const fuentes = new Map();
 // Google Fonts sin «user-agent» responde TTF, que es lo que entiende el generador de imágenes
@@ -51,7 +64,7 @@ export async function GET(_req, { params }) {
   const fonts = [titulo && { name: "T", data: titulo, weight: 800 }, texto && { name: "B", data: texto, weight: 400 }].filter(Boolean);
   const s = k === 0 ? null : propiasDe(p, lang)[k - 1];
   const portada = portadaDe(p, lang);
-  const icono = (t) => img ? <img alt="" src={img} width={t} height={t} style={{ borderRadius: t * 0.23, boxShadow: "0 30px 70px rgba(0,0,0,.35)", background: "#fff" }} />
+  const icono = (t) => img ? <img alt="" src={img} width={t} height={t} style={{ borderRadius: t * 0.23, boxShadow: "0 30px 70px rgba(0,0,0,.35)" }} />
     : <div style={{ width: t, height: t, borderRadius: t * 0.23, background: "rgba(255,255,255,.95)", color: c, display: "flex", alignItems: "center", justifyContent: "center", fontSize: t * 0.5, fontFamily: "T" }}>{nombre[0]}</div>;
   const ojo = (t) => <div style={{ fontSize: 34, letterSpacing: 9, opacity: 0.8, fontFamily: "B", marginBottom: 30 }}>{t}</div>;
   const frase = (t, tam = 72) => <div style={{ fontSize: tam, lineHeight: 1.22, fontFamily: "T", textAlign: "center", maxWidth: 900 }}>{t}</div>;
@@ -77,7 +90,8 @@ export async function GET(_req, { params }) {
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 90px" }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>{cuerpo}</div>
       </div>
-      <div style={{ display: "flex", justifyContent: "center", padding: "0 0 90px", fontSize: 34, opacity: 0.85, letterSpacing: 4, fontFamily: "B" }}>fungirak.com · FUNGIRAK STUDIO</div>
+      {s?.deco?.length ? decos(s.deco, W, H) : null}
+      {pie(80, blanco)}
     </div>,
     { width: W, height: H, emoji: "twemoji", fonts: fonts.length ? fonts : undefined, headers: { "Cache-Control": "public, max-age=86400, s-maxage=86400" } }
   );

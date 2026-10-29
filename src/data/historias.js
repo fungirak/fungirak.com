@@ -4,6 +4,7 @@
 import { PROYECTOS, ORDEN, ORDEN_HISTORIAS } from "./proyectos";
 import { conDemos } from "./historias-demos";
 import { tonoDe } from "./cards-fondo";
+import { decoDe } from "./historias-deco";
 import { TEXTOS } from "./historias-textos";
 // (copia de tx de lib/i18n: aquel archivo es solo del navegador y este también lo usa el servidor para las imágenes)
 const tx = (v, lang) => (v && typeof v === "object" && !Array.isArray(v) ? v[lang] ?? v.es : v);
@@ -43,12 +44,13 @@ const frase = (t) => { const s = String(t || "").trim(); const m = s.match(/^(.{
 // Que ninguna frase termine con una palabra sola en el último renglón: las dos últimas van unidas (espacio que no corta).
 export const sinViuda = (t) => (typeof t === "string" ? t.replace(/\s+(\S+)\s*$/, "\u00A0$1") : t);
 const pulir = (x) => ({ ...x, ...(x.texto && { texto: sinViuda(x.texto) }), ...(x.sub && { sub: sinViuda(x.sub) }) });
+const decorar = (id) => (x) => (x.tipo === "demo" ? x : { ...x, deco: decoDe(id, x.ojo, x.texto, x.sub).filter((e) => e !== x.emoji) });
 export const portadaDe = (p, lang) => ({ frase: sinViuda(tx(p.lema, lang) || tx(p.tagline, lang) || ""), sub: sinViuda(tx(p.lema, lang) ? tx(p.tagline, lang) || "" : "") });
 
 // La promo de la quinta: gratis para siempre, lo que suma el plan FUNGIRAK y la prueba de 30 días.
 const PRECIO = "$4.990";
 // Las 5 propias: 1 el gancho, 2 la comunidad, 3 lo mejor, 4 un número (o lo mejor) y 5 la promo con el botón para entrar.
-export function propiasDe(p, lang) { return propiasCrudas(p, lang).map(pulir); }
+export function propiasDe(p, lang) { return propiasCrudas(p, lang).map(pulir).map(decorar(p.id)); }
 function propiasCrudas(p, lang) {
   const es = lang !== "en";
   const t = es ? TEXTOS[p.id] : null;
