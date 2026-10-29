@@ -34,6 +34,11 @@ const LUGARES = [[0.08, 0.24, -12, 132], [0.8, 0.3, 10, 116], [0.16, 0.72, 6, 12
 export const decos = (lista = [], W, H, lugares = LUGARES) => lugares.slice(0, lista.length).map(([x, y, g, t], i) => (
   <div key={i} style={{ position: "absolute", left: Math.round(W * x), top: Math.round(H * y), fontSize: t, transform: `rotate(${g}deg)`, display: "flex" }}>{lista[i]}</div>
 ));
+// Dónde va el celular en la historia con la app funcionando (1080 × 1920): lo usa también el armado del video para Instagram.
+export const CEL = { x: 307, y: 560, w: 466, h: 1000 };
+async function posterDe(s) {
+  try { const b = await readFile(join(process.cwd(), "public", `${s.video}.jpg`)); return `data:image/jpeg;base64,${b.toString("base64")}`; } catch { return null; }
+}
 export const COL = { display: "flex", flexDirection: "column", alignItems: "center" }; // el generador no apila los fragmentos: cada grupo va en su columna
 const fuentes = new Map();
 // Google Fonts sin «user-agent» responde TTF, que es lo que entiende el generador de imágenes
@@ -70,6 +75,7 @@ export async function GET(_req, { params }) {
   const ojo = (t) => <div style={{ fontSize: 34, letterSpacing: 9, opacity: 0.8, fontFamily: "B", marginBottom: 30 }}>{t}</div>;
   const frase = (t, tam = 72) => <div style={{ fontSize: tam, lineHeight: 1.22, fontFamily: "T", textAlign: "center", maxWidth: 900 }}>{t}</div>;
   const blanco = p.id === "teamjoy";
+  const poster = s?.tipo === "demo" ? await posterDe(s) : null;
   let cuerpo;
   if (!s) cuerpo = <div style={COL}>{icono(300)}<div style={{ fontSize: 96, fontFamily: "T", marginTop: 56, textAlign: "center", lineHeight: 1.05 }}>{nombre}</div>
     <div style={{ fontSize: 34, letterSpacing: 8, opacity: 0.85, fontFamily: "B", margin: "22px 0 70px" }}>FROM FUNGIRAK</div>{frase(portada.frase, 66)}
@@ -79,6 +85,7 @@ export async function GET(_req, { params }) {
   else if (s.tipo === "entrar") cuerpo = <div style={COL}>{icono(250)}<div style={{ marginTop: 60, display: "flex" }}>{frase(s.texto, 76)}</div>
     {s.sub ? <div style={{ fontSize: 38, opacity: 0.92, fontFamily: "B", marginTop: 40, textAlign: "center", maxWidth: 880, lineHeight: 1.45 }}>{s.sub}</div> : null}
     <div style={{ marginTop: 56, padding: "34px 56px", borderRadius: 999, background: blanco ? "#1f2937" : "#fff", color: blanco ? "#fff" : "#111", fontSize: 46, fontFamily: "B" }}>{p.url.replace("https://", "")}</div></div>;
+  else if (s.tipo === "demo") cuerpo = null; // la historia con la app funcionando: texto arriba y el celular (ver «demo» abajo)
   else cuerpo = <div style={COL}>{s.emoji ? <div style={{ fontSize: 130, marginBottom: 30 }}>{s.emoji}</div> : null}{ojo(s.ojo)}{frase(s.texto, 78)}{s.sub && s.sub !== s.texto ? <div style={{ fontSize: 40, opacity: 0.88, fontFamily: "B", marginTop: 40, textAlign: "center", maxWidth: 860, lineHeight: 1.4 }}>{s.sub}</div> : null}</div>;
   const fondo = blanco ? "#ffffff" : p.id === "dertin" ? "linear-gradient(180deg, #26262e 0%, #0b0b10 48%, #000 100%)" : `linear-gradient(180deg, ${claro(c)} 0%, ${c} 46%, ${oscuro(c)} 100%)`;
   const tapiz = tapizSVG(p, W, H, blanco ? 0.4 : p.id === "dertin" ? 0.22 : 0.17);
@@ -92,6 +99,11 @@ export async function GET(_req, { params }) {
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>{cuerpo}</div>
       </div>
       {s?.deco?.length ? decos(s.deco, W, H) : null}
+      {s?.tipo === "demo" ? <div style={{ position: "absolute", left: 0, top: 230, width: W, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        {ojo(s.ojo)}{frase(s.texto, 56)}</div> : null}
+      {/* el celular: en la imagen va el primer cuadro; el video de Instagram lo pone encima en la misma posición (CEL) */}
+      {s?.tipo === "demo" ? <div style={{ position: "absolute", left: CEL.x - 14, top: CEL.y - 14, width: CEL.w + 28, height: CEL.h + 28, borderRadius: 64, background: "#0b0b10", display: "flex", padding: 14, boxShadow: "0 40px 90px rgba(0,0,0,.45)" }}>
+        {poster ? <img alt="" src={poster} width={CEL.w} height={CEL.h} style={{ borderRadius: 50, objectFit: "cover" }} /> : null}</div> : null}
       {pie(80, blanco)}
     </div>,
     { width: W, height: H, emoji: "twemoji", fonts: fonts.length ? fonts : undefined, headers: { "Cache-Control": "public, max-age=86400, s-maxage=86400" } }
