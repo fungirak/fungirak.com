@@ -23,6 +23,11 @@ export const INDUSTRIAS = [
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
 export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "afinados", "santafe-oculta", "fabrica",
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"];
+// El orden de cada fila de cards (1 Lo central, 2 Más del Studio, 3 Escuelas, 4 Herramientas, 5 Juegos, 6 Sitios) y el de las historias,
+// elegidos a mano por Gabriel el 29/10/2026. Lo que no esté en la lista va al final.
+export const ORDEN_FILAS = [["teamjoy", "problematica", "dertin", "libro-1", "libro-2", "ep"], ["atlas", "mitour", "atalaya", "musgui", "surco", "micoteca", "carta-al-futuro", "hoy", "preguntas", "termometro", "rinde", "que-hago-hoy", "voluntarios", "fabrica", "ecos"], ["mate", "asador", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios"], ["pasalo", "escanea", "cv"], ["cronicas", "prode", "afinados", "santafe-oculta", "trivia", "figus"], ["sinvueltas", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"]];
+export const ORDEN_HISTORIAS = ["teamjoy", "dertin", "cronicas", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "afinados", "santafe-oculta", "fabrica", "ecos"];
+
 export const PROYECTOS = [
   {
     id: "teamjoy",
@@ -192,7 +197,7 @@ export const PROYECTOS = [
   },
   {
     id: "gourmet",
-    fila: 4,
+    fila: 6,
     nombre: "Santa Fe Gourmet",
     url: "https://santafe-gourmet.fungirak.com",
     logo: "/img/logos/gourmet.png",
@@ -208,7 +213,7 @@ export const PROYECTOS = [
   },
   {
     id: "schools",
-    fila: 4,
+    fila: 6,
     nombre: "Santa Fe Schools",
     url: "https://santafe-schools.fungirak.com",
     logo: "/img/logos/schools.png",
@@ -224,7 +229,7 @@ export const PROYECTOS = [
   },
   {
     id: "telos",
-    fila: 4,
+    fila: 6,
     nombre: "Santa Fe Telo's",
     url: "https://santafe-telos.fungirak.com",
     logo: "/img/logos/telos.png",
@@ -242,7 +247,7 @@ export const PROYECTOS = [
   },
   {
     id: "negro",
-    fila: 4,
+    fila: 6,
     nombre: { es: "Sitio homenaje a Experimento Negro", en: "Tribute site to Experimento Negro" },
     url: "https://experimento-negro.fungirak.com",
     logo: "/img/logos/negro.svg",
@@ -258,7 +263,7 @@ export const PROYECTOS = [
     },
   },  {
     id: "peyote",
-    fila: 4,
+    fila: 6,
     nombre: { es: "Sitio homenaje a El Peyote Asesino", en: "Tribute site to El Peyote Asesino" },
     url: "https://peyote-asesino.fungirak.com",
     logo: "/img/logos/peyote.png",
@@ -284,7 +289,7 @@ export const PROYECTOS = [
   },
   {
     id: "loquero",
-    fila: 4,
+    fila: 6,
     nombre: { es: "Sitio homenaje a Loquero", en: "Tribute site to Loquero" },
     url: "https://loquero.fungirak.com",
     logo: "/img/logos/loquero.png",
@@ -310,7 +315,7 @@ export const PROYECTOS = [
   },
   {
     id: "mate",
-    fila: 2,
+    fila: 3,
     nombre: "La Escuela del Mate",
     url: "https://escuela-del-mate.fungirak.com",
     logo: "/img/logos/mate.png",
@@ -336,7 +341,7 @@ export const PROYECTOS = [
   },
   {
     id: "asador",
-    fila: 2,
+    fila: 3,
     nombre: "La Escuela del Asador",
     url: "https://escueladelasador.fungirak.com",
     logo: "/img/logos/asador.png",
@@ -414,7 +419,7 @@ export const PROYECTOS = [
   },
   {
     id: "sinvueltas",
-    fila: 4,
+    fila: 6,
     nombre: "Sin Vueltas",
     url: "https://sin-vueltas.fungirak.com",
     logo: "/img/logos/sinvueltas.png",
@@ -466,7 +471,7 @@ export const PROYECTOS = [
   },
   {
     id: "cv",
-    fila: 2,
+    fila: 4,
     nombre: "CV",
     url: "https://cv.fungirak.com",
     logo: "/img/logos/cv.png",
@@ -492,7 +497,7 @@ export const PROYECTOS = [
   },
   {
     id: "pasalo",
-    fila: 2,
+    fila: 4,
     nombre: "Pásalo",
     url: "https://pasalo.fungirak.com",
     logo: "/img/logos/pasalo.png",
@@ -593,7 +598,7 @@ export const PROYECTOS = [
   },
   {
     id: "escuela-del-pescador",
-    fila: 2,
+    fila: 3,
     nombre: "La Escuela del Pescador",
     url: "https://escuela-del-pescador.fungirak.com",
     logo: "/img/logos/escuela-del-pescador.png",
@@ -619,7 +624,7 @@ export const PROYECTOS = [
   },
   {
     id: "escuela-de-mascotas",
-    fila: 2,
+    fila: 3,
     nombre: "La Escuela de las Mascotas",
     url: "https://escuela-de-mascotas.fungirak.com",
     logo: "/img/logos/escuela-de-mascotas.png",
@@ -645,7 +650,7 @@ export const PROYECTOS = [
   },
   {
     id: "primeros-auxilios",
-    fila: 2,
+    fila: 3,
     nombre: "La Escuela de los Primeros Auxilios",
     url: "https://primeros-auxilios.fungirak.com",
     logo: "/img/logos/primeros-auxilios.png",
@@ -667,7 +672,7 @@ export const PROYECTOS = [
   },
   {
     id: "trivia",
-    fila: 3,
+    fila: 5,
     nombre: "La Gran Trivia",
     url: "https://trivia.fungirak.com",
     logo: "/img/logos/trivia.png",
@@ -689,7 +694,7 @@ export const PROYECTOS = [
   },
   {
     id: "figus",
-    fila: 3,
+    fila: 5,
     nombre: "Figus",
     url: "https://figus.fungirak.com",
     logo: "/img/logos/figus.png",
@@ -733,7 +738,7 @@ export const PROYECTOS = [
   },
   {
     id: "prode",
-    fila: 3,
+    fila: 5,
     nombre: "Prode",
     url: "https://prode.fungirak.com",
     logo: "/img/logos/prode.png",
@@ -755,7 +760,7 @@ export const PROYECTOS = [
   },
   {
     id: "afinados",
-    fila: 3,
+    fila: 5,
     nombre: "Afinados",
     url: "https://afinados.fungirak.com",
     logo: "/img/logos/afinados.png",
@@ -777,7 +782,7 @@ export const PROYECTOS = [
   },
   {
     id: "santafe-oculta",
-    fila: 3,
+    fila: 5,
     nombre: "Santa Fe Oculta",
     url: "https://santafe-oculta.fungirak.com",
     logo: "/img/logos/santafe-oculta.png",
@@ -802,7 +807,7 @@ export const PROYECTOS = [
 
   {
     id: "escanea",
-    fila: 2,
+    fila: 4,
     nombre: "Escaneá",
     url: "https://escanea.fungirak.com",
     logo: "/img/logos/escanea.png",
@@ -958,7 +963,7 @@ export const PROYECTOS = [
   },
   {
     id: "tribus",
-    fila: 4,
+    fila: 6,
     nombre: "Tribus urbanas",
     url: "https://tribus.fungirak.com",
     logo: "/img/logos/tribus.png",
@@ -984,7 +989,7 @@ export const PROYECTOS = [
   },
   {
     id: "cronicas",
-    fila: 3,
+    fila: 5,
     nombre: "Las Crónicas de Fungi",
     url: "https://cronicasdefungi.fungirak.com",
     logo: "/img/logos/cronicas.png",

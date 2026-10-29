@@ -1,7 +1,7 @@
 // Historias de fungirak.com (la foto de la portada): una de presentación por cada app, sitio y juego, y 5 propias de cada una.
 // Se arman solas con la ficha de cada proyecto (lema, números, destacados, descripción): si se suma una app, aparece sola.
 // Cada día arranca con otra app, en orden (no al azar), así en un mes pasan todas.
-import { PROYECTOS, ORDEN } from "./proyectos";
+import { PROYECTOS, ORDEN, ORDEN_HISTORIAS } from "./proyectos";
 import { TEXTOS } from "./historias-textos";
 // (copia de tx de lib/i18n: aquel archivo es solo del navegador y este también lo usa el servidor para las imágenes)
 const tx = (v, lang) => (v && typeof v === "object" && !Array.isArray(v) ? v[lang] ?? v.es : v);
@@ -31,7 +31,7 @@ export function hojaFuentes(p) {
 // Team Joy no tiene logo en el sitio: usa el ícono de la cuenta FUNGIRAK.
 const LOGOS = { teamjoy: "/img/logos/teamjoy.png" };
 
-const orden = (p) => { const i = ORDEN.indexOf(p.id); return i < 0 ? 999 : i; };
+const orden = (p) => { const i = ORDEN_HISTORIAS.indexOf(p.id); return i < 0 ? 999 + ORDEN.indexOf(p.id) : i; };
 export const APPS_HISTORIAS = PROYECTOS.filter((p) => !FUERA.has(p.id) && !p.pausa && p.url && !["libro", "ep"].includes(p.tipo)).sort((a, b) => orden(a) - orden(b));
 
 // La primera frase de un texto (para no meter párrafos en una historia).
@@ -86,6 +86,6 @@ export function colorDe(p) {
 // Con qué app arranca hoy: un día después del otro, en orden (día argentino).
 export function inicioDeHoy(n = APPS_HISTORIAS.length) {
   const hoy = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" }));
-  const dias = Math.floor(Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()) / 864e5);
+  const dias = Math.floor(Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()) / 864e5) - Math.floor(Date.UTC(2026, 9, 29) / 864e5); // el 29/10/2026 arrancó la primera
   return ((dias % n) + n) % n;
 }

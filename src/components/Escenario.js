@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { PROYECTOS, INDUSTRIAS, ORDEN } from "@/data/proyectos";
+import { PROYECTOS, INDUSTRIAS, ORDEN, ORDEN_FILAS } from "@/data/proyectos";
 import { useLang, tx } from "@/lib/i18n";
 import { Casa, Llave, Persona } from "./Iconos";
 import Micelio from "./Micelio";
@@ -92,8 +92,8 @@ export default function Escenario({ onOpen, sellos, onSound, aplausos = {} }) {
   };
 
   const pos = (p) => { const k = ORDEN.indexOf(p.id); return k < 0 ? 99 : k; };
-  const primero = (p) => { const k = ["teamjoy", "dertin"].indexOf(p.id); return k < 0 ? 9 : k; }; // en «Lo central», Team Joy y Dertin adelante
-  const fila = (n) => PROYECTOS.filter((p) => p.fila === n).sort((a, b) => (n === 1 ? primero(a) - primero(b) : pos(a) - pos(b)));
+  const enFila = (n, p) => { const k = (ORDEN_FILAS[n - 1] || []).indexOf(p.id); return k < 0 ? 99 + pos(p) : k; }; // el orden elegido para cada fila
+  const fila = (n) => PROYECTOS.filter((p) => p.fila === n).sort((a, b) => enFila(n, a) - enFila(n, b));
   const marca = (p) => filtro !== "todas" && !p.industrias.includes(filtro);
   const brilla = (p) => filtro !== "todas" && p.industrias.includes(filtro);
 
@@ -109,7 +109,7 @@ export default function Escenario({ onOpen, sellos, onSound, aplausos = {} }) {
         ))}
       </div>
 
-      {[1, 2, 3, 4].map((n) => (
+      {[1, 2, 3, 4, 5, 6].map((n) => (
         <div className="fila" key={n}>
           <div className="fila-head">
             <h2 className="display">{ui[`fila${n}`]}</h2>

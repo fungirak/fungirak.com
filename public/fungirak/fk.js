@@ -22,10 +22,11 @@
   // Con el atributo «categorias» (la portada de fungirak.com): todo el estudio agrupado como la franja «Más de FUNGIRAK Studio».
   // Lo que no tiene cuenta FUNGIRAK (Team Joy, ECOS, Fábrica y los sitios) se toma de EXTRA, con los íconos del portal.
   const GRUPOS = [
-    ["Apps", ["teamjoy", "dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "carta-al-futuro", "preguntas", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "voluntarios"]],
-    ["Herramientas", ["ecos", "sinvueltas", "hoy", "cv", "escanea", "pasalo", "fabrica"]],
-    ["Juegos", ["trivia", "figus", "prode", "afinados", "cronicas", "santafe-oculta"]],
-    ["Sitios", ["gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"]],
+    ["Apps", ["teamjoy", "dertin", "atlas", "mitour", "atalaya", "musgui", "surco", "micoteca", "carta-al-futuro", "hoy", "preguntas", "termometro", "rinde", "que-hago-hoy", "voluntarios", "fabrica", "ecos"]],
+    ["Escuelas", ["mate", "asador", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios"]],
+    ["Herramientas", ["pasalo", "escanea", "cv"]],
+    ["Juegos", ["cronicas", "prode", "afinados", "santafe-oculta", "trivia", "figus"]],
+    ["Sitios", ["sinvueltas", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"]],
   ];
   const EXTRA = {
     teamjoy: ["Team Joy", "https://teamjoy.site", "/img/teamjoy-logo-240.webp"], ecos: ["ECOS", "https://ecos-map.fungirak.com", "/img/logos/ecos.png"],
