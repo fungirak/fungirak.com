@@ -1,10 +1,35 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fondoDe } from "@/data/cards-fondo";
 import { PROYECTOS, INDUSTRIAS, ORDEN, ORDEN_FILAS } from "@/data/proyectos";
 import { useLang, tx } from "@/lib/i18n";
 import { Casa, Llave, Persona } from "./Iconos";
 import Micelio from "./Micelio";
+
+// Una fila de cards que se desliza de costado. En la compu suma flechas a los costados (el celu se desliza con el dedo);
+// cada flecha se esconde cuando ya no hay más cards de ese lado.
+function Riel({ children, es }) {
+  const pista = useRef(null);
+  const [borde, setBorde] = useState({ ini: true, fin: true });
+  useEffect(() => {
+    const n = pista.current;
+    if (!n) return;
+    const medir = () => setBorde({ ini: n.scrollLeft <= 4, fin: n.scrollLeft + n.clientWidth >= n.scrollWidth - 4 });
+    medir();
+    n.addEventListener("scroll", medir, { passive: true });
+    const ro = new ResizeObserver(medir);
+    ro.observe(n);
+    return () => { n.removeEventListener("scroll", medir); ro.disconnect(); };
+  }, []);
+  const mover = (d) => pista.current?.scrollBy({ left: d * Math.max(260, pista.current.clientWidth * 0.8), behavior: "smooth" });
+  return (
+    <div className="riel">
+      <button type="button" className="riel-flecha prev" aria-label={es ? "Ver anteriores" : "Previous"} disabled={borde.ini} onClick={() => mover(-1)}>‹</button>
+      <div ref={pista} className="cards">{children}</div>
+      <button type="button" className="riel-flecha next" aria-label={es ? "Ver más" : "More"} disabled={borde.fin} onClick={() => mover(1)}>›</button>
+    </div>
+  );
+}
 
 function Arte({ p }) {
   if (p.id === "teamjoy") return <img src="/img/teamjoy-logo-240.webp" alt="Team Joy" width={118} height={118} style={{ objectFit: "contain" }} />;
@@ -120,11 +145,11 @@ export default function Escenario({ onOpen, sellos, onSound, aplausos = {} }) {
               ✓ {lang === "es" ? "Abriste" : "Opened"} {fila(n).filter((p) => sellos.includes(p.id)).length} {lang === "es" ? "de" : "of"} {fila(n).length}
             </span>
           </div>
-          <div className="cards">
+          <Riel es={lang === "es"}>
             {fila(n).map((p, idx) => (
               <Card key={p.id} p={p} idx={idx + [1, 2, 3].filter((k) => k < n).reduce((t, k) => t + fila(k).length, 0)} onOpen={onOpen} sellado={sellos.includes(p.id)} dim={marca(p)} lit={brilla(p)} onHover={hoverYSonido} likes={aplausos?.[p.id] || 0} />
             ))}
-          </div>
+          </Riel>
         </div>
       ))}
     </section>

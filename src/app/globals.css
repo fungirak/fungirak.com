@@ -806,6 +806,22 @@ img {
   font-weight: 600;
 }
 
+/* Flechas de las filas de cards (solo con mouse: en pantallas táctiles se desliza con el dedo) */
+.riel { position: relative; }
+.riel-flecha { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .riel-flecha {
+    display: grid; place-items: center; position: absolute; z-index: 3; top: 50%; transform: translateY(-50%);
+    width: 44px; height: 44px; border-radius: 50%; font-size: 1.6rem; line-height: 1; padding-bottom: 3px;
+    background: var(--surface); color: var(--text); border: 1px solid var(--line-2); box-shadow: var(--shadow);
+    cursor: pointer; transition: opacity .2s, transform .15s;
+  }
+  .riel-flecha.prev { left: -14px; }
+  .riel-flecha.next { right: -14px; }
+  .riel-flecha:hover:not(:disabled) { transform: translateY(-50%) scale(1.08); }
+  .riel-flecha:disabled { opacity: 0; pointer-events: none; }
+}
+
 .cards {
   display: flex;
   gap: 16px;
