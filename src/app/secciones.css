@@ -65,7 +65,16 @@
 .bit-flecha { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 1.5rem; line-height: 1; padding-bottom: 3px; background: var(--surface); color: var(--text); border: 1px solid var(--line-2); box-shadow: var(--shadow); cursor: pointer; transition: opacity .2s, transform .15s; }
 .bit-flecha:hover:not(:disabled) { transform: scale(1.08); }
 .bit-flecha:disabled { opacity: 0; pointer-events: none; }
-@media (max-width: 640px) { .bit-flecha { width: 32px; height: 32px; font-size: 1.2rem; } .bit-linea { grid-template-columns: repeat(var(--n), 170px); } .bit-card { width: 152px; } }
+@media (max-width: 640px) {
+  .bit-linea { grid-template-columns: repeat(var(--n), 170px); } .bit-card { width: 152px; }
+  /* En el celu la línea va de borde a borde y las flechas flotan sobre ella, a la altura de los puntos (la línea queda al medio: 16px abajo y 6px arriba de relleno) */
+  .bit { display: block; margin-inline: calc(-1 * clamp(16px, 4vw, 48px)); }
+  .bit-pista { -webkit-mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); }
+  .bit-flecha { position: absolute; z-index: 2; top: calc(50% - 5px); transform: translateY(-50%); width: 34px; height: 34px; font-size: 1.25rem;
+    background: color-mix(in srgb, var(--surface) 72%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .bit-flecha.prev { left: 8px; } .bit-flecha.next { right: 8px; }
+  .bit-flecha:hover:not(:disabled) { transform: translateY(-50%) scale(1.08); }
+}
 
 /* 4. Ruleta */
 .ruleta { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: center; }
