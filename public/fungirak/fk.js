@@ -192,6 +192,27 @@
     setTimeout(() => { document.body.appendChild(h); embudo("seguir.visto", a.id); }, 1200);
   }
 
+  // Tira de íconos que se desliza: con el dedo en el celu; con la ruedita o arrastrando con el mouse en la compu.
+  // Sin barra de scroll: los bordes se esfuman de cada lado mientras quede algo por ver.
+  function deslizable(el) {
+    const bordes = () => {
+      const fin = el.scrollWidth - el.clientWidth - el.scrollLeft;
+      el.style.setProperty("--iz", el.scrollLeft > 2 ? "28px" : "0px");
+      el.style.setProperty("--de", fin > 2 ? "28px" : "0px");
+    };
+    el.addEventListener("scroll", bordes, { passive: true });
+    el.addEventListener("wheel", (e) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX) || el.scrollWidth <= el.clientWidth) return;
+      e.preventDefault(); el.scrollLeft += e.deltaY;
+    }, { passive: false });
+    let x0 = null, s0 = 0;
+    el.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") return; x0 = e.clientX; s0 = el.scrollLeft; el.classList.add("arr"); el.setPointerCapture(e.pointerId); });
+    el.addEventListener("pointermove", (e) => { if (x0 !== null) el.scrollLeft = s0 - (e.clientX - x0); });
+    const soltar = () => { x0 = null; el.classList.remove("arr"); };
+    el.addEventListener("pointerup", soltar); el.addEventListener("pointercancel", soltar);
+    requestAnimationFrame(bordes);
+  }
+
   // Cartel suave en la portada: solo sin sesión, después de mirar un rato o bajar un poco; no vuelve por 7 días si lo cerrás.
   function cartel(app) {
     const hasta = Number(leer("fk.cartel", localStorage) || 0);
@@ -204,13 +225,14 @@
         .c{box-sizing:border-box;width:min(560px,calc(100vw - 24px));background:#fff;color:#15171c;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.28);padding:16px 18px;display:grid;gap:10px;animation:e .35s ease}
         :host([oscuro]) .c{background:#1b1e24;color:#eef0f3}@keyframes e{from{transform:translateY(20px);opacity:0}}
         .t{display:flex;gap:10px;align-items:flex-start}.t b{font-size:16px}.x{margin-left:auto;border:0;background:none;font-size:22px;cursor:pointer;color:inherit;opacity:.6}
-        .c>*{min-width:0}.i{display:flex;gap:6px;overflow:hidden}.i img{width:30px;height:30px;border-radius:8px;flex:none}
+        .c>*{min-width:0}.i{display:flex;gap:6px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;cursor:grab;touch-action:pan-x;--iz:0px;--de:28px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 var(--iz),#000 calc(100% - var(--de)),transparent);mask-image:linear-gradient(90deg,transparent,#000 var(--iz),#000 calc(100% - var(--de)),transparent)}.i::-webkit-scrollbar{display:none}.i.arr{cursor:grabbing}.i img{width:30px;height:30px;border-radius:8px;flex:none;-webkit-user-drag:none;user-select:none}
         .f{display:flex;gap:8px;flex-wrap:wrap}.f a{flex:1;min-width:140px;text-align:center;border-radius:12px;padding:10px;font-weight:700;text-decoration:none}
         .p{background:#111;color:#fff}.s{background:rgba(127,127,127,.15);color:inherit}:host([oscuro]) .p{background:#3CF2A0;color:#06120c}
         @media (prefers-reduced-motion:reduce){.c{animation:none}}</style>
         <div class="c" role="dialog" aria-label="Cuenta FUNGIRAK"><div class="t"><div><b>Una cuenta para todas las apps de FUNGIRAK</b><div style="opacity:.75">Entrás una vez y abrís cualquiera con un clic.</div></div><button class="x" aria-label="Cerrar">×</button></div>
         <div class="i" aria-hidden="true">${enOrden().map((a) => `<img src="${esc(a.icono)}" alt="" width="30" height="30" loading="lazy">`).join("")}</div>
         <div class="f"><a class="p" href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta gratis</a><a class="s" href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Ya tengo cuenta</a></div></div>`;
+      deslizable(h.shadowRoot.querySelector(".i"));
       h.shadowRoot.querySelector(".x").addEventListener("click", () => { guardar("fk.cartel", String(Date.now() + 7 * 864e5), localStorage); embudo("cartel.cerrado", app); h.remove(); });
       h.shadowRoot.querySelectorAll("a").forEach((x) => x.addEventListener("click", () => embudo("cartel.click", app)));
       document.body.appendChild(h); embudo("cartel.visto", app);
