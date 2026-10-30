@@ -164,7 +164,7 @@
           ? `<p class="t">Todo FUNGIRAK Studio</p><div class="gs">${grupos.map(([t, l]) => `<p class="gt">${esc(t)} <span>${t === "Apps" ? apps : l.length}</span></p><div class="g">${l.map(tarjeta).join("")}</div>`).join("")}</div>`
           : `<p class="t">${y.sesion ? "Tus apps" : "Apps de FUNGIRAK"}</p><div class="g">${orden.map(tarjeta).join("")}</div>`;
         pan.insertAdjacentHTML("beforeend", `
-<div class="pie">${y.caida ? "" : y.sesion ? `<a href="${CUENTA}/">Administrar tu cuenta</a>` : `<a href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta FUNGIRAK</a><a href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a>`}<a href="https://fungirak.com">fungirak.com</a></div>`);
+<div class="pie">${y.caida ? "" : y.sesion ? `<a href="${CUENTA}/">Administrar tu cuenta</a>` : `<a href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta FUNGIRAK</a><a href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a>`}</div>`);
         pan.querySelectorAll(".ap").forEach((a) => a.addEventListener("click", () => embudo(y.sesion && !usadas.has(a.dataset.id) ? "grilla.probar" : "grilla.abrir", this.app)));
       } else {
         pan.innerHTML = `<div class="cab"><span class="av">${avatar(y, 44)}</span><div><b>${esc(y.nombre || "@" + y.usuario)}</b><small>@${esc(y.usuario)} · cuenta FUNGIRAK</small></div></div>
