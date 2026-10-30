@@ -2707,3 +2707,7 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
 .hst-deco.d2 { left: 18%; bottom: 15%; --r: 6deg; font-size: 38px; animation-delay: .4s, -2.6s; }
 @keyframes hst-flotar { 0%, 100% { transform: translateY(0) rotate(var(--r)); } 50% { transform: translateY(-10px) rotate(calc(var(--r) * -1)); } }
 @media (prefers-reduced-motion: reduce) { .hst-deco { animation: none; transform: rotate(var(--r)); } }
+
+/* «Descargar todo» debajo del usuario de Instagram: solo texto gris con el ícono, sin caja (abre public/fungirak/descargar.js) */
+.btn-descargar { display: flex; align-items: center; gap: 6px; margin: 4px 0 2px; padding: 2px 0; border: 0; background: none; color: var(--text-3); font: 600 .84rem/1.2 var(--font-body); cursor: pointer; transition: color .2s; }
+.btn-descargar:hover, .btn-descargar:focus-visible { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }

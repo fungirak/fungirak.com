@@ -112,6 +112,9 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
             <button className="solo-cel" onClick={() => { setDrawer(false); abrir("juego"); }}>
               <span>🎮</span> {ui.nav.jugar}
             </button>
+            <button onClick={() => { setDrawer(false); window.fkDescargar?.abrir(); }}>
+              <span>⬇️</span> {lang === "en" ? "Download all the apps" : "Descargar todas las apps"}
+            </button>
             <button onClick={() => ir("donar")}>
               <span>💚</span> {ui.nav.ayudar}
             </button>

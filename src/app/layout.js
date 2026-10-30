@@ -105,6 +105,7 @@ export default function RootLayout({ children }) {
         {children}
         <Analytics />
       <Script src="/fungirak/fk.js" strategy="afterInteractive" />
+      <Script src="/fungirak/descargar.js" strategy="lazyOnload" />
       {/* Cookies de medición (Google Analytics) con consentimiento: cuenta.fungirak.com/fk-ga.js */}
       <script async src="https://cuenta.fungirak.com/fk-ga.js" data-privacidad="https://cuenta.fungirak.com/legal/cookies" /></body>
     </html>
