@@ -3,7 +3,8 @@
    cuenta.fungirak.com/?descargar=1 con la ventana ya abierta (así hay una sola «FUNGIRAK Studio» instalable, la de la cuenta). Desde ahí:
    - «Instalar N»: instala cada app marcada sin salir de acá. El progreso queda en esta ventana; cada app se abre en una ventanita
      (compu) o pestaña (celu) solo para instalarse, con el asistente de cuenta.fungirak.com/fila.js a pantalla completa (tapa cookies y
-     carteles de la app); al terminar avisa acá (postMessage) y se cierra sola. Cuando el navegador traiga navigator.install, se instala
+     carteles de la app). Las apps tienen COOP same-origin (la ventanita no puede hablarle a esta), así que al terminar pasa por
+     cuenta.fungirak.com/?fklisto=…, que lo anota en localStorage («fk.fila»: acá llega como evento storage) y se cierra sola. Cuando el navegador traiga navigator.install, se instala
      cada una directo desde acá. Aparte, «FUNGIRAK Studio»: este mismo sitio como una sola app con las marcadas.
    - «Descargar carpeta»: baja «FUNGIRAK Studio.zip», ordenada por categoría, con un acceso directo por app (y en Linux un
      instalar.sh que las suma al menú de aplicaciones); en el celu, una página por app y «FUNGIRAK Studio.html» con todas.
@@ -91,25 +92,24 @@ ${CATS.slice(1).map(([k, t]) => { const l = lista.filter((a) => a[3] === k); ret
     if (typeof navigator.install === "function") return instalar(lista, v, cerrar, sistema); // el navegador ya instala apps de otros sitios desde acá
     const movil = sistema === "ios" || sistema === "android", est = Object.fromEntries(lista.map((a) => [a[0], "pendiente"]));
     let i = 0, w = null, vigia = null;
-    const ICO = { pendiente: "○", abierta: "⏳", cerrada: "⚠️", ok: "✅", saltada: "⏭" };
+    const ICO = { pendiente: "○", abierta: "⏳", bloqueada: "⚠️", ok: "✅", saltada: "⏭" };
     const actual = () => lista[i];
     const avanzar = (estado) => { const a = actual(); if (!a) return; est[a[0]] = estado; clearInterval(vigia); i++; pintarF(); };
     const abrirApp = () => {
       const [id, nombre, url] = actual();
       // ?fkinst: el asistente nuevo (fila.js); ?fkcola de una sola app: el de las apps que todavía tienen la fila vieja en fk.js
       const u = id === "teamjoy" ? `${url}/` : `${url}/?fkinst=1&fkcola=${b64({ c: [[url, nombre, id]], v: location.origin + "/" })}&fkpaso=0`;
+      try { localStorage.removeItem("fk.fila"); } catch {}
       w = window.open(u, "fkinst", movil ? "" : `popup,width=460,height=700,left=${Math.max(0, screenX + outerWidth - 520)},top=${screenY + 70}`);
-      est[id] = "abierta"; pintarF();
-      clearInterval(vigia);
-      vigia = setInterval(() => { if (!w || w.closed) { clearInterval(vigia); if (est[id] === "abierta") { est[id] = "cerrada"; pintarF(); } } }, 800);
+      est[id] = w ? "abierta" : "bloqueada"; pintarF(); // null = el navegador bloqueó la ventanita (con COOP, «closed» no sirve para saber si sigue abierta)
     };
     const oir = (e) => {
-      const d = e.data; if (!d || d.fk !== "fila") return;
-      if (e.origin !== location.origin && !lista.some((a) => e.origin === new URL(a[2]).origin)) return;
-      if (actual() && ["abierta", "cerrada"].includes(est[actual()[0]])) avanzar(d.ok ? "ok" : "saltada");
+      if (e.key !== "fk.fila" || !e.newValue) return;
+      let d; try { d = JSON.parse(e.newValue); } catch { return; }
+      if (actual() && ["abierta", "bloqueada"].includes(est[actual()[0]])) avanzar(d.ok ? "ok" : "saltada");
     };
-    addEventListener("message", oir);
-    const listo = () => { removeEventListener("message", oir); clearInterval(vigia); cerrar(); };
+    addEventListener("storage", oir);
+    const listo = () => { removeEventListener("storage", oir); clearInterval(vigia); cerrar(); };
     function pintarF() {
       const hechas = lista.filter((a) => est[a[0]] === "ok").length, pasadas = lista.filter((a) => ["ok", "saltada"].includes(est[a[0]])).length;
       const a = actual(), e = a && est[a[0]];
@@ -117,12 +117,12 @@ ${CATS.slice(1).map(([k, t]) => { const l = lista.filter((a) => a[3] === k); ret
         ? `<p class="nota"><b>✅ Listo: instalaste ${hechas} de ${lista.length}.</b> ${movil ? "Las tenés en tu pantalla de inicio: para agruparlas, mantené apretada una y arrastrala sobre otra." : "Las encontrás en tu escritorio o en el menú de aplicaciones."}</p><div class="bs"><button class="si" data-g="fin">Listo</button></div>`
         : e === "abierta"
           ? `<p class="nota">${a[0] === "teamjoy" ? `Se abrió <b>Team Joy</b>: tocá su botón «Instalar». Después cerrá esa ${movil ? "pestaña" : "ventanita"} y tocá «Ya la instalé».` : `Se abrió <b>${esc(a[1])}</b> en una ${movil ? "pestaña" : "ventanita"}: tocá «Instalar» ahí. Cuando termine se cierra sola y seguimos acá.`}</p><div class="bs"><button class="no" data-g="saltar">Saltear</button><button class="alt" data-g="ya">Ya la instalé</button><button class="si" data-g="abrir">Abrir de nuevo</button></div>`
-          : e === "cerrada"
-            ? `<p class="nota">Se cerró la ${movil ? "pestaña" : "ventanita"} de <b>${esc(a[1])}</b>. ¿La instalaste?</p><div class="bs"><button class="no" data-g="saltar">Saltear</button><button class="alt" data-g="abrir">Reintentar</button><button class="si" data-g="ya">Sí, seguir</button></div>`
+          : e === "bloqueada"
+            ? `<p class="nota">El navegador bloqueó la ${movil ? "pestaña" : "ventanita"} de <b>${esc(a[1])}</b>. Permití las ventanas emergentes de este sitio (el ícono en la barra de direcciones) y tocá «Reintentar».</p><div class="bs"><button class="no" data-g="saltar">Saltear</button><button class="si" data-g="abrir">Reintentar</button></div>`
             : `<p class="nota">${pasadas ? "" : `Cada app se abre en una ${movil ? "pestaña" : "ventanita"} solo para instalarse y se cierra sola: vos seguís acá. `}${sistema === "ios" ? "En el iPhone, en cada una: Compartir → «Agregar a inicio»." : ""}</p><div class="bs"><button class="no" data-g="fin">Terminar</button><button class="alt" data-g="saltar">Saltear</button><button class="si" data-g="abrir">Instalar ${esc(a[1])}</button></div>`;
       v.innerHTML = `<button class="x" aria-label="Cerrar">✕</button><div class="cab"><b>Instalando tus apps</b><small>${pasadas} de ${lista.length} · ${hechas} instaladas</small></div>
         <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="${lista.length}" aria-valuenow="${pasadas}"><i style="width:${Math.round((pasadas / lista.length) * 100)}%"></i></div>
-        <div class="lista">${lista.map(([id, nombre], k) => `<label class="${k === i ? "act" : ""}"><span class="ico">${ICO[est[id]]}</span><img src="${LOGO(id)}" alt="" width="44" height="44" loading="lazy"><span><b>${esc(nombre)}</b><small>${{ pendiente: k === i ? "Sigue esta" : "Pendiente", abierta: "Instalando…", cerrada: "Sin confirmar", ok: "Instalada", saltada: "Salteada" }[est[id]]}</small></span><span></span></label>`).join("")}</div>
+        <div class="lista">${lista.map(([id, nombre], k) => `<label class="${k === i ? "act" : ""}"><span class="ico">${ICO[est[id]]}</span><img src="${LOGO(id)}" alt="" width="44" height="44" loading="lazy"><span><b>${esc(nombre)}</b><small>${{ pendiente: k === i ? "Sigue esta" : "Pendiente", abierta: "Instalando…", bloqueada: "Ventanita bloqueada", ok: "Instalada", saltada: "Salteada" }[est[id]]}</small></span><span></span></label>`).join("")}</div>
         <div class="pie">${pie}</div>`;
       v.querySelector(".x").onclick = listo;
       const g = (k) => v.querySelector(`[data-g=${k}]`);
@@ -270,7 +270,14 @@ label.act{background:rgba(60,242,160,.14)}.ico{width:20px;text-align:center;font
   window.fkDescargar = { abrir, apps: APPS };
   if (instalada()) lanzador(); // abriste FUNGIRAK Studio desde el escritorio o el inicio
   // la ventanita de una app terminó (fila vieja de fk.js: vuelve acá con ?fklisto=N): avisar a la ventana del progreso y cerrarse
-  { const p = new URLSearchParams(location.search); if (p.has("fklisto") && window.opener) { try { window.opener.postMessage({ fk: "fila", ok: p.get("fklisto") !== "0" }, location.origin); } catch {} window.close(); } }
+  { const p = new URLSearchParams(location.search);
+    if (p.has("fklisto")) {
+      try { localStorage.setItem("fk.fila", JSON.stringify({ ok: p.get("fklisto") !== "0", t: Date.now() })); } catch {}
+      history.replaceState(null, "", location.pathname);
+      window.close(); // si el navegador no la deja cerrar, un cartel lo dice
+      setTimeout(() => { const t = document.createElement("div"); t.textContent = p.get("fklisto") !== "0" ? "✅ Listo. Ya podés cerrar esta ventana: el progreso sigue en la otra." : "Salteada. Ya podés cerrar esta ventana: el progreso sigue en la otra.";
+        t.style.cssText = "position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;padding:24px;text-align:center;background:#111;color:#fff;font:700 18px/1.4 system-ui,sans-serif"; document.body.appendChild(t); }, 400);
+    } }
   // viene del botón de fungirak.com: la ventana ya abierta
   if (new URLSearchParams(location.search).has("descargar")) { const u = new URL(location.href); u.searchParams.delete("descargar"); history.replaceState(history.state, "", u); abrir(); }
   // cualquier botón con data-fk-descargar la abre (así sirve también en páginas sin React, como la barra de la cuenta)
