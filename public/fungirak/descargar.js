@@ -1,9 +1,10 @@
 /* FUNGIRAK · «Descargar todo»: las apps del Studio de una vez (mismo archivo en fungirak.com y en cuenta.fungirak.com).
    window.fkDescargar.abrir() abre la ventana con las apps en orden, por categoría y con casillas. En fungirak.com lleva a
    cuenta.fungirak.com/?descargar=1 con la ventana ya abierta (así hay una sola «FUNGIRAK Studio» instalable, la de la cuenta). Desde ahí:
-   - «Instalar»: instala «FUNGIRAK Studio» (este mismo sitio como app) sin salir de acá; al abrirla muestra solo las apps marcadas,
-     por categoría, y cada una se abre con un toque. En iPhone, Apple no deja mostrar el botón: se explica «Compartir → Agregar a inicio».
-     Cuando el navegador traiga navigator.install (instalar apps de otros sitios desde acá), se instala cada app por separado, acá mismo.
+   - «Instalar N»: instala cada app marcada sin salir de acá. El progreso queda en esta ventana; cada app se abre en una ventanita
+     (compu) o pestaña (celu) solo para instalarse, con el asistente de cuenta.fungirak.com/fila.js a pantalla completa (tapa cookies y
+     carteles de la app); al terminar avisa acá (postMessage) y se cierra sola. Cuando el navegador traiga navigator.install, se instala
+     cada una directo desde acá. Aparte, «FUNGIRAK Studio»: este mismo sitio como una sola app con las marcadas.
    - «Descargar carpeta»: baja «FUNGIRAK Studio.zip», ordenada por categoría, con un acceso directo por app (y en Linux un
      instalar.sh que las suma al menú de aplicaciones); en el celu, una página por app y «FUNGIRAK Studio.html» con todas.
    Las marcadas quedan en localStorage (y en ?studio=…); si la app instalada no las sabe (p. ej. en el iPhone), muestra todas.
@@ -84,7 +85,57 @@ ${CATS.slice(1).map(([k, t]) => { const l = lista.filter((a) => a[3] === k); ret
     return zip(A);
   }
 
-  // ——— Instalar sin salir de acá ———
+  // ——— Instalar una por una sin salir de acá: el progreso queda en esta ventana ———
+  const b64 = (o) => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  function fila(lista, v, cerrar, sistema) {
+    if (typeof navigator.install === "function") return instalar(lista, v, cerrar, sistema); // el navegador ya instala apps de otros sitios desde acá
+    const movil = sistema === "ios" || sistema === "android", est = Object.fromEntries(lista.map((a) => [a[0], "pendiente"]));
+    let i = 0, w = null, vigia = null;
+    const ICO = { pendiente: "○", abierta: "⏳", cerrada: "⚠️", ok: "✅", saltada: "⏭" };
+    const actual = () => lista[i];
+    const avanzar = (estado) => { const a = actual(); if (!a) return; est[a[0]] = estado; clearInterval(vigia); i++; pintarF(); };
+    const abrirApp = () => {
+      const [id, nombre, url] = actual();
+      // ?fkinst: el asistente nuevo (fila.js); ?fkcola de una sola app: el de las apps que todavía tienen la fila vieja en fk.js
+      const u = id === "teamjoy" ? `${url}/` : `${url}/?fkinst=1&fkcola=${b64({ c: [[url, nombre, id]], v: location.origin + "/" })}&fkpaso=0`;
+      w = window.open(u, "fkinst", movil ? "" : `popup,width=460,height=700,left=${Math.max(0, screenX + outerWidth - 520)},top=${screenY + 70}`);
+      est[id] = "abierta"; pintarF();
+      clearInterval(vigia);
+      vigia = setInterval(() => { if (!w || w.closed) { clearInterval(vigia); if (est[id] === "abierta") { est[id] = "cerrada"; pintarF(); } } }, 800);
+    };
+    const oir = (e) => {
+      const d = e.data; if (!d || d.fk !== "fila") return;
+      if (e.origin !== location.origin && !lista.some((a) => e.origin === new URL(a[2]).origin)) return;
+      if (actual() && ["abierta", "cerrada"].includes(est[actual()[0]])) avanzar(d.ok ? "ok" : "saltada");
+    };
+    addEventListener("message", oir);
+    const listo = () => { removeEventListener("message", oir); clearInterval(vigia); cerrar(); };
+    function pintarF() {
+      const hechas = lista.filter((a) => est[a[0]] === "ok").length, pasadas = lista.filter((a) => ["ok", "saltada"].includes(est[a[0]])).length;
+      const a = actual(), e = a && est[a[0]];
+      const pie = !a
+        ? `<p class="nota"><b>✅ Listo: instalaste ${hechas} de ${lista.length}.</b> ${movil ? "Las tenés en tu pantalla de inicio: para agruparlas, mantené apretada una y arrastrala sobre otra." : "Las encontrás en tu escritorio o en el menú de aplicaciones."}</p><div class="bs"><button class="si" data-g="fin">Listo</button></div>`
+        : e === "abierta"
+          ? `<p class="nota">${a[0] === "teamjoy" ? `Se abrió <b>Team Joy</b>: tocá su botón «Instalar». Después cerrá esa ${movil ? "pestaña" : "ventanita"} y tocá «Ya la instalé».` : `Se abrió <b>${esc(a[1])}</b> en una ${movil ? "pestaña" : "ventanita"}: tocá «Instalar» ahí. Cuando termine se cierra sola y seguimos acá.`}</p><div class="bs"><button class="no" data-g="saltar">Saltear</button><button class="alt" data-g="ya">Ya la instalé</button><button class="si" data-g="abrir">Abrir de nuevo</button></div>`
+          : e === "cerrada"
+            ? `<p class="nota">Se cerró la ${movil ? "pestaña" : "ventanita"} de <b>${esc(a[1])}</b>. ¿La instalaste?</p><div class="bs"><button class="no" data-g="saltar">Saltear</button><button class="alt" data-g="abrir">Reintentar</button><button class="si" data-g="ya">Sí, seguir</button></div>`
+            : `<p class="nota">${pasadas ? "" : `Cada app se abre en una ${movil ? "pestaña" : "ventanita"} solo para instalarse y se cierra sola: vos seguís acá. `}${sistema === "ios" ? "En el iPhone, en cada una: Compartir → «Agregar a inicio»." : ""}</p><div class="bs"><button class="no" data-g="fin">Terminar</button><button class="alt" data-g="saltar">Saltear</button><button class="si" data-g="abrir">Instalar ${esc(a[1])}</button></div>`;
+      v.innerHTML = `<button class="x" aria-label="Cerrar">✕</button><div class="cab"><b>Instalando tus apps</b><small>${pasadas} de ${lista.length} · ${hechas} instaladas</small></div>
+        <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="${lista.length}" aria-valuenow="${pasadas}"><i style="width:${Math.round((pasadas / lista.length) * 100)}%"></i></div>
+        <div class="lista">${lista.map(([id, nombre], k) => `<label class="${k === i ? "act" : ""}"><span class="ico">${ICO[est[id]]}</span><img src="${LOGO(id)}" alt="" width="44" height="44" loading="lazy"><span><b>${esc(nombre)}</b><small>${{ pendiente: k === i ? "Sigue esta" : "Pendiente", abierta: "Instalando…", cerrada: "Sin confirmar", ok: "Instalada", saltada: "Salteada" }[est[id]]}</small></span><span></span></label>`).join("")}</div>
+        <div class="pie">${pie}</div>`;
+      v.querySelector(".x").onclick = listo;
+      const g = (k) => v.querySelector(`[data-g=${k}]`);
+      g("abrir") && (g("abrir").onclick = abrirApp);
+      g("saltar") && (g("saltar").onclick = () => { try { w?.close(); } catch {} avanzar("saltada"); });
+      g("ya") && (g("ya").onclick = () => { try { w?.close(); } catch {} avanzar("ok"); });
+      g("fin") && (g("fin").onclick = listo);
+      v.querySelector("label.act")?.scrollIntoView({ block: "nearest" });
+    }
+    pintarF();
+  }
+
+  // ——— FUNGIRAK Studio: este mismo sitio como una sola app con las marcadas ———
   async function instalar(lista, v, cerrar, sistema) {
     const ids = lista.map((a) => a[0]).join(",");
     try { localStorage.setItem(K, ids); } catch {}
@@ -157,6 +208,9 @@ input[type=checkbox]{width:20px;height:20px;accent-color:#16a36a;margin:0}
 .no{background:rgba(127,127,127,.15);color:inherit}.si{background:#111;color:#fff}:host([oscuro]) .si{background:#3CF2A0;color:#06120c}
 .si[disabled]{opacity:.45;cursor:not-allowed}.alt{background:none;border:1.5px solid rgba(127,127,127,.35)!important;color:inherit}.alt[disabled]{opacity:.45;cursor:not-allowed}
 .mini{min-height:36px;padding:0 14px;border-radius:12px;font:inherit;font-weight:800;cursor:pointer}
+.prog{flex:none;height:8px;margin:0 20px 10px;border-radius:8px;background:rgba(127,127,127,.18);overflow:hidden}.prog i{display:block;height:100%;background:#3CF2A0;transition:width .4s ease}
+label.act{background:rgba(60,242,160,.14)}.ico{width:20px;text-align:center;font-size:15px}
+.enl{border:0;background:none;color:#0b8f5a;font:inherit;font-weight:800;cursor:pointer;padding:0;text-decoration:underline}:host([oscuro]) .enl{color:#3CF2A0}
 .nota{font-size:12.5px;opacity:.72;margin:0}
 .ok{padding:28px 22px 24px;display:grid;gap:12px;text-align:center}.ok b{font-size:20px}.ok p{margin:0;opacity:.8}
 @keyframes ap{from{opacity:0}}@keyframes sube{from{opacity:0;transform:translate(-50%,-46%) scale(.97)}}
@@ -189,7 +243,7 @@ input[type=checkbox]{width:20px;height:20px;accent-color:#16a36a;margin:0}
           `<label><input type="checkbox" data-id="${id}" ${marcadas.has(id) ? "checked" : ""}><img src="${LOGO(id)}" alt="" width="44" height="44" loading="lazy"><span><b>${esc(nombre)}</b><small>${esc(url.replace("https://", ""))}</small></span><span class="kb">${mb(kbs)}</span></label>`).join("")).join("")}</div>
         <div class="pie">
           <div class="tot"><span>Para ${NOMBRE_SO[sistema]}</span><span>Total: <b>${mb(kb)}</b></span></div>
-          <p class="nota">Sin salir de acá: «Instalar» suma FUNGIRAK Studio a ${movil ? "tu inicio" : "tu compu"} con las apps que marcaste, ordenadas por categoría. «Descargar carpeta» baja un acceso directo a cada una.</p>
+          <p class="nota">Sin salir de acá: «Instalar» instala cada app marcada, una por una, y ves el progreso en esta ventana. «Descargar carpeta» baja un acceso directo a cada una. ¿Preferís una sola app con todas? <button class="enl" data-ac="studio">Instalá FUNGIRAK Studio</button>.</p>
           <div class="bs"><button class="no" data-ac="cancelar">Cancelar</button><button class="alt" data-ac="carpeta" ${elegidas.length ? "" : "disabled"}>Descargar carpeta</button><button class="si" data-ac="ir" ${elegidas.length ? "" : "disabled"}>Instalar ${elegidas.length}</button></div>
         </div>
       </div>`;
@@ -199,14 +253,15 @@ input[type=checkbox]{width:20px;height:20px;accent-color:#16a36a;margin:0}
       r.querySelectorAll("input[data-id]").forEach((c) => (c.onchange = () => { c.checked ? marcadas.add(c.dataset.id) : marcadas.delete(c.dataset.id); const y = r.querySelector(".lista").scrollTop; pintar(); r.querySelector(".lista").scrollTop = y; }));
       r.querySelector("[data-ac=cancelar]").onclick = cerrar;
       const lista = () => APPS.filter((a) => marcadas.has(a[0]));
-      r.querySelector("[data-ac=ir]").onclick = () => instalar(lista(), r.querySelector(".v"), cerrar, sistema);
+      r.querySelector("[data-ac=ir]").onclick = () => fila(lista(), r.querySelector(".v"), cerrar, sistema);
+      r.querySelector("[data-ac=studio]").onclick = () => instalar(lista(), r.querySelector(".v"), cerrar, sistema);
       r.querySelector("[data-ac=carpeta]").onclick = async (e) => {
         e.target.disabled = true; e.target.textContent = "Armando la carpeta…";
         const blob = await carpeta(lista(), sistema);
         const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "FUNGIRAK Studio.zip"; document.body.appendChild(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(a.href), 60000);
-        r.querySelector(".v").innerHTML = `<div class="ok"><b>✅ Listo: «FUNGIRAK Studio.zip»</b><p>${movil ? `Abrilo desde «Archivos» (o «Descargas»): se descomprime y te queda la carpeta con ${lista().length} apps ordenadas por categoría. Adentro, «FUNGIRAK Studio.html» las muestra todas juntas.` : `Descomprimilo donde quieras y te queda la carpeta con ${lista().length} apps, ordenadas por categoría.`}${sistema === "linux" || sistema === "otro" ? " Para sumarlas al menú de aplicaciones, corré <b>sh instalar.sh</b> adentro de la carpeta." : ""}</p><div class="bs"><button class="no" data-f="1">Volver</button><button class="si" data-f="2">Instalar FUNGIRAK Studio</button></div></div>`;
-        r.querySelector("[data-f='1']").onclick = cerrar; r.querySelector("[data-f='2']").onclick = () => instalar(lista(), r.querySelector(".v"), cerrar, sistema);
+        r.querySelector(".v").innerHTML = `<div class="ok"><b>✅ Listo: «FUNGIRAK Studio.zip»</b><p>${movil ? `Abrilo desde «Archivos» (o «Descargas»): se descomprime y te queda la carpeta con ${lista().length} apps ordenadas por categoría. Adentro, «FUNGIRAK Studio.html» las muestra todas juntas.` : `Descomprimilo donde quieras y te queda la carpeta con ${lista().length} apps, ordenadas por categoría.`}${sistema === "linux" || sistema === "otro" ? " Para sumarlas al menú de aplicaciones, corré <b>sh instalar.sh</b> adentro de la carpeta." : ""}</p><div class="bs"><button class="no" data-f="1">Volver</button><button class="si" data-f="2">Instalarlas</button></div></div>`;
+        r.querySelector("[data-f='1']").onclick = cerrar; r.querySelector("[data-f='2']").onclick = () => fila(lista(), r.querySelector(".v"), cerrar, sistema);
       };
     };
     pintar();
@@ -214,6 +269,8 @@ input[type=checkbox]{width:20px;height:20px;accent-color:#16a36a;margin:0}
   }
   window.fkDescargar = { abrir, apps: APPS };
   if (instalada()) lanzador(); // abriste FUNGIRAK Studio desde el escritorio o el inicio
+  // la ventanita de una app terminó (fila vieja de fk.js: vuelve acá con ?fklisto=N): avisar a la ventana del progreso y cerrarse
+  { const p = new URLSearchParams(location.search); if (p.has("fklisto") && window.opener) { try { window.opener.postMessage({ fk: "fila", ok: p.get("fklisto") !== "0" }, location.origin); } catch {} window.close(); } }
   // viene del botón de fungirak.com: la ventana ya abierta
   if (new URLSearchParams(location.search).has("descargar")) { const u = new URL(location.href); u.searchParams.delete("descargar"); history.replaceState(history.state, "", u); abrir(); }
   // cualquier botón con data-fk-descargar la abre (así sirve también en páginas sin React, como la barra de la cuenta)
