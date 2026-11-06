@@ -113,6 +113,7 @@ ${CATS.slice(1).map(([k, t]) => { const l = lista.filter((a) => a[3] === k); ret
     };
     addEventListener("storage", oir);
     const listo = () => { removeEventListener("storage", oir); cerrar(); };
+    const velo = v.getRootNode().querySelector(".velo"); if (velo) velo.onclick = null; // un clic afuera no corta la instalación: se cierra con ✕ o «Terminar»
     function pintarF() {
       const hechas = lista.filter((a) => est[a[0]] === "ok").length, pasadas = lista.filter((a) => ["ok", "ya", "saltada"].includes(est[a[0]])).length, yaEstaban = lista.filter((a) => est[a[0]] === "ya").length;
       const sig = resto()[0], tjPend = tj && est.teamjoy === "pendiente", ven = movil ? "pestaña" : "ventanita";
