@@ -1,13 +1,14 @@
 "use client";
 import { useLang, tx } from "@/lib/i18n";
 import { LINKS } from "@/data/perfil";
-import { PROYECTOS } from "@/data/proyectos";
+import { PROYECTOS, ORDEN_FILAS } from "@/data/proyectos";
 import Sello from "./Sello";
 import { Socials } from "./Hero";
 
 // la columna de proyectos se separa en Apps, Juegos y Sitios (como la franja de los sitios)
-const JUEGOS = ["cronicas"];
-const SITIOS = ["gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"];
+// las mismas categorías que las filas de cards de la portada (5 Juegos, 6 Sitios): un producto, una sola categoría (AUTO-007)
+const JUEGOS = ORDEN_FILAS[4];
+const SITIOS = ORDEN_FILAS[5];
 
 // En las columnas de proyectos, al pasar el mouse (o con el teclado) aparece una tarjetita con el ícono, qué es y la firma del estudio.
 function AppTip({ p, label, href, lang, es }) {
@@ -105,7 +106,7 @@ export default function Footer({ abrir, stats }) {
         </span>
         <span className="live-stats">
           <span className="pill live">{ui.enVivo}</span>
-          <span className="pill">👀 {(stats?.visitas || 0).toLocaleString(lang)} {ui.visitas}</span>
+          <span className="pill">👀 {stats?.visitas ? stats.visitas.toLocaleString(lang) : "—"} {ui.visitas}</span>
           <span className="pill">🍄 {stats?.pasaportes || 0} <span className="solo-desk">{ui.pasaportes}</span><span className="solo-m">{es ? "pasaportes" : "passports"}</span></span>
           <span className="pill">💬 {stats?.mensajes || 0} <span className="solo-desk">{ui.mensajes}</span><span className="solo-m">{es ? "charlas" : "chats"}</span></span>
         </span>

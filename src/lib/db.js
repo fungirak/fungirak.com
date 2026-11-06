@@ -43,6 +43,7 @@ export function asegurarTablas() {
         ip_hash text
       )`;
       await sql`CREATE INDEX IF NOT EXISTS muro_tipo_visible ON muro (tipo, visible, creado DESC)`;
+      await sql`CREATE TABLE IF NOT EXISTS vistos (clave text NOT NULL, ip_hash text NOT NULL, dia date NOT NULL DEFAULT current_date, PRIMARY KEY (clave, ip_hash, dia))`;
       await sql`CREATE TABLE IF NOT EXISTS muro_acciones (
         muro_id int NOT NULL REFERENCES muro(id) ON DELETE CASCADE,
         accion text NOT NULL,
@@ -69,6 +70,15 @@ export async function sumar(clave, n = 1) {
   const r = await sql`INSERT INTO contadores (clave, valor) VALUES (${clave}, ${n})
     ON CONFLICT (clave) DO UPDATE SET valor = contadores.valor + ${n} RETURNING valor`;
   return Number(r[0].valor);
+}
+
+// Primera vez hoy de esta persona para esta clave (visitas, pasaportes): si ya contó, no vuelve a sumar.
+export async function primeraVezHoy(clave, ipHash) {
+  if (!sql) return true;
+  await asegurarTablas();
+  const r = await sql`INSERT INTO vistos (clave, ip_hash) VALUES (${clave}, ${ipHash}) ON CONFLICT DO NOTHING RETURNING 1`;
+  if (Math.random() < 0.01) await sql`DELETE FROM vistos WHERE dia < current_date - 2`.catch(() => {});
+  return r.length > 0;
 }
 
 export async function leerContadores() {
@@ -164,13 +174,13 @@ export async function leerComentarios(app) {
 export async function publicarMuro(x) {
   if (!sql) {
     memoria.muro = memoria.muro || [];
-    const item = { ...x, id: memoria.muro.length + 1, creado: new Date().toISOString(), votos: 0, reportes: 0, visible: true };
+    const item = { ...x, id: memoria.muro.length + 1, creado: new Date().toISOString(), votos: 0, reportes: 0, visible: x.visible !== false };
     memoria.muro.push(item);
     const { ip_hash, ...publico } = item;
     return publico;
   }
   await asegurarTablas();
-  const r = await sql`INSERT INTO muro (tipo, nombre, emoji, texto, ip_hash) VALUES (${x.tipo}, ${x.nombre}, ${x.emoji}, ${x.texto}, ${x.ip_hash})
+  const r = await sql`INSERT INTO muro (tipo, nombre, emoji, texto, ip_hash, visible) VALUES (${x.tipo}, ${x.nombre}, ${x.emoji}, ${x.texto}, ${x.ip_hash}, ${x.visible !== false})
     RETURNING id, creado, nombre, emoji, texto, votos`;
   return r[0];
 }

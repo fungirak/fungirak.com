@@ -2,7 +2,7 @@ import { leerMuro, leerComentarios, publicarMuro, publicacionesRecientes, accion
 import { PROYECTOS } from "@/data/proyectos";
 
 const APPS = new Set(PROYECTOS.filter((p) => p.url).map((p) => p.id)); // las apps que pueden tener comentarios
-import { revisar, segundaOpinion, EMOJIS } from "@/lib/moderacion";
+import { revisar, segundaOpinion, sospechoso, EMOJIS } from "@/lib/moderacion";
 
 export const dynamic = "force-dynamic";
 
@@ -11,11 +11,11 @@ export async function GET(req) {
   const app = new URL(req.url).searchParams.get("app");
   if (app) {
     if (!APPS.has(app)) return Response.json({ comentarios: [] }, { status: 404 });
-    try { return Response.json({ comentarios: await leerComentarios(app) }, { headers: { "Cache-Control": "public, s-maxage=15, stale-while-revalidate=60" } }); }
+    try { return Response.json({ comentarios: await leerComentarios(app) }, { headers: { "Cache-Control": "no-store" } }); }
     catch (e) { console.error("muro/comentarios", e); return Response.json({ comentarios: [] }); }
   }
   try {
-    return Response.json(await leerMuro(), { headers: { "Cache-Control": "public, s-maxage=15, stale-while-revalidate=60" } });
+    return Response.json(await leerMuro(), { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     console.error("muro/get", e);
     return Response.json({ huellas: [], ideas: [] });
@@ -43,6 +43,7 @@ export async function POST(req) {
   }
 
   if (b._hp) return Response.json({ ok: true });
+  if (!["huella", "idea", "comentario"].includes(b.tipo)) return Response.json({ ok: false, error: "tipo" }, { status: 400 });
   const tipo = b.tipo === "idea" ? "idea" : b.tipo === "comentario" && APPS.has(b.app) ? `com:${b.app}` : "huella";
   if (b.tipo === "comentario" && !APPS.has(b.app)) return Response.json({ ok: false, error: "error" }, { status: 400 });
   const texto = limpio(b.texto, 400).replace(/\s+/g, " ").slice(0, tipo === "idea" ? 280 : tipo.startsWith("com:") ? 240 : 180);
@@ -55,8 +56,9 @@ export async function POST(req) {
 
   try {
     if ((await publicacionesRecientes(ip)) >= 4) return Response.json({ ok: false, error: "limite" }, { status: 429 });
-    const item = await publicarMuro({ tipo, nombre, emoji, texto, ip_hash: ip });
-    return Response.json({ ok: true, item });
+    const dudoso = sospechoso(`${nombre || ""} ${texto}`);
+    const item = await publicarMuro({ tipo, nombre, emoji, texto, ip_hash: ip, visible: !dudoso });
+    return Response.json(dudoso ? { ok: true, revision: true } : { ok: true, item });
   } catch (e) {
     console.error("muro/post", e);
     return Response.json({ ok: false, error: "error" }, { status: 500 });

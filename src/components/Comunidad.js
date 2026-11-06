@@ -6,8 +6,8 @@ import { useFiltro, AvisoFiltro, claseFiltro } from "./Filtro";
 import { avisarPorMail } from "@/lib/avisoMail";
 
 const ERRORES = {
-  es: { links: "Sin links ni @usuarios, porfa 🙏", lenguaje: "Mantengámoslo family friendly 💚", gritos: "No hace falta gritar 😅", spam: "Eso parece spam 🤖", corto: "Escribí un poquito más", limite: "Ya dejaste varias, ¡gracias! Volvé en un rato", error: "No se pudo publicar, probá de nuevo" },
-  en: { links: "No links or @handles, please 🙏", lenguaje: "Let's keep it family friendly 💚", gritos: "No need to shout 😅", spam: "That looks like spam 🤖", corto: "Write a bit more", limite: "You've left several already, thanks! Come back later", error: "Couldn't post, try again" },
+  es: { revision: "¡Gracias! La vamos a leer antes de publicarla 🍄", tipo: "Algo salió mal, probá de nuevo", links: "Sin links ni @usuarios, porfa 🙏", lenguaje: "Mantengámoslo family friendly 💚", gritos: "No hace falta gritar 😅", spam: "Eso parece spam 🤖", corto: "Escribí un poquito más", limite: "Ya dejaste varias, ¡gracias! Volvé en un rato", error: "No se pudo publicar, probá de nuevo" },
+  en: { revision: "Thanks! We'll read it before publishing 🍄", tipo: "Something went wrong, try again", links: "No links or @handles, please 🙏", lenguaje: "Let's keep it family friendly 💚", gritos: "No need to shout 😅", spam: "That looks like spam 🤖", corto: "Write a bit more", limite: "You've left several already, thanks! Come back later", error: "Couldn't post, try again" },
 };
 
 function hace(fecha, lang) {
@@ -50,6 +50,12 @@ function Formulario({ tipo, onPublicado, placeholder, max, boton, onSello }) {
         setEstado("ok");
         onSello?.();
         setTimeout(() => setEstado(null), 2500);
+      } else if (r.ok && j.ok && j.revision) {
+        // quedó en revisión (moderación antes de publicar): se ve cuando se aprueba
+        avisarPorMail(`🕵️ fungirak.com · ${tipo === "idea" ? "Idea" : "Huella"} en revisión`, { Texto: texto, Motivo: "Parece en inglés o sin sentido: aprobala o borrala desde el panel" });
+        setTexto("");
+        setEstado("revision");
+        setTimeout(() => setEstado(null), 5000);
       } else setEstado(j.error || "error");
     } catch {
       setEstado("error");
@@ -80,7 +86,7 @@ function Formulario({ tipo, onPublicado, placeholder, max, boton, onSello }) {
         </button>
       </div>
       <AvisoFiltro palabras={malas} />
-      {estado && estado !== "enviando" && <p className={`aviso ${estado === "ok" ? "ok" : "err"}`} style={{ marginTop: 10 }}>{estado === "ok" ? (es ? "¡Listo! Ya es parte del micelio 🍄" : "Done! It's now part of the mycelium 🍄") : ERRORES[lang][estado] || ERRORES[lang].error}</p>}
+      {estado && estado !== "enviando" && <p className={`aviso ${estado === "ok" || estado === "revision" ? "ok" : "err"}`} style={{ marginTop: 10 }}>{estado === "ok" ? (es ? "¡Listo! Ya es parte del micelio 🍄" : "Done! It's now part of the mycelium 🍄") : ERRORES[lang][estado] || ERRORES[lang].error}</p>}
     </form>
   );
 }
@@ -182,7 +188,7 @@ export default function Comunidad({ muro, setMuro, sellar }) {
           <div className="muro-col">
             <h3 className="display">👣 {es ? "Dejá tu huella" : "Leave your mark"}</h3>
             <Formulario tipo="huella" max={180} placeholder={es ? "¿Qué me querés decir?" : "What would you like to tell me?"} boton={es ? "Dejar huella" : "Leave mark"} onPublicado={(it) => setMuro((m) => ({ ...m, huellas: [it, ...m.huellas] }))} onSello={() => sellar("huella")} />
-            {huellas.length === 0 && <p className="aviso">{es ? "Todavía no hay huellas. ¡Estrená el muro!" : "No marks yet. Be the first!"}</p>}
+            {huellas.length === 0 && !muro.cargando && <p className="aviso">{es ? "Todavía no hay huellas. ¡Estrená el muro!" : "No marks yet. Be the first!"}</p>}
             <div className="huellas">
               {huellas.map((h, i) => (
                 <article key={h.id} className="huella" style={{ animationDelay: `${Math.min(i, 12) * 0.04}s`, "--rot": `${((h.id * 37) % 7) - 3}deg` }}>

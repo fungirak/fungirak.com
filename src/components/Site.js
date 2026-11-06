@@ -50,7 +50,7 @@ export default function Site() {
   const [payload, setPayload] = useState(null);
   const [toast, setToast] = useState(null);
   const [stats, setStats] = useState(null);
-  const [muro, setMuro] = useState({ huellas: [], ideas: [] });
+  const [muro, setMuro] = useState({ huellas: [], ideas: [], cargando: true });
   const tocadas = useRef(new Set());
   const [desdeIg, setDesdeIg] = useState(false);
   const listo = useRef(false);

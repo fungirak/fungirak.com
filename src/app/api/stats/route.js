@@ -1,4 +1,4 @@
-import { leerContadores, sumar, hashIp, permitido, mismoOrigen, leerJSON, sql, asegurarTablas } from "@/lib/db";
+import { leerContadores, sumar, hashIp, permitido, mismoOrigen, leerJSON, sql, asegurarTablas, primeraVezHoy } from "@/lib/db";
 import { numerosRuleta } from "@/lib/ruleta";
 import { PROYECTOS } from "@/data/proyectos";
 
@@ -9,12 +9,12 @@ export async function GET() {
     const c = await leerContadores();
     // los números de la ruleta y del muro (sin datos de nadie), también para las estadísticas del correo central
     const ruleta = await numerosRuleta().catch(() => null);
-    const muro = sql ? await asegurarTablas().then(() => sql`SELECT count(*)::int AS n, count(*) FILTER (WHERE creado > now() - interval '7 days')::int AS semana FROM muro`).then((r) => r[0]).catch(() => null) : null;
+    const muro = sql ? await asegurarTablas().then(() => sql`SELECT count(*)::int AS n, count(*) FILTER (WHERE creado > now() - interval '7 days')::int AS semana FROM muro WHERE visible AND tipo IN ('huella', 'idea')`).then((r) => r[0]).catch(() => null) : null;
     const aplausos = {};
     for (const [k, v] of Object.entries(c)) if (k.startsWith("aplauso:")) aplausos[k.slice(8)] = v;
     return Response.json(
       { visitas: c.visitas || 0, pasaportes: c.pasaportes || 0, mensajes: c.mensajes || 0, aplausos, ruleta, muro },
-      { headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=120" } }
+      { headers: { "Cache-Control": "public, s-maxage=10, stale-while-revalidate=30" } }
     );
   } catch (e) {
     console.error("stats/get", e);
@@ -36,6 +36,7 @@ export async function POST(req) {
   if (!permitido(`${ip}:${clave}`, ...limite)) return Response.json({ ok: true, limitado: true });
 
   try {
+    if ((clave === "visitas" || clave === "pasaportes") && !(await primeraVezHoy(clave, ip))) return Response.json({ ok: true, limitado: true });
     const valor = await sumar(clave);
     return Response.json({ ok: true, valor });
   } catch (e) {
