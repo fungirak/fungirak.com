@@ -1,11 +1,16 @@
 "use client";
-// Panel global del estudio: todas las apps con backend en una vista (cuentas, actividad, denuncias pendientes) más el correo
-// central (cupo de mails de hoy, cola y estado de los sitios). La contraseña maestra queda solo en esta pestaña.
+// Panel global del estudio: suscripciones y planes de la cuenta FUNGIRAK, el correo central (cupo de mails de hoy, cola y estado
+// de los sitios) y TODAS las apps, juegos y sitios por categoría: los números en vivo de las que tienen panel y, en cada una, todas
+// sus métricas del mail diario. La contraseña maestra queda solo en esta pestaña.
 import { useCallback, useEffect, useState } from "react";
 
 const K = "panel.llave";
 const num = (n) => (n === null || n === undefined ? "—" : Number(n).toLocaleString("es-AR"));
 const pct = (a, b) => (b ? Math.min(100, Math.round((a / b) * 100)) : 0);
+const pesos = (n) => (n === null || n === undefined ? "—" : Number(n).toLocaleString("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }));
+const fecha = (f) => (f ? new Date(f).toLocaleDateString("es-AR", { day: "numeric", month: "short" }) : "—");
+const host = (u) => String(u || "").replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+const valor = (m, k) => Number.parseFloat(m.find(([x]) => x === k)?.[1]) || 0;
 
 export default function Panel() {
   const [llave, setLlave] = useState("");
@@ -25,7 +30,14 @@ export default function Panel() {
   const entrar = (e) => { e.preventDefault(); const v = String(new FormData(e.currentTarget).get("k") || ""); try { sessionStorage.setItem(K, v); } catch {} setLlave(v); };
 
   const apps = d?.apps || [];
-  const tot = (k) => apps.reduce((t, a) => t + (Number(a[k]) || 0), 0);
+  const todas = d?.todas?.apps || [], grupos = d?.todas?.grupos || [];
+  // cuentas y nuevas: con las métricas de todas se suman también las que no tienen panel (Team Joy, Dertin, Dami…); si no, las del panel
+  const tot = (k) => (todas.length && (k === "cuentas" || k === "nuevas7")
+    ? todas.reduce((t, a) => t + valor(a.metricas, k === "cuentas" ? "Cuentas en total" : "Cuentas nuevas (7 días)"), 0)
+    : apps.reduce((t, a) => t + (Number(a[k]) || 0), 0));
+  const enVivo = Object.fromEntries(apps.map((a) => [host(a.url), a]));
+  const sueltas = apps.filter((a) => !todas.some((t) => host(t.url) === host(a.url)));
+  const pl = d?.planes, cu = d?.cuenta;
   const c = d?.correo, u = c?.cupo?.usados, tp = c?.cupo?.topes;
   return (
     <div className="adm">
@@ -48,6 +60,37 @@ export default function Panel() {
             <div className="adm-tile"><b>{num(tot("pendientes"))}</b><span>denuncias para revisar</span></div>
           </div>
 
+          <h2>💳 Suscripciones y planes</h2>
+          {pl?.error ? <p className="adm-err">Cuenta FUNGIRAK: {pl.error}</p> : pl && <>
+            {!pl.cobro?.activo && <p className="adm-nota">El cobro con Mercado Pago todavía no está activo: por ahora los planes salen de pruebas, regalos y premios.</p>}
+            <div className="adm-tiles chicas">
+              <div className="adm-tile"><b>{num(pl.cobro?.activas)}</b><span>suscripciones activas</span>{pl.cobro?.activas_grupo > 0 && <small>{num(pl.cobro.activas_grupo)} de grupo</small>}</div>
+              <div className="adm-tile"><b>{pesos(pl.cobro?.cobrado30)}</b><span>cobrado en 30 días</span>{pl.cobro?.regalos30 > 0 && <small>+ {pesos(pl.cobro.regalos30)} en regalos</small>}</div>
+              <div className="adm-tile"><b>{num(pl.con_plan)}</b><span>cuentas con plan</span></div>
+              <div className="adm-tile"><b>{num(pl.prueba)}</b><span>en prueba gratis</span></div>
+              <div className="adm-tile"><b>{num(pl.vigentes)}</b><span>grupos vigentes</span><small>{num(pl.miembros)} miembros · {num(pl.grupos)} creados</small></div>
+              <div className="adm-tile"><b>{num(pl.invitados)}</b><span>llegaron invitados</span><small>{num(pl.premiados)} con premio</small></div>
+              <div className="adm-tile"><b>{num((pl.arrep || []).filter((x) => x.estado === "recibido").length)}</b><span>arrepentimientos por resolver</span></div>
+            </div>
+            {pl.motivos?.length > 0 && <p className="adm-nota">Días de plan dados: {pl.motivos.map((m) => `${m.motivo} ${num(m.veces)} veces (${num(m.dias)} días)`).join(" · ")}</p>}
+            {pl.pagos?.length > 0 && <table className="adm-tabla"><thead><tr><th>Fecha</th><th>Cuenta</th><th>Plan</th><th>Monto</th><th>Estado</th></tr></thead>
+              <tbody>{pl.pagos.slice(0, 12).map((p, i) => <tr key={i}><td>{fecha(p.creado)}</td><td>{p.usuario ? `@${p.usuario}` : "—"}</td><td>{p.plan}{p.periodo ? ` · ${p.periodo}` : ""}{p.personas > 1 ? ` · ${p.personas} personas` : ""}</td><td>{pesos(p.monto)}</td><td>{p.estado}</td></tr>)}</tbody></table>}
+            <p style={{ margin: "8px 0 0" }}><a className="adm-b adm-b2" style={{ textDecoration: "none" }} href="https://cuenta.fungirak.com/admin" target="_blank" rel="noopener noreferrer">Abrir el panel de la cuenta →</a></p>
+          </>}
+
+          <h2>🔑 Cuenta FUNGIRAK</h2>
+          {cu?.error ? <p className="adm-err">Cuenta FUNGIRAK: {cu.error}</p> : cu && <>
+            <div className="adm-tiles chicas">
+              <div className="adm-tile"><b>{num(cu.total)}</b><span>cuentas</span><small>{num(cu.dia)} hoy · {num(cu.semana)} en 7 días</small></div>
+              <div className="adm-tile"><b>{num(cu.activas)}</b><span>activas en 24 h</span></div>
+              <div className="adm-tile"><b>{num(cu.con_mail)}</b><span>con mail confirmado</span></div>
+              <div className="adm-tile"><b>{num(cu.dos_pasos)}</b><span>con dos pasos</span><small>{num(cu.con_llave)} con llave de acceso</small></div>
+              <div className="adm-tile"><b>{num(cu.menores)}</b><span>de 13 a 17 años</span></div>
+              <div className="adm-tile"><b>{num(cu.suspendidas)}</b><span>suspendidas</span></div>
+            </div>
+            {cu.apps?.some((x) => x.personas) && <p className="adm-nota">Entran con la cuenta: {cu.apps.filter((x) => x.personas).sort((a, b) => b.personas - a.personas).map((x) => `${x.nombre} ${num(x.personas)} (${num(x.semana)} esta semana)`).join(" · ")}</p>}
+          </>}
+
           <h2>✉️ Mails de hoy</h2>
           {c?.error ? <p className="adm-err">Correo: {c.error}</p> : u && (
             <div className="pg-correo">
@@ -59,24 +102,37 @@ export default function Panel() {
                 <tbody>{Object.entries(c.cola).map(([s, x]) => <tr key={s}><td>{s}</td><td>{num(x.enviado || 0)}</td><td>{num(x.pendiente || 0)}</td><td>{num(x.omitido || 0)}</td><td>{num(x.error || 0)}</td></tr>)}</tbody></table>}
             </div>)}
 
-          <h2>📱 Las apps</h2>
-          <div className="pg-apps">{apps.map((a) => (
-            <article key={a.id} className={`adm-tile pg-app${a.ok ? "" : " pg-mal"}`}>
-              <p className="pg-n">{a.emoji} <b>{a.nombre}</b>{a.pendientes > 0 && <span className="pg-badge">{a.pendientes} para revisar</span>}</p>
-              {a.ok ? <>
-                <dl><div><dt>cuentas</dt><dd>{num(a.cuentas)}</dd></div><div><dt>nuevas 7 días</dt><dd>{num(a.nuevas7 ?? a.nuevasHoy)}</dd></div><div><dt>activas 7 días</dt><dd>{num(a.activas7)}</dd></div></dl>
-                {a.nota && <p className="pg-nota" style={{ margin: 0, fontSize: ".8rem", opacity: .8 }}>{a.nota}</p>}
-                {a.dias?.length > 0 && <Mini dias={a.dias} />}
-              </> : <p className="adm-err">{a.codigo === 404 ? "Panel todavía sin publicar" : a.error}</p>}
-              <a className="adm-b adm-b2" href={`${a.url}/admin`} target="_blank" rel="noopener noreferrer">Abrir su panel →</a>
-            </article>))}</div>
+          {d.todas?.error && <p className="adm-err">Las métricas de todas las apps no llegaron ({d.todas.error}): abajo van solo las que tienen panel.</p>}
+          {grupos.map((g) => { const del = todas.filter((a) => a.grupo === g); return del.length > 0 && <section key={g}>
+            <h2>{{ Apps: "📱", Juegos: "🎮", Sitios: "🌐" }[g] || "📁"} {g} <small className="adm-nota">· {del.length}</small></h2>
+            <div className="pg-apps">{del.map((t) => <App key={t.id} t={t} a={enVivo[host(t.url)]} />)}</div>
+          </section>; })}
+          {sueltas.length > 0 && <><h2>📱 {todas.length ? "Otras con panel" : "Las apps"}</h2><div className="pg-apps">{sueltas.map((a) => <App key={a.id} a={a} />)}</div></>}
 
           {c?.estado?.length > 0 && <><h2>🟢 Estado de los sitios</h2>
             <ul className="pg-estado">{c.estado.map((s) => <li key={s.id} className={s.ok === false ? "pg-mal" : ""}>{s.ok === false ? "🔴" : "🟢"} {s.nombre}<small>{s.ms ? `${s.ms} ms` : ""}{s.pct !== null && s.pct !== undefined ? ` · ${s.pct}%` : ""}</small></li>)}</ul></>}
-          <p className="adm-nota">Actualizado {new Date(d.generado).toLocaleString("es-AR")}. Team Joy se maneja aparte.</p>
+          <p className="adm-nota">Actualizado {new Date(d.generado).toLocaleString("es-AR")}. Team Joy, Dertin y Dami Laoshi tienen además su propio reporte por mail.</p>
         </>
       )}
     </div>
+  );
+}
+// Una app: arriba sus números en vivo (si tiene panel) y abajo, desplegables, todas sus métricas del mail diario.
+function App({ t, a }) {
+  const m = t?.metricas || [], url = a?.url || t?.url;
+  return (
+    <article className={`adm-tile pg-app${a && !a.ok ? " pg-mal" : ""}`}>
+      <p className="pg-n">{t?.emoji || a?.emoji} <b>{t?.nombre || a?.nombre}</b>{a?.pendientes > 0 && <span className="pg-badge">{a.pendientes} para revisar</span>}</p>
+      {a && (a.ok ? <>
+        <dl><div><dt>cuentas</dt><dd>{num(a.cuentas)}</dd></div><div><dt>nuevas 7 días</dt><dd>{num(a.nuevas7 ?? a.nuevasHoy)}</dd></div><div><dt>activas 7 días</dt><dd>{num(a.activas7)}</dd></div></dl>
+        {a.nota && <p className="pg-nota" style={{ margin: 0, fontSize: ".8rem", opacity: .8 }}>{a.nota}</p>}
+        {a.dias?.length > 0 && <Mini dias={a.dias} />}
+      </> : <p className="adm-err">{a.codigo === 404 ? "Panel todavía sin publicar" : a.error}</p>)}
+      {!a && m.length > 0 && <ul className="pg-filas">{m.slice(0, 3).map(([k, v]) => <li key={k}><span>{k}</span><b>{String(v)}</b></li>)}</ul>}
+      {t?.error && <p className="adm-err">{t.error}</p>}
+      {m.length > (a ? 0 : 3) && <details className="pg-mas"><summary>Todas sus métricas ({m.length})</summary><ul className="pg-filas">{m.map(([k, v]) => <li key={k}><span>{k}</span><b>{String(v)}</b></li>)}</ul></details>}
+      <a className="adm-b adm-b2" href={a ? `${url}/admin` : url} target="_blank" rel="noopener noreferrer">{a ? "Abrir su panel →" : "Abrir el sitio →"}</a>
+    </article>
   );
 }
 function Barra({ t, n, de, s }) {
@@ -127,6 +183,8 @@ const CSS = `
 .pg-n{margin:0;display:flex;gap:6px;align-items:center;flex-wrap:wrap}.pg-badge{margin-left:auto;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--a-r);color:#fff}
 .pg-app dl{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0}.pg-app dt{font-size:11px;color:var(--a-s)}.pg-app dd{margin:0;font-weight:800;font-size:18px}
 .pg-app .adm-b{text-align:center;text-decoration:none}.pg-mini{display:flex;align-items:flex-end;gap:2px;height:34px}.pg-mini span{flex:1;background:var(--a-ac);border-radius:2px;opacity:.75}
+.pg-filas{list-style:none;padding:0;margin:0;display:grid;gap:2px;font-size:13px}.pg-filas li{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--a-l);padding:3px 0}
+.pg-filas span{color:var(--a-s)}.pg-filas b{text-align:right;overflow-wrap:anywhere}.pg-mas summary{cursor:pointer;color:var(--a-ac);font-weight:600;font-size:13px}.pg-mas[open] summary{margin-bottom:6px}
 .pg-estado{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
 .pg-estado li{background:var(--a-c);border:1px solid var(--a-l);border-radius:10px;padding:8px 10px;display:flex;justify-content:space-between;gap:6px}.pg-estado small{color:var(--a-s)}
 `;

@@ -1,6 +1,9 @@
 // Panel global del estudio (fungirak.com/panel): junta los números de todas las apps con backend en una sola vista.
 // No guarda ninguna clave: la contraseña maestra viene en cada pedido (x-admin-key) y se reenvía solo a la lista fija de abajo.
-// Team Joy queda afuera (se maneja aparte, en AWS).
+// Team Joy no tiene panel acá (se maneja aparte, en AWS), pero sus números del día entran por el correo, en «Todas».
+// Además: las métricas de TODAS las apps, juegos y sitios (las mismas del mail diario, desde el correo) y los planes y
+// suscripciones de la cuenta FUNGIRAK (cuenta.fungirak.com/api/admin, con la misma contraseña maestra).
+export const maxDuration = 60;
 const APPS = [
   { id: "mate", nombre: "La Escuela del Mate", url: "https://escuela-del-mate.fungirak.com", tipo: "kit", emoji: "🧉" },
   { id: "asador", nombre: "La Escuela del Asador", url: "https://escueladelasador.fungirak.com", tipo: "kit", emoji: "🔥" },
@@ -31,12 +34,14 @@ const APPS = [
   { id: "hoy", nombre: "Hoy", url: "https://hoy.fungirak.com", tipo: "molde", emoji: "☀️" },
 ];
 const CORREO = "https://correo.fungirak.com/api/admin";
+const TODAS = "https://correo.fungirak.com/api/admin/todas";
+const CUENTA = "https://cuenta.fungirak.com/api/admin";
 const intentos = new Map(); // freno por conexión: así nadie usa el panel para probar contraseñas contra todas las apps
 const ipDe = (req) => (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "?";
 
-async function pedir(url, llave) {
+async function pedir(url, llave, ms = 9000) {
   try {
-    const r = await fetch(url, { headers: { "x-admin-key": llave }, cache: "no-store", signal: AbortSignal.timeout(9000) });
+    const r = await fetch(url, { headers: { "x-admin-key": llave }, cache: "no-store", signal: AbortSignal.timeout(ms) });
     const j = await r.json().catch(() => ({}));
     return r.ok ? { ok: true, d: j } : { ok: false, codigo: r.status, error: j.error || `Error ${r.status}` };
   } catch (e) { return { ok: false, codigo: 0, error: e?.name === "TimeoutError" ? "No respondió a tiempo" : "Sin conexión" }; }
@@ -78,6 +83,7 @@ export async function POST(req) {
   // primero se prueba contra el correo central: si la contraseña no sirve, no se manda a ninguna app
   const correo = await pedir(CORREO, llave);
   if (!correo.ok && (correo.codigo === 401 || correo.codigo === 429)) return Response.json({ error: correo.codigo === 429 ? "Demasiados intentos. Esperá 15 minutos." : "Contraseña incorrecta." }, { status: correo.codigo });
-  const apps = await Promise.all(APPS.map((a) => app(a, llave)));
-  return Response.json({ apps, correo: correo.ok ? correo.d : { error: correo.error }, generado: new Date().toISOString() }, { headers: { "Cache-Control": "no-store" } });
+  const [apps, todas, planes, cuenta] = await Promise.all([Promise.all(APPS.map((a) => app(a, llave))), pedir(TODAS, llave, 50000), pedir(`${CUENTA}?que=planes`, llave), pedir(`${CUENTA}?que=resumen`, llave)]);
+  const o = (r) => (r.ok ? r.d : { error: r.error });
+  return Response.json({ apps, correo: o(correo), todas: o(todas), planes: o(planes), cuenta: o(cuenta), generado: new Date().toISOString() }, { headers: { "Cache-Control": "no-store" } });
 }
