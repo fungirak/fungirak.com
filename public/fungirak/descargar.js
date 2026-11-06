@@ -94,7 +94,7 @@ ${CATS.slice(1).map(([k, t]) => { const l = lista.filter((a) => a[3] === k); ret
     // una sola ventanita recorre todas (menos Team Joy, que no tiene el asistente: va al final, a mano); acá solo se ve el progreso
     const movil = sistema === "ios" || sistema === "android", est = Object.fromEntries(lista.map((a) => [a[0], "pendiente"]));
     const cadena = lista.filter((a) => a[0] !== "teamjoy"), tj = lista.find((a) => a[0] === "teamjoy");
-    const ICO = { pendiente: "○", abierta: "⏳", bloqueada: "⚠️", ok: "✅", saltada: "⏭" };
+    const ICO = { pendiente: "○", abierta: "⏳", bloqueada: "⚠️", ok: "✅", ya: "☑️", saltada: "⏭" };
     let corriendo = false;
     const resto = () => cadena.filter((a) => ["pendiente", "abierta", "bloqueada"].includes(est[a[0]]));
     const abrir1 = (desde) => {
@@ -107,14 +107,14 @@ ${CATS.slice(1).map(([k, t]) => { const l = lista.filter((a) => a[3] === k); ret
       if (e.key !== "fk.fila" || !e.newValue) return;
       let d; try { d = JSON.parse(e.newValue); } catch { return; }
       if (!(d.app in est) || !["abierta", "pendiente", "bloqueada"].includes(est[d.app])) return;
-      est[d.app] = d.ok ? "ok" : "saltada";
+      est[d.app] = d.ya ? "ya" : d.ok ? "ok" : "saltada";
       const sig = resto()[0]; if (sig) est[sig[0]] = "abierta"; else corriendo = false; // la ventanita ya abrió la próxima sola
       pintarF();
     };
     addEventListener("storage", oir);
     const listo = () => { removeEventListener("storage", oir); cerrar(); };
     function pintarF() {
-      const hechas = lista.filter((a) => est[a[0]] === "ok").length, pasadas = lista.filter((a) => ["ok", "saltada"].includes(est[a[0]])).length;
+      const hechas = lista.filter((a) => est[a[0]] === "ok").length, pasadas = lista.filter((a) => ["ok", "ya", "saltada"].includes(est[a[0]])).length, yaEstaban = lista.filter((a) => est[a[0]] === "ya").length;
       const sig = resto()[0], tjPend = tj && est.teamjoy === "pendiente", ven = movil ? "pestaña" : "ventanita";
       const pie = sig && est[sig[0]] === "bloqueada"
         ? `<p class="nota">El navegador bloqueó la ${ven}. Permití las ventanas emergentes de este sitio (el ícono en la barra de direcciones) y tocá «Reintentar».</p><div class="bs"><button class="no" data-g="fin">Terminar</button><button class="si" data-g="seguir">Reintentar</button></div>`
@@ -124,10 +124,10 @@ ${CATS.slice(1).map(([k, t]) => { const l = lista.filter((a) => a[3] === k); ret
             ? `<p class="nota">Se abre una sola ${ven} que pasa sola por cada app: en cada una tocás «Instalar» y confirmás. Vos seguís acá viendo el progreso.</p><div class="bs"><button class="no" data-g="fin">Terminar</button><button class="si" data-g="seguir">${pasadas ? "Seguir" : "Empezar"}</button></div>`
             : tjPend
               ? `<p class="nota">Falta <b>Team Joy</b>, que se instala con su propio botón: se abre, tocás «Instalar» y después «Ya está».</p><div class="bs"><button class="no" data-g="tjno">Saltear</button><button class="alt" data-g="tjya">Ya está</button><button class="si" data-g="tj">Abrir Team Joy</button></div>`
-              : `<p class="nota"><b>✅ Listo: instalaste ${hechas} de ${lista.length}.</b> ${movil ? "Las tenés en tu pantalla de inicio: para agruparlas, mantené apretada una y arrastrala sobre otra." : "Las encontrás en tu escritorio o en el menú de aplicaciones."}</p><div class="bs"><button class="si" data-g="fin">Listo</button></div>`;
+              : `<p class="nota"><b>✅ Listo: instalaste ${hechas} de ${lista.length}${yaEstaban ? ` (y ${yaEstaban} ya las tenías)` : ""}.</b> ${movil ? "Las tenés en tu pantalla de inicio: para agruparlas, mantené apretada una y arrastrala sobre otra." : "Las encontrás en tu escritorio o en el menú de aplicaciones."}</p><div class="bs"><button class="si" data-g="fin">Listo</button></div>`;
       v.innerHTML = `<button class="x" aria-label="Cerrar">✕</button><div class="cab"><b>Instalando tus apps</b><small>${pasadas} de ${lista.length} · ${hechas} instaladas</small></div>
         <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="${lista.length}" aria-valuenow="${pasadas}"><i style="width:${Math.round((pasadas / lista.length) * 100)}%"></i></div>
-        <div class="lista">${lista.map(([id, nombre]) => `<label class="${(sig && sig[0] === id) || (!sig && id === "teamjoy" && tjPend) ? "act" : ""}"><span class="ico">${ICO[est[id]]}</span><img src="${LOGO(id)}" alt="" width="44" height="44" loading="lazy"><span><b>${esc(nombre)}</b><small>${{ pendiente: "Pendiente", abierta: "Instalando…", bloqueada: "Ventanita bloqueada", ok: "Instalada", saltada: "Salteada" }[est[id]]}</small></span><span></span></label>`).join("")}</div>
+        <div class="lista">${lista.map(([id, nombre]) => `<label class="${(sig && sig[0] === id) || (!sig && id === "teamjoy" && tjPend) ? "act" : ""}"><span class="ico">${ICO[est[id]]}</span><img src="${LOGO(id)}" alt="" width="44" height="44" loading="lazy"><span><b>${esc(nombre)}</b><small>${{ pendiente: "Pendiente", abierta: "Instalando…", bloqueada: "Ventanita bloqueada", ok: "Instalada", ya: "Ya la tenías", saltada: "Salteada" }[est[id]]}</small></span><span></span></label>`).join("")}</div>
         <div class="pie">${pie}</div>`;
       v.querySelector(".x").onclick = listo;
       const g = (k, f) => { const b = v.querySelector(`[data-g=${k}]`); if (b) b.onclick = f; };
