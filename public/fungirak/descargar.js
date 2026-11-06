@@ -6,7 +6,7 @@
      Cuando el navegador traiga navigator.install (instalar apps de otros sitios desde acá), se instala cada app por separado, acá mismo.
    - «Descargar carpeta»: baja «FUNGIRAK Studio.zip», ordenada por categoría, con un acceso directo por app (y en Linux un
      instalar.sh que las suma al menú de aplicaciones); en el celu, una página por app y «FUNGIRAK Studio.html» con todas.
-   Las marcadas viajan en ?studio=… (así las ve también la app del inicio del iPhone, que no comparte el almacenamiento) y en localStorage.
+   Las marcadas quedan en localStorage (y en ?studio=…); si la app instalada no las sabe (p. ej. en el iPhone), muestra todas.
    Sin alertas nativas; Esc cierra. */
 (() => {
   if (window.fkDescargar) return;
@@ -115,8 +115,8 @@ ${CATS.slice(1).map(([k, t]) => { const l = lista.filter((a) => a[3] === k); ret
   function lanzador() {
     let ids = new URLSearchParams(location.search).get("studio");
     try { if (ids) localStorage.setItem(K, ids); else ids = localStorage.getItem(K); } catch {}
-    const lista = APPS.filter((a) => (ids || "").split(",").includes(a[0]));
-    if (!lista.length || document.querySelector("fk-studio")) return;
+    const marcadas = APPS.filter((a) => (ids || "").split(",").includes(a[0])), lista = marcadas.length ? marcadas : APPS; // sin elegidas: todas
+    if (document.querySelector("fk-studio")) return;
     const h = document.createElement("fk-studio"), r = h.attachShadow({ mode: "open" });
     if (document.documentElement.dataset.theme === "dark" || document.documentElement.dataset.tema === "oscuro" || (!document.documentElement.dataset.theme && !document.documentElement.dataset.tema && matchMedia("(prefers-color-scheme: dark)").matches)) h.setAttribute("oscuro", "");
     r.innerHTML = `<style>${CSS}
