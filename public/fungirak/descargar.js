@@ -3,8 +3,9 @@
    cuenta.fungirak.com/?descargar=1 con la ventana ya abierta (así hay una sola «FUNGIRAK Studio» instalable, la de la cuenta). Desde ahí:
    - «Instalar N»: instala cada app marcada sin salir de acá. El progreso queda en esta ventana; cada app se abre en una ventanita
      (compu) o pestaña (celu) solo para instalarse, con el asistente de cuenta.fungirak.com/fila.js a pantalla completa (tapa cookies y
-     carteles de la app). Las apps tienen COOP same-origin (la ventanita no puede hablarle a esta), así que al terminar pasa por
-     cuenta.fungirak.com/?fklisto=…, que lo anota en localStorage («fk.fila»: acá llega como evento storage) y se cierra sola. Cuando el navegador traiga navigator.install, se instala
+     carteles de la app). Una sola ventanita recorre todas: las apps tienen COOP same-origin (no le pueden hablar a esta), así que
+     entre app y app pasa por cuenta.fungirak.com/fila-paso.html, que anota el resultado en localStorage («fk.fila»: acá llega como
+     evento storage) y abre sola la próxima. Solo hace falta el «Instalar» y la confirmación del navegador en cada una. Cuando el navegador traiga navigator.install, se instala
      cada una directo desde acá. Aparte, «FUNGIRAK Studio»: este mismo sitio como una sola app con las marcadas.
    - «Descargar carpeta»: baja «FUNGIRAK Studio.zip», ordenada por categoría, con un acceso directo por app (y en Linux un
      instalar.sh que las suma al menú de aplicaciones); en el celu, una página por app y «FUNGIRAK Studio.html» con todas.
@@ -90,46 +91,52 @@ ${CATS.slice(1).map(([k, t]) => { const l = lista.filter((a) => a[3] === k); ret
   const b64 = (o) => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   function fila(lista, v, cerrar, sistema) {
     if (typeof navigator.install === "function") return instalar(lista, v, cerrar, sistema); // el navegador ya instala apps de otros sitios desde acá
+    // una sola ventanita recorre todas (menos Team Joy, que no tiene el asistente: va al final, a mano); acá solo se ve el progreso
     const movil = sistema === "ios" || sistema === "android", est = Object.fromEntries(lista.map((a) => [a[0], "pendiente"]));
-    let i = 0, w = null, vigia = null;
+    const cadena = lista.filter((a) => a[0] !== "teamjoy"), tj = lista.find((a) => a[0] === "teamjoy");
     const ICO = { pendiente: "○", abierta: "⏳", bloqueada: "⚠️", ok: "✅", saltada: "⏭" };
-    const actual = () => lista[i];
-    const avanzar = (estado) => { const a = actual(); if (!a) return; est[a[0]] = estado; clearInterval(vigia); i++; pintarF(); };
-    const abrirApp = () => {
-      const [id, nombre, url] = actual();
-      // ?fkinst: el asistente nuevo (fila.js); ?fkcola de una sola app: el de las apps que todavía tienen la fila vieja en fk.js
-      const u = id === "teamjoy" ? `${url}/` : `${url}/?fkinst=1&fkcola=${b64({ c: [[url, nombre, id]], v: location.origin + "/" })}&fkpaso=0`;
+    let corriendo = false;
+    const resto = () => cadena.filter((a) => ["pendiente", "abierta", "bloqueada"].includes(est[a[0]]));
+    const abrir1 = (desde) => {
+      const [id, , url] = desde, q = resto().filter((a) => a[0] !== id).map((a) => [a[0], a[2]]);
       try { localStorage.removeItem("fk.fila"); } catch {}
-      w = window.open(u, "fkinst", movil ? "" : `popup,width=460,height=700,left=${Math.max(0, screenX + outerWidth - 520)},top=${screenY + 70}`);
-      est[id] = w ? "abierta" : "bloqueada"; pintarF(); // null = el navegador bloqueó la ventanita (con COOP, «closed» no sirve para saber si sigue abierta)
+      const w = window.open(`${url}/?fkinst=1&fkid=${encodeURIComponent(id)}&fkq=${b64(q)}`, "fkinst", movil ? "" : `popup,width=460,height=700,left=${Math.max(0, screenX + outerWidth - 520)},top=${screenY + 70}`);
+      est[id] = w ? "abierta" : "bloqueada"; corriendo = !!w; pintarF();
     };
     const oir = (e) => {
       if (e.key !== "fk.fila" || !e.newValue) return;
       let d; try { d = JSON.parse(e.newValue); } catch { return; }
-      if (actual() && ["abierta", "bloqueada"].includes(est[actual()[0]])) avanzar(d.ok ? "ok" : "saltada");
+      if (!(d.app in est) || !["abierta", "pendiente", "bloqueada"].includes(est[d.app])) return;
+      est[d.app] = d.ok ? "ok" : "saltada";
+      const sig = resto()[0]; if (sig) est[sig[0]] = "abierta"; else corriendo = false; // la ventanita ya abrió la próxima sola
+      pintarF();
     };
     addEventListener("storage", oir);
-    const listo = () => { removeEventListener("storage", oir); clearInterval(vigia); cerrar(); };
+    const listo = () => { removeEventListener("storage", oir); cerrar(); };
     function pintarF() {
       const hechas = lista.filter((a) => est[a[0]] === "ok").length, pasadas = lista.filter((a) => ["ok", "saltada"].includes(est[a[0]])).length;
-      const a = actual(), e = a && est[a[0]];
-      const pie = !a
-        ? `<p class="nota"><b>✅ Listo: instalaste ${hechas} de ${lista.length}.</b> ${movil ? "Las tenés en tu pantalla de inicio: para agruparlas, mantené apretada una y arrastrala sobre otra." : "Las encontrás en tu escritorio o en el menú de aplicaciones."}</p><div class="bs"><button class="si" data-g="fin">Listo</button></div>`
-        : e === "abierta"
-          ? `<p class="nota">${a[0] === "teamjoy" ? `Se abrió <b>Team Joy</b>: tocá su botón «Instalar». Después cerrá esa ${movil ? "pestaña" : "ventanita"} y tocá «Ya la instalé».` : `Se abrió <b>${esc(a[1])}</b> en una ${movil ? "pestaña" : "ventanita"}: tocá «Instalar» ahí. Cuando termine se cierra sola y seguimos acá.`}</p><div class="bs"><button class="no" data-g="saltar">Saltear</button><button class="alt" data-g="ya">Ya la instalé</button><button class="si" data-g="abrir">Abrir de nuevo</button></div>`
-          : e === "bloqueada"
-            ? `<p class="nota">El navegador bloqueó la ${movil ? "pestaña" : "ventanita"} de <b>${esc(a[1])}</b>. Permití las ventanas emergentes de este sitio (el ícono en la barra de direcciones) y tocá «Reintentar».</p><div class="bs"><button class="no" data-g="saltar">Saltear</button><button class="si" data-g="abrir">Reintentar</button></div>`
-            : `<p class="nota">${pasadas ? "" : `Cada app se abre en una ${movil ? "pestaña" : "ventanita"} solo para instalarse y se cierra sola: vos seguís acá. `}${sistema === "ios" ? "En el iPhone, en cada una: Compartir → «Agregar a inicio»." : ""}</p><div class="bs"><button class="no" data-g="fin">Terminar</button><button class="alt" data-g="saltar">Saltear</button><button class="si" data-g="abrir">Instalar ${esc(a[1])}</button></div>`;
+      const sig = resto()[0], tjPend = tj && est.teamjoy === "pendiente", ven = movil ? "pestaña" : "ventanita";
+      const pie = sig && est[sig[0]] === "bloqueada"
+        ? `<p class="nota">El navegador bloqueó la ${ven}. Permití las ventanas emergentes de este sitio (el ícono en la barra de direcciones) y tocá «Reintentar».</p><div class="bs"><button class="no" data-g="fin">Terminar</button><button class="si" data-g="seguir">Reintentar</button></div>`
+        : sig && corriendo
+          ? `<p class="nota">Se abrió una ${ven}: en cada app tocá <b>«Instalar»</b> y confirmá el cartel del navegador${sistema === "ios" ? " (en iPhone: Compartir → «Agregar a inicio»)" : ""}. <b>Pasa sola a la siguiente</b> y acá ves el progreso. ¿Se cerró? Tocá «Seguir».</p><div class="bs"><button class="no" data-g="fin">Terminar</button><button class="alt" data-g="saltar">Saltear ${esc(sig[1])}</button><button class="si" data-g="seguir">Seguir</button></div>`
+          : sig
+            ? `<p class="nota">Se abre una sola ${ven} que pasa sola por cada app: en cada una tocás «Instalar» y confirmás. Vos seguís acá viendo el progreso.</p><div class="bs"><button class="no" data-g="fin">Terminar</button><button class="si" data-g="seguir">${pasadas ? "Seguir" : "Empezar"}</button></div>`
+            : tjPend
+              ? `<p class="nota">Falta <b>Team Joy</b>, que se instala con su propio botón: se abre, tocás «Instalar» y después «Ya está».</p><div class="bs"><button class="no" data-g="tjno">Saltear</button><button class="alt" data-g="tjya">Ya está</button><button class="si" data-g="tj">Abrir Team Joy</button></div>`
+              : `<p class="nota"><b>✅ Listo: instalaste ${hechas} de ${lista.length}.</b> ${movil ? "Las tenés en tu pantalla de inicio: para agruparlas, mantené apretada una y arrastrala sobre otra." : "Las encontrás en tu escritorio o en el menú de aplicaciones."}</p><div class="bs"><button class="si" data-g="fin">Listo</button></div>`;
       v.innerHTML = `<button class="x" aria-label="Cerrar">✕</button><div class="cab"><b>Instalando tus apps</b><small>${pasadas} de ${lista.length} · ${hechas} instaladas</small></div>
         <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="${lista.length}" aria-valuenow="${pasadas}"><i style="width:${Math.round((pasadas / lista.length) * 100)}%"></i></div>
-        <div class="lista">${lista.map(([id, nombre], k) => `<label class="${k === i ? "act" : ""}"><span class="ico">${ICO[est[id]]}</span><img src="${LOGO(id)}" alt="" width="44" height="44" loading="lazy"><span><b>${esc(nombre)}</b><small>${{ pendiente: k === i ? "Sigue esta" : "Pendiente", abierta: "Instalando…", bloqueada: "Ventanita bloqueada", ok: "Instalada", saltada: "Salteada" }[est[id]]}</small></span><span></span></label>`).join("")}</div>
+        <div class="lista">${lista.map(([id, nombre]) => `<label class="${(sig && sig[0] === id) || (!sig && id === "teamjoy" && tjPend) ? "act" : ""}"><span class="ico">${ICO[est[id]]}</span><img src="${LOGO(id)}" alt="" width="44" height="44" loading="lazy"><span><b>${esc(nombre)}</b><small>${{ pendiente: "Pendiente", abierta: "Instalando…", bloqueada: "Ventanita bloqueada", ok: "Instalada", saltada: "Salteada" }[est[id]]}</small></span><span></span></label>`).join("")}</div>
         <div class="pie">${pie}</div>`;
       v.querySelector(".x").onclick = listo;
-      const g = (k) => v.querySelector(`[data-g=${k}]`);
-      g("abrir") && (g("abrir").onclick = abrirApp);
-      g("saltar") && (g("saltar").onclick = () => { try { w?.close(); } catch {} avanzar("saltada"); });
-      g("ya") && (g("ya").onclick = () => { try { w?.close(); } catch {} avanzar("ok"); });
-      g("fin") && (g("fin").onclick = listo);
+      const g = (k, f) => { const b = v.querySelector(`[data-g=${k}]`); if (b) b.onclick = f; };
+      g("fin", listo);
+      g("seguir", () => { const s = resto()[0]; if (s) abrir1(s); });
+      g("saltar", () => { const s = resto()[0]; if (!s) return; est[s[0]] = "saltada"; const n = resto()[0]; if (n) abrir1(n); else { corriendo = false; pintarF(); } });
+      g("tj", () => { window.open(`${tj[2]}/`, "fkinst", movil ? "" : "popup,width=460,height=700"); });
+      g("tjya", () => { est.teamjoy = "ok"; pintarF(); });
+      g("tjno", () => { est.teamjoy = "saltada"; pintarF(); });
       v.querySelector("label.act")?.scrollIntoView({ block: "nearest" });
     }
     pintarF();
@@ -269,7 +276,7 @@ label.act{background:rgba(60,242,160,.14)}.ico{width:20px;text-align:center;font
   }
   window.fkDescargar = { abrir, apps: APPS };
   if (instalada()) lanzador(); // abriste FUNGIRAK Studio desde el escritorio o el inicio
-  // la ventanita de una app terminó (fila vieja de fk.js: vuelve acá con ?fklisto=N): avisar a la ventana del progreso y cerrarse
+  // (compatibilidad) la fila vieja de fk.js volvía acá con ?fklisto=N: se anota para la ventana del progreso y se cierra
   { const p = new URLSearchParams(location.search);
     if (p.has("fklisto")) {
       try { localStorage.setItem("fk.fila", JSON.stringify({ ok: p.get("fklisto") !== "0", t: Date.now() })); } catch {}
