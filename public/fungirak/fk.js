@@ -235,8 +235,15 @@
     const hasta = Number(leer("fk.cartel", localStorage) || 0);
     if (Date.now() < hasta || document.getElementById("fk-cartel")) return;
     let listo = false;
+    // un aviso a la vez (PROP-005 / NAV-007): si hay otro en pantalla (cookies, un modal, la instalación) espera; y sale una sola vez
+    // por sesión en todo FUNGIRAK (cookie de sesión fk_cartel en .fungirak.com), no una vez en cada app
+    const ocupado = () => !!document.querySelector('fk-cookies, fk-fila, fk-descargar, [aria-modal="true"], dialog[open]') && [...document.querySelectorAll('fk-cookies, fk-fila, fk-descargar, [aria-modal="true"], dialog[open]')].some((e) => e.getBoundingClientRect().height > 0);
     const mostrar = () => {
-      if (listo) return; listo = true; window.removeEventListener("scroll", alBajar);
+      if (listo) return;
+      if (/(?:^|; )fk_cartel=1/.test(document.cookie)) { listo = true; return; }
+      if (ocupado()) { setTimeout(mostrar, 3000); return; }
+      listo = true; window.removeEventListener("scroll", alBajar);
+      try { document.cookie = `fk_cartel=1; path=/${/(^|\.)fungirak\.com$/.test(location.hostname) ? "; domain=.fungirak.com" : ""}; SameSite=Lax`; } catch {}
       const h = document.createElement("div"); h.id = "fk-cartel";
       conTema(h).attachShadow({ mode: "open" }).innerHTML = `<style>:host{all:initial;position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483000;font:500 14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
         .c{box-sizing:border-box;width:min(560px,calc(100vw - 24px));background:#fff;color:#15171c;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.28);padding:16px 18px;display:grid;gap:10px;animation:e .35s ease}

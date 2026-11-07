@@ -12,6 +12,34 @@ const fecha = (f) => (f ? new Date(f).toLocaleDateString("es-AR", { day: "numeri
 const host = (u) => String(u || "").replace(/^https?:\/\//, "").replace(/\/.*$/, "");
 const valor = (m, k) => Number.parseFloat(m.find(([x]) => x === k)?.[1]) || 0;
 
+// El muro de fungirak.com: lo que quedó en revisión se aprueba o se borra (AUTO-001 / HARD-001).
+function MuroRevision({ llave }) {
+  const [l, setL] = useState(null), [err, setErr] = useState("");
+  const cargar = useCallback(async () => {
+    try { const r = await fetch("/api/panel/muro", { headers: { "x-admin-key": llave }, cache: "no-store" }); const j = await r.json(); if (!r.ok) throw new Error(j.error); setL(j.pendientes || []); setErr(""); }
+    catch (e) { setErr(e.message || "No se pudo cargar."); }
+  }, [llave]);
+  useEffect(() => { cargar(); }, [cargar]); // eslint-disable-line react-hooks/set-state-in-effect -- carga al entrar
+  const hacer = async (id, accion) => {
+    try { const r = await fetch("/api/panel/muro", { method: "POST", headers: { "x-admin-key": llave, "Content-Type": "application/json" }, body: JSON.stringify({ id, accion }) }); if (!r.ok) throw new Error((await r.json()).error); setL((x) => x.filter((m) => m.id !== id)); }
+    catch (e) { setErr(e.message || "No se pudo."); }
+  };
+  return (
+    <>
+      <h2>🧱 Muro de fungirak.com <small className="adm-nota">· en revisión: {l ? l.length : "…"}</small></h2>
+      {err && <p className="adm-err">{err}</p>}
+      {l && !l.length && <p className="adm-nota">No hay nada esperando revisión.</p>}
+      {l && l.length > 0 && <ul className="pg-muro">{l.map((m) => (
+        <li key={m.id}>
+          <p><b>{m.emoji} {m.nombre || "Anónimo"}</b> <small className="adm-nota">· {m.tipo} · {fecha(m.creado)}{m.reportes ? ` · ${m.reportes} reportes` : ""}</small></p>
+          <p>{m.texto}</p>
+          <span className="adm-acc"><button type="button" className="adm-b" onClick={() => hacer(m.id, "aprobar")}>Aprobar</button><button type="button" className="adm-b adm-b2" onClick={() => hacer(m.id, "borrar")}>Borrar</button></span>
+        </li>
+      ))}</ul>}
+    </>
+  );
+}
+
 export default function Panel() {
   const [llave, setLlave] = useState("");
   const [d, setD] = useState(null), [error, setError] = useState(""), [cargando, setCargando] = useState(false);
@@ -59,6 +87,8 @@ export default function Panel() {
             <div className="adm-tile"><b>{num(tot("activas7"))}</b><span>personas activas esta semana</span></div>
             <div className="adm-tile"><b>{num(tot("pendientes"))}</b><span>denuncias para revisar</span></div>
           </div>
+
+          <MuroRevision llave={llave} />
 
           <h2>💳 Suscripciones y planes</h2>
           {pl?.error ? <p className="adm-err">Cuenta FUNGIRAK: {pl.error}</p> : pl && <>
@@ -179,6 +209,7 @@ const CSS = `
 .pg-correo{display:grid;gap:10px}.pg-barra{background:var(--a-c);border:1px solid var(--a-l);border-radius:14px;padding:12px}
 .pg-barra p{margin:0 0 6px;display:flex;justify-content:space-between;gap:8px}.pg-barra p span{color:var(--a-s)}.pg-barra div{height:10px;border-radius:99px;background:var(--a-ac2);overflow:hidden}
 .pg-barra i{display:block;height:100%;border-radius:99px}.pg-barra small{color:var(--a-s);font-size:12px}
+.pg-muro{display:grid;gap:10px;list-style:none;padding:0;margin:0}.pg-muro li{background:var(--a-c);border:1px solid var(--a-l);border-radius:12px;padding:10px 12px;display:grid;gap:6px}.pg-muro p{margin:0;overflow-wrap:anywhere}
 .pg-apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}.pg-app{gap:10px}.pg-app.pg-mal{border-color:var(--a-r)}
 .pg-n{margin:0;display:flex;gap:6px;align-items:center;flex-wrap:wrap}.pg-badge{margin-left:auto;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--a-r);color:#fff}
 .pg-app dl{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0}.pg-app dt{font-size:11px;color:var(--a-s)}.pg-app dd{margin:0;font-weight:800;font-size:18px}
