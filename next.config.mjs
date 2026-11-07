@@ -10,12 +10,12 @@ const security = [
     value: [
       "default-src 'self'",
       // Next.js inyecta scripts en línea (tema sin parpadeo, datos estructurados, hidratación)
-      `script-src 'self' https://cuenta.fungirak.com https://www.googletagmanager.com 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      `script-src 'self' https://accounts.google.com/gsi/client https://cuenta.fungirak.com https://www.googletagmanager.com 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style",
       "img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com data: blob: https://i.ytimg.com https://cuenta.fungirak.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://formsubmit.co https://cuenta.fungirak.com",
-      "frame-src https://www.youtube-nocookie.com https://www.youtube.com",
+      "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://formsubmit.co https://cuenta.fungirak.com https://accounts.google.com/gsi/",
+      "frame-src https://www.youtube-nocookie.com https://www.youtube.com https://accounts.google.com/gsi/",
       "media-src 'self' https://www.youtube-nocookie.com",
       "worker-src 'self' blob:",
       "object-src 'none'",
