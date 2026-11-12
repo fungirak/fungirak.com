@@ -2,6 +2,7 @@
 // POST { email, nombre, idea }: mandar o corregir la idea para la próxima edición (una por email y por edición).
 import { mismoOrigen, leerJSON, hashIp, permitido, limpio } from "@/lib/db";
 import { estado, participar } from "@/lib/sorteo";
+import { registrar } from "@/lib/auditoria";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const res = (data, status = 200) => Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
@@ -21,6 +22,7 @@ export async function POST(req) {
   if (b.acepto !== true) return res({ error: "bases" }, 400);
   try {
     const r = await participar({ email, nombre: limpio(b.nombre, 60), idea: limpio(b.idea, 1300, true), ipHash: hashIp(req) });
+    if (!r.error) await registrar(req, "concurso.participa", { bases: "aceptadas" });
     return res(r, r.error ? (r.error === "no-disponible" ? 503 : 400) : 200);
   } catch (e) { console.error(e); return res({ error: "servidor" }, 500); }
 }

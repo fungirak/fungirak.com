@@ -1,6 +1,7 @@
 import { guardarMensaje, mensajesRecientes, hashIp, mismoOrigen, sumar, leerJSON, limpio } from "@/lib/db";
 import { ofensivas } from "@/lib/filtro";
 import { segundaOpinion } from "@/lib/moderacion";
+import { registrar } from "@/lib/auditoria";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -43,6 +44,7 @@ export async function POST(req) {
   try {
     if ((await mensajesRecientes(m.ip_hash)) >= 5) return Response.json({ ok: false, error: "limite" }, { status: 429 });
     id = await guardarMensaje(m);
+    await registrar(req, "contacto.mensaje", { id, interes: m.interes || null });
     await sumar("mensajes");
   } catch (e) {
     console.error("contacto/db", e);

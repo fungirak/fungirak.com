@@ -1,6 +1,7 @@
 // Moderación del muro de fungirak.com desde el panel: lo que quedó en revisión (inglés, tecleo al azar, enlaces o 3 reportes) se
 // aprueba o se borra acá. La contraseña maestra se valida contra el correo central, igual que el panel (no se guarda acá).
 import { sql } from "@/lib/db";
+import { registrar } from "@/lib/auditoria";
 
 const CORREO = "https://correo.fungirak.com/api/admin";
 const intentos = new Map();
@@ -36,5 +37,6 @@ export async function POST(req) {
   if (!sql || !Number.isInteger(id) || !["aprobar", "borrar"].includes(b.accion)) return Response.json({ error: "Pedido inválido." }, { status: 400 });
   if (b.accion === "aprobar") await sql`UPDATE muro SET visible = true, reportes = 0 WHERE id = ${id}`;
   else await sql`DELETE FROM muro WHERE id = ${id}`;
+  await registrar(req, "moderacion.accion", { muro: id, accion: b.accion });
   return Response.json({ ok: true });
 }

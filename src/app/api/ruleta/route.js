@@ -2,6 +2,7 @@
 // El sorteo y los códigos se hacen acá (servidor). El navegador nunca ve probabilidades ni puede inventar códigos.
 import { hashIp, mismoOrigen, leerJSON, limpio, permitido } from "@/lib/db";
 import { girar, reclamar, puedeGirar } from "@/lib/ruleta";
+import { registrar } from "@/lib/auditoria";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const res = (data, status = 200) => Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
@@ -33,6 +34,7 @@ export async function POST(req) {
       const email = limpio(b.email, 120).toLowerCase();
       if (!EMAIL.test(email)) return res({ error: "email" }, 400);
       const r = await reclamar({ token: limpio(b.token, 40), email, nombre: limpio(b.nombre, 60), ipHash: ip });
+      if (!r.error) await registrar(req, "ruleta.reclamo", {});
       return res(r, r.error ? (r.error === "no-disponible" ? 503 : 409) : 200);
     }
     return res({ error: "accion" }, 400);

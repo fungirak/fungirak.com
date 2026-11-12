@@ -1,3 +1,4 @@
+import { registrar } from "@/lib/auditoria";
 // Panel global del estudio (fungirak.com/panel): junta los números de todas las apps con backend en una sola vista.
 // No guarda ninguna clave: la contraseña maestra viene en cada pedido (x-admin-key) y se reenvía solo a la lista fija de abajo.
 // Team Joy no tiene panel acá (se maneja aparte, en AWS), pero sus números del día entran por el correo, en «Todas».
@@ -84,6 +85,7 @@ export async function POST(req) {
   const correo = await pedir(CORREO, llave);
   if (!correo.ok && (correo.codigo === 401 || correo.codigo === 429)) return Response.json({ error: correo.codigo === 429 ? "Demasiados intentos. Esperá 15 minutos." : "Contraseña incorrecta." }, { status: correo.codigo });
   const [apps, todas, planes, cuenta] = await Promise.all([Promise.all(APPS.map((a) => app(a, llave))), pedir(TODAS, llave, 50000), pedir(`${CUENTA}?que=planes`, llave), pedir(`${CUENTA}?que=resumen`, llave)]);
+  await registrar(req, "panel.entrada", {});
   const o = (r) => (r.ok ? r.d : { error: r.error });
   return Response.json({ apps, correo: o(correo), todas: o(todas), planes: o(planes), cuenta: o(cuenta), generado: new Date().toISOString() }, { headers: { "Cache-Control": "no-store" } });
 }

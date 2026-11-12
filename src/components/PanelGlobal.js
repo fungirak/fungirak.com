@@ -139,6 +139,8 @@ export default function Panel() {
           </section>; })}
           {sueltas.length > 0 && <><h2>📱 {todas.length ? "Otras con panel" : "Las apps"}</h2><div className="pg-apps">{sueltas.map((a) => <App key={a.id} a={a} />)}</div></>}
 
+          <AuditoriaGlobal llave={llave} />
+
           {c?.estado?.length > 0 && <><h2>🟢 Estado de los sitios</h2>
             <ul className="pg-estado">{c.estado.map((s) => <li key={s.id} className={s.ok === false ? "pg-mal" : ""}>{s.ok === false ? "🔴" : "🟢"} {s.nombre}<small>{s.ms ? `${s.ms} ms` : ""}{s.pct !== null && s.pct !== undefined ? ` · ${s.pct}%` : ""}</small></li>)}</ul></>}
           <p className="adm-nota">Actualizado {new Date(d.generado).toLocaleString("es-AR")}. Team Joy, Dertin y Dami Laoshi tienen además su propio reporte por mail.</p>
@@ -219,3 +221,44 @@ const CSS = `
 .pg-estado{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
 .pg-estado li{background:var(--a-c);border:1px solid var(--a-l);border-radius:10px;padding:8px 10px;display:flex;justify-content:space-between;gap:6px}.pg-estado small{color:var(--a-s)}
 `;
+
+// Auditoría global: la cadena de huellas de cada app (sana = nadie cambió ni borró filas recientes) y los últimos eventos
+// de todas juntas, con filtros. Se carga a pedido (pregunta a cada app) y cada consulta queda registrada en cada app.
+function AuditoriaGlobal({ llave }) {
+  const [d, setD] = useState(null), [err, setErr] = useState(""), [cargando, setCargando] = useState(false);
+  const [dias, setDias] = useState(7), [app, setApp] = useState(""), [txt, setTxt] = useState("");
+  const cargar = async () => {
+    setCargando(true); setErr("");
+    try { const r = await fetch(`/api/panel/auditoria?dias=${dias}`, { method: "POST", headers: { "x-admin-key": llave }, cache: "no-store" }); const j = await r.json(); if (!r.ok) throw new Error(j.error || "No se pudo."); setD(j); }
+    catch (e) { setErr(e.message); }
+    setCargando(false);
+  };
+  const nombre = Object.fromEntries((d?.apps || []).map((a) => [a.id, a.nombre]));
+  const t = txt.trim().toLowerCase();
+  const lista = (d?.eventos || []).filter((e) => (!app || e.app === app) && (!t || `${e.evento} ${e.apodo || ""} ${JSON.stringify(e.detalle || {})}`.toLowerCase().includes(t)));
+  const malas = (d?.apps || []).filter((a) => a.cadena && !a.cadena.sana);
+  return (
+    <section>
+      <h2>🧾 Auditoría <small className="adm-nota">· constancias y seguridad de todas las apps</small></h2>
+      <div className="fila" style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+        <label>Últimos <select value={dias} onChange={(e) => setDias(Number(e.target.value))}>{[1, 7, 30, 90, 365].map((n) => <option key={n} value={n}>{n} {n === 1 ? "día" : "días"}</option>)}</select></label>
+        <button type="button" onClick={cargar} disabled={cargando}>{cargando ? "Preguntando a cada app…" : d ? "Actualizar" : "Cargar auditoría"}</button>
+      </div>
+      {err && <p className="adm-err">{err}</p>}
+      {d && <>
+        <p className={malas.length ? "adm-err" : "adm-nota"}>{malas.length ? `⚠️ Cadena con problemas en: ${malas.map((a) => `${a.nombre} (${a.cadena.alteradas} alteradas, ${a.cadena.huecos} huecos)`).join(" · ")}` : "✅ La cadena de huellas está sana en todas las apps que la tienen: nadie cambió ni borró eventos recientes."}</p>
+        <table className="adm-tabla"><thead><tr><th>App</th><th>Eventos</th><th>Cadena</th></tr></thead>
+          <tbody>{d.apps.map((a) => <tr key={a.id}><td>{a.nombre}</td><td>{a.error ? <span className="adm-err">{a.error}</span> : a.n}</td>
+            <td>{a.cadena ? (a.cadena.sana ? `✅ ${a.cadena.encadenadas} encadenadas` : `⚠️ ${a.cadena.alteradas} alteradas · ${a.cadena.huecos} huecos`) : "—"}</td></tr>)}</tbody></table>
+        <div className="fila" style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
+          <select value={app} onChange={(e) => setApp(e.target.value)}><option value="">Todas las apps</option>{d.apps.map((a) => <option key={a.id} value={a.id}>{a.nombre}</option>)}</select>
+          <input value={txt} onChange={(e) => setTxt(e.target.value)} placeholder="Buscar evento, usuario o detalle" />
+        </div>
+        <table className="adm-tabla"><thead><tr><th>Cuándo</th><th>App</th><th>Evento</th><th>Quién</th><th>Desde</th><th>Detalle</th></tr></thead>
+          <tbody>{lista.slice(0, 300).map((e) => <tr key={`${e.app}-${e.id}`}><td>{new Date(e.creado).toLocaleString("es-AR")}</td><td>{nombre[e.app] || e.app}</td><td>{e.evento}</td>
+            <td>{e.apodo ? `@${e.apodo}` : "—"}</td><td>{[e.dispositivo, e.region || e.pais].filter(Boolean).join(" · ")}</td><td><code>{JSON.stringify(e.detalle || {}).slice(0, 120)}</code></td></tr>)}</tbody></table>
+        <p className="adm-nota">{lista.length} eventos · generado {new Date(d.generado).toLocaleString("es-AR")}. Las IP nunca se guardan: solo una huella.</p>
+      </>}
+    </section>
+  );
+}

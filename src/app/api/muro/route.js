@@ -3,6 +3,7 @@ import { PROYECTOS } from "@/data/proyectos";
 
 const APPS = new Set(PROYECTOS.filter((p) => p.url).map((p) => p.id)); // las apps que pueden tener comentarios
 import { revisar, segundaOpinion, sospechoso, EMOJIS } from "@/lib/moderacion";
+import { registrar } from "@/lib/auditoria";
 
 export const dynamic = "force-dynamic";
 
@@ -58,6 +59,7 @@ export async function POST(req) {
     if ((await publicacionesRecientes(ip)) >= 4) return Response.json({ ok: false, error: "limite" }, { status: 429 });
     const dudoso = sospechoso(`${nombre || ""} ${texto}`);
     const item = await publicarMuro({ tipo, nombre, emoji, texto, ip_hash: ip, visible: !dudoso });
+    await registrar(req, "muro.publicacion", { id: item?.id ?? null, tipo, revision: dudoso });
     return Response.json(dudoso ? { ok: true, revision: true } : { ok: true, item });
   } catch (e) {
     console.error("muro/post", e);
