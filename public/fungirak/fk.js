@@ -149,6 +149,14 @@
       pan.style.right = "0px";
       const ancho = pan.getBoundingClientRect().width, caja = this.getBoundingClientRect(), sobra = ancho - (caja.right - 8);
       if (sobra > 0) pan.style.right = `${-Math.max(0, Math.min(sobra, window.innerWidth - 8 - caja.right))}px`;
+      if (innerWidth < 640) {
+        // celu: centrado y siempre adentro de la pantalla (si un padre tiene desenfoque o transform, se mide y se corrige)
+        const w = Math.min(420, innerWidth - 16), arriba = Math.round(b.getBoundingClientRect().bottom + 8);
+        Object.assign(pan.style, { position: "fixed", left: "0px", right: "auto", width: `${w}px`, top: "0px", maxHeight: `calc(100dvh - ${arriba + 12}px)`, overflowY: "auto" });
+        const r0 = pan.getBoundingClientRect();
+        pan.style.left = `${Math.round((innerWidth - w) / 2 - r0.left)}px`;
+        pan.style.top = `${Math.round(arriba - r0.top)}px`;
+      } else Object.assign(pan.style, { position: "", left: "", width: "", top: "", maxHeight: "", overflowY: "" });
       const y = this.y || { sesion: false }, usadas = new Set((y.apps || []).map((a) => a.id));
       if (que === "apps") {
         embudo("grilla.abierta", this.app);
