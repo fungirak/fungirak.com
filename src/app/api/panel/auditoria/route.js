@@ -16,7 +16,11 @@ const APPS = [
   M("oculta", "Santa Fe Oculta", "https://santafe-oculta.fungirak.com"), M("hoy", "Hoy", "https://hoy.fungirak.com"),
   { id: "gourmet", nombre: "Santa Fe Gourmet", url: "https://santafe-gourmet.fungirak.com", tipo: "molde" },
   { id: "atlas", nombre: "Atlas Fit Pro", url: "https://atlasfit-pro.fungirak.com", tipo: "atlas" },
-  { id: "mitour", nombre: "MiTour", url: "https://mitour.fungirak.com", tipo: "solo-eventos" },
+  M("mitour", "MiTour", "https://mitour.fungirak.com"), M("dertin", "Dertin", "https://dertin.fungirak.com"), M("carta", "Carta al Futuro", "https://carta-al-futuro.fungirak.com"),
+  { id: "sinvueltas", nombre: "Sin Vueltas", url: "https://sin-vueltas.fungirak.com/api/admin", tipo: "que" },
+  { id: "cronicas", nombre: "Las Crónicas de Fungi", url: "https://cronicasdefungi.fungirak.com/api/admin/", tipo: "que" },
+  { id: "cuenta", nombre: "Cuenta FUNGIRAK", url: "https://cuenta.fungirak.com/api/admin", tipo: "que" },
+  { id: "teamjoy", nombre: "Team Joy", url: "https://correo.fungirak.com/api/admin/teamjoy-auditoria", tipo: "vista" },
 ];
 const CORREO = "https://correo.fungirak.com/api/admin";
 const intentos = new Map();
@@ -31,8 +35,8 @@ async function pedir(url, llave, ms = 12000) {
 }
 
 async function deApp(a, llave, dias) {
-  const rutaEv = a.tipo === "atlas" ? `${a.url}/api/admin?vista=auditoria&dias=${dias}` : `${a.url}/api/auditoria?vista=eventos&dias=${dias}`;
-  const rutaCa = a.tipo === "atlas" ? `${a.url}/api/admin?vista=cadena` : a.tipo === "molde" ? `${a.url}/api/auditoria?vista=cadena` : null;
+  const rutaEv = a.tipo === "atlas" ? `${a.url}/api/admin?vista=auditoria&dias=${dias}` : a.tipo === "que" ? `${a.url}?que=eventos&dias=${dias}` : a.tipo === "vista" ? `${a.url}?vista=eventos&dias=${dias}` : `${a.url}/api/auditoria?vista=eventos&dias=${dias}`;
+  const rutaCa = a.tipo === "atlas" ? `${a.url}/api/admin?vista=cadena` : a.tipo === "que" ? `${a.url}?que=cadena` : a.tipo === "vista" ? `${a.url}?vista=cadena` : `${a.url}/api/auditoria?vista=cadena`;
   const [ev, ca] = await Promise.all([pedir(rutaEv, llave), rutaCa ? pedir(rutaCa, llave) : Promise.resolve(null)]);
   return {
     id: a.id, nombre: a.nombre,
