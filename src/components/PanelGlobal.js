@@ -287,7 +287,7 @@ function Apps({ filas, cargando, errTodas, grupos }) {
                 {f.metricas.length > 0 ? <ul className="pn-metricas">{f.metricas.map(([k, v]) => <li key={k}><span>{k}</span><b>{String(v)}</b></li>)}</ul> : <p className="pn-nota">Sin métricas del mail diario.</p>}
                 <p className="pn-acc">{(() => { const pd = panelDe(f.a?.url || f.url); return pd ? <a className="pn-b" href={pd.url} target="_blank" rel="noopener noreferrer">Abrir su panel ↗</a> : null; })()}
                   <a className="pn-b pn-b2" href={f.url || f.a?.url} target="_blank" rel="noopener noreferrer">Abrir el sitio ↗</a>
-                  <span className="pn-nota">{panelDe(f.a?.url || f.url)?.directo ? "Entrás directo con tu cuenta (si ya hiciste el paso de dos pasos hoy en este navegador)." : f.id === "fabrica" ? "Fábrica tiene su panel de dueño con su propia clave." : panelDe(f.a?.url || f.url) ? "" : "Esta app no tiene panel propio: todo lo suyo está acá."}</span></p>
+                  <span className="pn-nota">{panelDe(f.a?.url || f.url)?.directo ? "Entrás directo con tu cuenta (si ya hiciste el paso de dos pasos hoy en este navegador)." : panelDe(f.a?.url || f.url) ? "" : "Esta app no tiene panel propio: todo lo suyo está acá."}</span></p>
               </td></tr>}
             </Fragment>); })}
         </tbody>

@@ -30,8 +30,8 @@ export const APPS_PANEL = [
 
 // Cómo se abre el panel de cada app desde el del estudio. Con la Cuenta FUNGIRAK (entrada /api/fungirak/admin): si ya hiciste
 // el paso de dos pasos en este navegador (vale 8 h), entrás directo, sin escribir nada. El resto, a su panel propio.
-const CON_CUENTA = new Set([...APPS_PANEL.map((a) => new URL(a.url).host), "dertin.fungirak.com", "sin-vueltas.fungirak.com", "cronicasdefungi.fungirak.com", "atlasfit-pro.fungirak.com"]);
-const PROPIOS = { "fabrica.fungirak.com": "/dueno", "cuenta.fungirak.com": "/admin" };
+const CON_CUENTA = new Set([...APPS_PANEL.map((a) => new URL(a.url).host), "dertin.fungirak.com", "sin-vueltas.fungirak.com", "cronicasdefungi.fungirak.com", "atlasfit-pro.fungirak.com", "fabrica.fungirak.com"]);
+const PROPIOS = { "cuenta.fungirak.com": "/admin" };
 export function panelDe(url) {
   let h; try { h = new URL(url).host; } catch { return null; }
   if (CON_CUENTA.has(h)) return { url: `https://${h}/api/fungirak/admin`, directo: true };
