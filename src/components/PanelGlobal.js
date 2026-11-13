@@ -77,12 +77,16 @@ export default function Panel() {
   if (!listo) return <div className="pn" />;
   if (!llave) return <Acceso onEntrar={(v) => { try { sessionStorage.setItem(K, v); } catch {} setLlave(v); }} error={base.err} />;
   const cargandoAlgo = base.cargando || apps.cargando || todas.cargando;
+  // barra de 0 a 100: cada parte que llega suma; mientras falta alguna, avanza de a poco para que se note que sigue trabajando
+  const listas = [base, apps, todas].filter((p) => !p.cargando && (p.d || p.err)).length;
+  const progreso = Math.round((listas / 3) * 100);
   const generado = base.d?.generado || apps.d?.generado;
   const malas = filas.filter((f) => f.mal).length;
   const titulo = SECCIONES.find(([x]) => x === sec)?.[1];
   return (
     <div className="pn pn-app">
       <style>{CSS}</style>
+      <div className={`pn-progreso${cargandoAlgo || progreso < 100 ? " on" : ""}`} role="progressbar" aria-label="Carga del panel" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progreso}><i style={{ width: `${Math.max(progreso, cargandoAlgo ? 8 : 0)}%` }} /></div>
       <aside className="pn-side">
         <div className="pn-logo"><span className="pn-dot" />Estudio</div>
         <nav aria-label="Secciones">{SECCIONES.map(([id, t, d]) => (
@@ -93,7 +97,7 @@ export default function Panel() {
       </aside>
       <main className="pn-main">
         <header className="pn-top">
-          <div><h1>{titulo}</h1><p className="pn-sub">{cargandoAlgo ? <span className="pn-vivo">Actualizando…</span> : generado ? `Actualizado ${fechaHora(generado)}` : ""}</p></div>
+          <div><h1>{titulo}</h1><p className="pn-sub">{cargandoAlgo || progreso < 100 ? <span className="pn-vivo">Cargando… {Math.max(progreso, 5)} %</span> : generado ? `Actualizado ${fechaHora(generado)}` : ""}</p></div>
           <div className="pn-acc"><button type="button" className="pn-b pn-b2" onClick={() => setN((x) => x + 1)} disabled={cargandoAlgo}><Ico d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5" s={16} />Actualizar</button>
             <button type="button" className="pn-b pn-b2 pn-movil" onClick={salir}>Salir</button></div>
         </header>
@@ -407,6 +411,8 @@ const CSS = `
 :root[data-tema="claro"] .pn{--f:#f6f7f9;--c:#fff;--t:#0f1419;--s:#5b6472;--l:#e5e8ee;--ac:#0b7a55;--ac2:#e3f4ec;--az:#2563eb;--r:#c4271b;--r2:#fdecea;--am:#b45309;--am2:#fef3e2;--sk1:#eceff3;--sk2:#f7f8fa}
 :root[data-tema="oscuro"] .pn{--f:#0b0e13;--c:#141921;--t:#e8ecf2;--s:#94a0b2;--l:#232b37;--ac:#3ecf8e;--ac2:#12261d;--az:#60a5fa;--r:#ff7b6e;--r2:#2b1513;--am:#fbbf24;--am2:#2a2012;--sk1:#1b222c;--sk2:#232c38}
 .pn *{box-sizing:border-box}
+.pn-progreso{position:fixed;left:0;right:0;top:0;height:3px;z-index:50;opacity:0;transition:opacity .4s .3s;pointer-events:none}.pn-progreso.on{opacity:1;transition-delay:0s}
+.pn-progreso i{display:block;height:100%;background:linear-gradient(90deg,#00a957,#1690a8 55%,#7346e8);border-radius:0 3px 3px 0;transition:width .5s ease;box-shadow:0 0 10px rgba(22,144,168,.6)}
 .pn-app{display:grid;grid-template-columns:232px minmax(0,1fr)}
 .pn-side{position:sticky;top:0;height:100vh;padding:18px 12px;border-right:1px solid var(--l);background:var(--c);display:flex;flex-direction:column;gap:14px}
 .pn-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;padding:4px 10px 10px;letter-spacing:-.01em}
