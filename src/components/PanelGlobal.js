@@ -10,7 +10,7 @@ import Errores from "./panel/Errores";
 import Metricas from "./panel/Metricas";
 import Operacion from "./panel/Operacion";
 import Reglas from "./panel/Reglas";
-import { APPS_PANEL } from "@/lib/panel-apps";
+import { APPS_PANEL, panelDe } from "@/lib/panel-apps";
 import { pedir } from "./panel/api";
 
 const K = "panel.llave";
@@ -285,8 +285,9 @@ function Apps({ filas, cargando, errTodas, grupos }) {
                 {m && <p className="pn-alerta chica"><b>{m.t}:</b> {m.d}</p>}
                 {f.a?.nota && <p className="pn-nota">{f.a.nota}</p>}
                 {f.metricas.length > 0 ? <ul className="pn-metricas">{f.metricas.map(([k, v]) => <li key={k}><span>{k}</span><b>{String(v)}</b></li>)}</ul> : <p className="pn-nota">Sin métricas del mail diario.</p>}
-                <p className="pn-acc"><a className="pn-b pn-b2" href={f.a ? `${f.a.url}/admin` : f.url} target="_blank" rel="noopener noreferrer">{f.a ? "Abrir su panel" : "Abrir el sitio"} ↗</a>
-                  {f.id === "fabrica" && <span className="pn-nota">Fábrica tiene su propio panel: entrás con tu cuenta de dueño en fabrica.fungirak.com/dueno.</span>}</p>
+                <p className="pn-acc">{(() => { const pd = panelDe(f.a?.url || f.url); return pd ? <a className="pn-b" href={pd.url} target="_blank" rel="noopener noreferrer">Abrir su panel ↗</a> : null; })()}
+                  <a className="pn-b pn-b2" href={f.url || f.a?.url} target="_blank" rel="noopener noreferrer">Abrir el sitio ↗</a>
+                  <span className="pn-nota">{panelDe(f.a?.url || f.url)?.directo ? "Entrás directo con tu cuenta (si ya hiciste el paso de dos pasos hoy en este navegador)." : f.id === "fabrica" ? "Fábrica tiene su panel de dueño con su propia clave." : panelDe(f.a?.url || f.url) ? "" : "Esta app no tiene panel propio: todo lo suyo está acá."}</span></p>
               </td></tr>}
             </Fragment>); })}
         </tbody>
@@ -395,7 +396,7 @@ function MuroRevision({ llave, filas }) {
     </section>
     <section className="pn-card"><h2>Apps con contenido para revisar</h2>
       {!conPend.length ? <p className="pn-ok-msg">Ninguna app tiene denuncias ni contenido oculto pendiente.</p> :
-        <ul className="pn-lista">{conPend.map((f) => <li key={f.id}><span>{f.emoji} {f.nombre}</span><em className="pn-cnt">{f.pend}</em><a className="pn-b pn-b2" href={`${f.a.url}/admin`} target="_blank" rel="noopener noreferrer">Revisar ↗</a></li>)}</ul>}
+        <ul className="pn-lista">{conPend.map((f) => <li key={f.id}><span>{f.emoji} {f.nombre}</span><em className="pn-cnt">{f.pend}</em><a className="pn-b pn-b2" href={panelDe(f.a.url)?.url || `${f.a.url}/admin`} target="_blank" rel="noopener noreferrer">Revisar ↗</a></li>)}</ul>}
     </section>
   </>);
 }
