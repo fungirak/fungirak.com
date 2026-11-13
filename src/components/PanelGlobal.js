@@ -229,13 +229,8 @@ function Resumen({ filas, base, apps, todas, ir }) {
           top.map((f) => <div key={f.id} className="pn-rank"><p><span>{f.emoji} {f.nombre}</span><b>{num(f.cuentas)}</b></p><div><i style={{ width: `${pct(f.cuentas, max)}%` }} /></div></div>)}
         <button type="button" className="pn-link" onClick={() => ir("apps")}>Ver todas las apps →</button>
       </section>
-      <section className="pn-card"><h2>Salud</h2>
-        <ul className="pn-salud">
-          <li className={malas.length ? "mal" : "ok"} onClick={() => ir("apps")}>{carg && !filas.length ? <Sk w="70%" /> : malas.length ? `${malas.length} apps sin datos` : "Todas las apps responden"}</li>
-          <li className={caidos.length ? "mal" : "ok"} onClick={() => ir("estado")}>{base.cargando ? <Sk w="60%" /> : caidos.length ? `${caidos.length} sitios caídos` : "Todos los sitios en línea"}</li>
-          <li className={pl?.cobro?.activo ? "ok" : "neutro"} onClick={() => ir("ingresos")}>{base.cargando ? <Sk w="50%" /> : pl?.cobro?.activo ? `${num(pl.cobro.activas)} suscripciones activas` : "Cobro con Mercado Pago sin activar"}</li>
-        </ul>
-        <h2 style={{ marginTop: 18 }}>Mails de hoy</h2>
+      <section className="pn-card">
+        <h2>Mails de hoy</h2>
         {base.cargando ? <><Sk h={10} /><Sk h={10} w="80%" /></> : u ? <>
           <div className="pn-mini-barra"><span>Resend</span><div><i style={{ width: `${pct(u.resend_dia, tp.resend.dia)}%` }} /></div><b>{num(u.resend_dia)}/{num(tp.resend.dia)}</b></div>
           <div className="pn-mini-barra"><span>Gmail</span><div><i style={{ width: `${pct(u.gmail_dia, tp.gmail.dia)}%` }} /></div><b>{num(u.gmail_dia)}/{num(tp.gmail.dia)}</b></div>
