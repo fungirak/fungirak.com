@@ -510,6 +510,7 @@ const CSS = `
 .pn-salud li{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--f);cursor:pointer;font-weight:600;font-size:13.5px}
 .pn-salud li::before{content:"";width:9px;height:9px;border-radius:50%;flex:none;background:var(--s)}.pn-salud li.ok::before{background:var(--ac)}.pn-salud li.mal::before{background:var(--r)}.pn-salud li.mal{color:var(--r)}
 .pn-barra-filtros{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pn-barra-filtros>*{min-width:0;max-width:100%}.pn-seg{flex:0 1 auto}
 .pn-in{padding:9px 12px;border-radius:10px;border:1px solid var(--l);background:var(--c);color:var(--t);font:inherit;min-width:0}
 input.pn-in{flex:1 1 220px}.pn-in:focus{outline:2px solid color-mix(in srgb,var(--ac) 50%,transparent);outline-offset:1px}
 .pn-orden{display:flex;align-items:center;gap:8px;color:var(--s);font-size:13px;font-weight:600}
