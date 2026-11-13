@@ -9,7 +9,11 @@ export default function Operacion({ llave, toast, cola }) {
   const [conf, ventana] = useConfirmar();
   const [anuncio, setAnuncio] = useState(undefined), [dom, setDom] = useState(null), [revisando, setRevisando] = useState(false);
   const [nov, setNov] = useState({ app: "", titulo: "", texto: "", url: "", cta: "" }), [conteo, setConteo] = useState(null);
-  useEffect(() => { pedir(llave, "cuenta", "/api/admin?que=anuncio").then((r) => setAnuncio(r.ok ? r.d.anuncio : null)); }, [llave]);
+  const [ver, setVer] = useState(null);
+  useEffect(() => {
+    pedir(llave, "cuenta", "/api/admin?que=anuncio").then((r) => setAnuncio(r.ok ? r.d.anuncio : null));
+    fetch("/api/panel/vercel", { headers: cab(llave), cache: "no-store" }).then((x) => x.json()).then(setVer).catch(() => setVer({ error: "Sin conexión." }));
+  }, [llave]);
 
   const publicar = async (e) => {
     e.preventDefault(); const f = new FormData(e.currentTarget);
@@ -43,6 +47,17 @@ export default function Operacion({ llave, toast, cola }) {
 
   return (<div style={{ display: "grid", gap: 12 }}>
     {ventana}
+    <section className="pn-card"><h2>🚀 Publicaciones y límites</h2>
+      {!ver ? <p className="pn-nota">Cargando…</p> : ver.sinToken ? <div className="pn-alerta chica">Para ver los deploys y el límite diario hace falta un token de solo lectura de Vercel (cuenta-work): en vercel.com → Settings → Tokens, creá uno y cargalo en el Vercel de fungirak.com como <code>VERCEL_TOKEN_TRABAJO</code>.</div>
+        : ver.error ? <p className="pn-err">{ver.error}</p> : <>
+        <div className="pn-mini-barra" style={{ gridTemplateColumns: "150px 1fr auto" }}><span>Deploys en 24 h</span><div><i style={{ width: `${Math.min(100, ver.usados)}%`, background: ver.usados > 85 ? "var(--r)" : undefined }} /></div><b>{num(ver.usados)} / {num(ver.tope)}</b></div>
+        {ver.liberaEn && <p className="pn-nota">Se libera el próximo lugar {fechaHora(ver.liberaEn)}.</p>}
+        {ver.fallidos.length > 0 && <p className="pn-alerta chica" style={{ marginTop: 8 }}>Fallaron: {ver.fallidos.map((f) => f.app).join(", ")}.</p>}
+        <div className="pn-tabla-caja" style={{ marginTop: 10 }}><table className="pn-tabla"><thead><tr><th>App</th><th>Último deploy</th><th>Estado</th><th className="pn-solo-ancho">Cambio</th></tr></thead>
+          <tbody>{ver.ultimos.map((d) => <tr key={d.app}><td><b>{d.app}</b></td><td className="pn-nw">{fechaHora(d.creado)}</td><td><span className={`pn-chip ${d.estado === "READY" ? "ok" : d.estado === "ERROR" ? "mal" : ""}`}>{d.estado === "READY" ? "Publicado" : d.estado === "ERROR" ? "Falló" : d.estado}</span></td><td className="pn-solo-ancho">{d.commit || "—"}</td></tr>)}</tbody></table></div>
+      </>}
+      <p className="pn-nota" style={{ marginTop: 10 }}>Límites del plan gratis: 100 deploys por día en Vercel, el cupo de mails está en <b>Correo</b>.</p>
+    </section>
     <section className="pn-card"><h2>📣 Cartel en todas las apps</h2>
       {anuncio === undefined ? <p className="pn-nota">Cargando…</p> : anuncio
         ? <div className="pn-item"><p><b>Publicado:</b> {anuncio.texto}</p><div className="pn-meta"><span className="pn-chip">{anuncio.nivel}</span><span>hasta {fechaHora(anuncio.hasta)}</span></div><div className="pn-acc"><button type="button" className="pn-b pn-b-peligro" onClick={quitar}>Sacar el cartel</button></div></div>
