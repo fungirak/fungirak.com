@@ -41,12 +41,18 @@ const CUENTA = "https://cuenta.fungirak.com/api/admin";
 const intentos = new Map(); // freno por conexión: así nadie usa el panel para probar contraseñas contra todas las apps
 const ipDe = (req) => (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "?";
 
-async function pedir(url, llave, ms = 9000) {
-  try {
-    const r = await fetch(url, { headers: { "x-admin-key": llave }, cache: "no-store", signal: AbortSignal.timeout(ms) });
-    const j = await r.json().catch(() => ({}));
-    return r.ok ? { ok: true, d: j } : { ok: false, codigo: r.status, error: j.error || `Error ${r.status}` };
-  } catch (e) { return { ok: false, codigo: 0, error: e?.name === "TimeoutError" ? "No respondió a tiempo" : "Sin conexión" }; }
+// Las apps duermen cuando nadie las usa y tardan unos segundos en despertar: 25 s de margen y, si no llega o falla por
+// conexión, un segundo intento (las respuestas con código, como «llave incorrecta», no se reintentan).
+async function pedir(url, llave, ms = 25000) {
+  for (let intento = 0; intento < 2; intento++) {
+    try {
+      const r = await fetch(url, { headers: { "x-admin-key": llave }, cache: "no-store", signal: AbortSignal.timeout(intento ? Math.min(ms, 15000) : ms) });
+      const j = await r.json().catch(() => ({}));
+      if (r.status >= 500 && !intento) continue;
+      return r.ok ? { ok: true, d: j } : { ok: false, codigo: r.status, error: j.error || `Error ${r.status}` };
+    } catch (e) { if (intento) return { ok: false, codigo: 0, error: e?.name === "TimeoutError" ? "No respondió a tiempo" : "Sin conexión" }; }
+  }
+  return { ok: false, codigo: 0, error: "No respondió" };
 }
 const pendientes = (m) => ["publicaciones", "comentarios", "propuestas", "mensajes"].reduce((t, k) => t + (Array.isArray(m?.[k]) ? m[k].filter((x) => x.oculto || x.denuncias > 0).length : 0), 0);
 

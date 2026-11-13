@@ -39,9 +39,11 @@ function useParte(llave, parte, n) {
     if (!llave) return;
     let vivo = true;
     setSt((s) => ({ ...s, cargando: true, err: "" })); // eslint-disable-line react-hooks/set-state-in-effect -- arranca la carga
-    fetch(`/api/panel?parte=${parte}`, { method: "POST", headers: cab(llave), cache: "no-store" })
-      .then(async (r) => { const j = await r.json().catch(() => ({})); if (!vivo) return; if (!r.ok) setSt({ d: null, err: j.error || "No se pudo.", cargando: false, codigo: r.status }); else setSt({ d: j, err: "", cargando: false }); })
-      .catch(() => vivo && setSt({ d: null, err: "Sin conexión.", cargando: false }));
+    // si el servidor tarda o falla (5xx o sin conexión), un reintento automático antes de mostrar el error
+    const ir = (n) => fetch(`/api/panel?parte=${parte}`, { method: "POST", headers: cab(llave), cache: "no-store" })
+      .then(async (r) => { const j = await r.json().catch(() => ({})); if (!vivo) return; if (r.status >= 500 && n === 0) return ir(1); if (!r.ok) setSt({ d: null, err: j.error || "No se pudo.", cargando: false, codigo: r.status }); else setSt({ d: j, err: "", cargando: false }); })
+      .catch(() => { if (!vivo) return; if (n === 0) return ir(1); setSt({ d: null, err: "Sin conexión.", cargando: false }); });
+    ir(0);
     return () => { vivo = false; };
   }, [llave, parte, n]);
   return st;

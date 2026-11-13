@@ -27,7 +27,7 @@ const CORREO = "https://correo.fungirak.com/api/admin";
 const intentos = new Map();
 const ipDe = (req) => (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "?";
 
-async function pedir(url, llave, ms = 12000) {
+async function pedir(url, llave, ms = 25000) {
   try {
     const r = await fetch(url, { headers: { "x-admin-key": llave }, cache: "no-store", signal: AbortSignal.timeout(ms) });
     const j = await r.json().catch(() => ({}));
