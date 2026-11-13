@@ -2,11 +2,15 @@
 // Panel del estudio. Antes de entrar no dice qué es ni qué hay adentro (título «Acceso», sin enlaces desde el sitio).
 // Adentro: resumen, apps (búsqueda, filtros, orden y paginación), ingresos, cuentas, correo, moderación, auditoría y estado.
 // Cada sección carga por su cuenta y muestra un esqueleto mientras tanto. La contraseña maestra queda solo en esta pestaña.
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { CSS_EXTRA, SESION, cab } from "./panel/api";
+import Personas from "./panel/Personas";
+import Bandeja from "./panel/Bandeja";
+import Errores from "./panel/Errores";
+import Metricas from "./panel/Metricas";
+import Operacion from "./panel/Operacion";
 
 const K = "panel.llave";
-const SESION = "__sesion__"; // entró con la Cuenta FUNGIRAK: la llave la pone el servidor, el navegador no manda ninguna
-const cab = (llave, extra = {}) => (llave === SESION ? extra : { "x-admin-key": llave, ...extra });
 const num = (n) => (n === null || n === undefined || Number.isNaN(Number(n)) ? "—" : Number(n).toLocaleString("es-AR"));
 const pct = (a, b) => (b ? Math.min(100, Math.round((a / b) * 100)) : 0);
 const pesos = (n) => (n === null || n === undefined ? "—" : Number(n).toLocaleString("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }));
@@ -43,10 +47,14 @@ function useParte(llave, parte, n) {
 const SECCIONES = [
   ["resumen", "Resumen", "M3 13h8V3H3zm10 8h8V11h-8zM3 21h8v-6H3zm10-18v6h8V3z"],
   ["apps", "Apps", "M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"],
-  ["ingresos", "Ingresos", "M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"],
-  ["cuentas", "Cuentas", "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8m13 10v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"],
-  ["correo", "Correo", "M4 4h16v16H4zM4 6l8 7 8-7"],
+  ["personas", "Personas", "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8m13 10v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"],
   ["moderacion", "Moderación", "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"],
+  ["errores", "Errores", "M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"],
+  ["metricas", "Métricas", "M3 3v18h18M7 15l4-4 3 3 5-6"],
+  ["ingresos", "Ingresos", "M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"],
+  ["cuentas", "Cuenta FK", "M12 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM4 22a8 8 0 0 1 16 0"],
+  ["correo", "Correo", "M4 4h16v16H4zM4 6l8 7 8-7"],
+  ["operacion", "Operación", "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"],
   ["auditoria", "Auditoría", "M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"],
   ["estado", "Estado", "M22 12h-4l-3 9L9 3l-3 9H2"],
 ];
@@ -58,6 +66,9 @@ export default function Panel() {
   const [sec, setSec] = useState("resumen");
   const [n, setN] = useState(0);
   const [errAcceso, setErrAcceso] = useState("");
+  const [aviso, setAviso] = useState("");
+  const reloj = useRef(0);
+  const toast = useCallback((t) => { setAviso(t); clearTimeout(reloj.current); reloj.current = setTimeout(() => setAviso(""), 3500); }, []);
   useEffect(() => {
     try { const h = location.hash.slice(1); if (SECCIONES.some(([x]) => x === h)) setSec(h); if (new URLSearchParams(location.search).get("error") === "pase") setErrAcceso("No se pudo abrir el panel con tu cuenta. Probá de nuevo."); } catch {} // eslint-disable-line react-hooks/set-state-in-effect -- estado de esta pestaña
     // primero la sesión con la Cuenta FUNGIRAK; si no hay, la clave de esta pestaña (modo viejo)
@@ -93,7 +104,8 @@ export default function Panel() {
   const titulo = SECCIONES.find(([x]) => x === sec)?.[1];
   return (
     <div className="pn pn-app">
-      <style>{CSS}</style>
+      <style>{CSS + CSS_EXTRA}</style>
+      {aviso && <div className="pn-toast" role="status">{aviso}</div>}
       <div className={`pn-progreso${cargandoAlgo || progreso < 100 ? " on" : ""}`} role="progressbar" aria-label="Carga del panel" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progreso}><i style={{ width: `${Math.max(progreso, cargandoAlgo ? 8 : 0)}%` }} /></div>
       <aside className="pn-side">
         <div className="pn-logo"><span className="pn-dot" />Estudio</div>
@@ -115,7 +127,11 @@ export default function Panel() {
         {sec === "ingresos" && <Ingresos pl={base.d?.planes} cargando={base.cargando} />}
         {sec === "cuentas" && <Cuentas cu={base.d?.cuenta} cargando={base.cargando} />}
         {sec === "correo" && <Correo c={base.d?.correo} cargando={base.cargando} />}
-        {sec === "moderacion" && <MuroRevision llave={llave} filas={filas} />}
+        {sec === "personas" && <Personas llave={llave} toast={toast} />}
+        {sec === "moderacion" && <><Bandeja llave={llave} toast={toast} /><MuroRevision llave={llave} filas={filas} /></>}
+        {sec === "errores" && <Errores llave={llave} toast={toast} />}
+        {sec === "metricas" && <Metricas llave={llave} filas={filas} base={base} />}
+        {sec === "operacion" && <Operacion llave={llave} toast={toast} cola={base.d?.correo?.cola} />}
         {sec === "auditoria" && <AuditoriaGlobal llave={llave} />}
         {sec === "estado" && <Estado c={base.d?.correo} cargando={base.cargando} />}
       </main>
@@ -184,7 +200,23 @@ function Resumen({ filas, base, apps, todas, ir }) {
   const c = base.d?.correo, u = c?.cupo?.usados, tp = c?.cupo?.topes;
   const caidos = (c?.estado || []).filter((s) => s.ok === false);
   const pl = base.d?.planes;
+  // 7: alertas del día, de la más grave a la más leve; cada una lleva a donde se resuelve
+  const errMails = Object.values(c?.cola || {}).reduce((t, x) => t + (x.error || 0), 0);
+  const arrep = (pl?.arrep || []).filter((x) => x.estado === "recibido").length;
+  const alertas = [
+    ...caidos.map((x) => ({ n: "r", t: `${x.nombre} no responde`, d: "El vigía del correo no la pudo abrir.", ir: "estado" })),
+    ...(malas.length ? [{ n: "r", t: `${malas.length} apps sin datos`, d: malas.slice(0, 5).map((f) => f.nombre).join(", ") + (malas.length > 5 ? "…" : ""), ir: "apps" }] : []),
+    ...(tot("pend") > 0 ? [{ n: "a", t: `${num(tot("pend"))} cosas para revisar`, d: "Denuncias y contenido oculto en las apps.", ir: "moderacion" }] : []),
+    ...(arrep ? [{ n: "a", t: `${arrep} pedidos de arrepentimiento`, d: "Hay 10 días para devolver: resolvelos en Ingresos.", ir: "ingresos" }] : []),
+    ...(u && pct(u.resend_dia, tp.resend.dia) >= 80 ? [{ n: "a", t: `Cupo de mails al ${pct(u.resend_dia, tp.resend.dia)} %`, d: "Los de marketing esperan a mañana.", ir: "correo" }] : []),
+    ...(errMails ? [{ n: "a", t: `${num(errMails)} mails con error`, d: "Se pueden reintentar desde Operación.", ir: "operacion" }] : []),
+    ...(pl && !pl.cobro?.activo ? [{ n: "i", t: "Cobro con Mercado Pago sin activar", d: "Los planes salen de pruebas, regalos y premios.", ir: "ingresos" }] : []),
+  ];
   return (<>
+    <section className="pn-card"><h2>Alertas de hoy {!carg && !base.cargando && <small className="pn-nota">· {alertas.filter((x) => x.n !== "i").length ? `${alertas.filter((x) => x.n !== "i").length} para mirar` : "todo en orden"}</small>}</h2>
+      {(carg || base.cargando) && !alertas.length ? <><Sk h={40} r={12} /><Sk h={40} r={12} /></> : !alertas.length ? <p className="pn-ok-msg">Todo en orden: las apps responden, los sitios están en línea y no hay nada para revisar.</p> :
+        <ul className="pn-alerta-l">{alertas.map((x, i) => <li key={i} className={x.n === "r" ? "r" : x.n === "a" ? "a" : ""} onClick={() => ir(x.ir)}><div><b>{x.t}</b><small>{x.d}</small></div></li>)}</ul>}
+    </section>
     <div className="pn-grid4">
       <Kpi t="Cuentas en todas las apps" v={num(tot("cuentas"))} cargando={carg && !filas.length} />
       <Kpi t="Cuentas nuevas · 7 días" v={num(tot("nuevas"))} cargando={carg && !filas.length} />
