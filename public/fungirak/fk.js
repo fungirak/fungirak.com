@@ -107,7 +107,7 @@
     connectedCallback() {
       if (this.shadowRoot) return;
       conTema(this);
-      this.attachShadow({ mode: "open" }).innerHTML = `<style>${CSS}</style><button class="ic" part="grilla" aria-label="Apps de FUNGIRAK" aria-haspopup="true" aria-expanded="false">${GRILLA}</button><span class="acc"></span><div class="pan" role="dialog" aria-label="Apps de FUNGIRAK" hidden></div>`;
+      this.attachShadow({ mode: "open" }).innerHTML = `<style>${CSS}</style><span class="acc"></span><button class="ic" part="grilla" aria-label="Apps de FUNGIRAK" aria-haspopup="true" aria-expanded="false">${GRILLA}</button><div class="pan" role="dialog" aria-label="Apps de FUNGIRAK" hidden></div>`;
       const b = this.shadowRoot.querySelector(".ic"), pan = this.shadowRoot.querySelector(".pan");
       b.addEventListener("click", () => this.abrir(pan.hidden ? "apps" : null));
       document.addEventListener("click", (e) => { if (!e.composedPath().includes(this)) this.abrir(null); });
@@ -131,7 +131,7 @@
       if (portal && y.caida) acc.innerHTML = ""; // la cuenta no responde: no ofrecer «Acceder» a una página caída
       else if (portal) acc.innerHTML = y.sesion
         ? `<button class="ic" aria-label="Tu cuenta FUNGIRAK: @${esc(y.usuario)}" aria-haspopup="true"><span class="av">${avatar(y, 34)}</span></button>`
-        : `<a class="btn sec" href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}">Acceder</a><a class="btn pri crear" href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}">Crear cuenta</a><style>@media (max-width: ${(parseInt(this.getAttribute("crear-desde"), 10) || 641) - 1}px) { .crear { display: none } }</style>`; // en pantallas angostas solo «Acceder» (crear está adentro); crear-desde="1500" lo sube en barras cargadas
+        : `<a class="btn sec" aria-label="Iniciar sesión" href="${CUENTA}/entrar?volver=${encodeURIComponent(location.href)}"><span class="l">Iniciar sesión</span><span class="i"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg></span></a><a class="btn pri crear" aria-label="Crear cuenta" href="${CUENTA}/crear?volver=${encodeURIComponent(location.href)}"><span class="l">Crear cuenta</span><span class="i"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/></svg></span></a><style>.acc{display:inline-flex;align-items:center;gap:6px}.i{display:none}@media (max-width:640px){.acc .btn{width:36px;height:36px;padding:0;display:inline-grid;place-items:center}.l{display:none}.i{display:inline-grid;place-items:center}}</style>`; // igual en todas las apps: Iniciar sesión · Crear cuenta · grilla · ☰ (en el celu, iconos)
       else acc.innerHTML = "";
       acc.querySelector("button")?.addEventListener("click", () => this.abrir(this.abierto === "yo" ? null : "yo"));
       acc.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => embudo(a.classList.contains("pri") ? "boton.crear" : "boton.acceder", this.app)));

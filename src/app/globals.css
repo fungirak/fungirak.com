@@ -2711,3 +2711,8 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
 /* «Descargar todo» debajo del usuario de Instagram: solo texto gris con el ícono, sin caja (abre public/fungirak/descargar.js) */
 .btn-descargar { display: flex; align-items: center; gap: 6px; margin: 4px 0 2px; padding: 2px 0; border: 0; background: none; color: var(--text-3); font: 600 .84rem/1.2 var(--font-body); cursor: pointer; transition: color .2s; }
 .btn-descargar:hover, .btn-descargar:focus-visible { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+
+/* nav-igual-v1: el ☰ siempre a la derecha de todo, también en la compu (el tema está adentro) */
+.hamburger { display: inline-grid; }
+/* con «Iniciar sesión» y «Crear cuenta» siempre a la vista, las secciones pasan al ☰ antes (siguen todas ahí) */
+@media (max-width: 1500px) { .nav-links { display: none; } .nav { justify-content: space-between; } }

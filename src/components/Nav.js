@@ -3,7 +3,7 @@ import { useCerrarConAtras } from "@/lib/atras";
 import { useEffect, useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { SELLOS, nivelDe } from "@/lib/pasaporte";
-import { Sol, Luna, Nota, Menu, Cruz } from "./Iconos";
+import { Nota, Menu, Cruz } from "./Iconos";
 import { Glifo } from "./SelloTinta";
 
 export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, visitante }) {
@@ -55,9 +55,6 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
       <button className="icon-btn hide-m" aria-pressed={sonido} onClick={() => setSonido(!sonido)} aria-label={sonido ? ui.sonido.on : ui.sonido.off} title={sonido ? ui.sonido.on : ui.sonido.off}>
         <Nota />
       </button>
-      <button className="icon-btn hide-m" onClick={() => setTema(tema === "dark" ? "light" : "dark")} aria-label={tema === "dark" ? ui.tema.claro : ui.tema.oscuro}>
-        {tema === "dark" ? <Sol /> : <Luna />}
-      </button>
     </>
   );
 
@@ -81,7 +78,7 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
 
         <div className="nav-tools">
           {herramientas}
-          <fk-barra app="fungirak" modo="portal" crear-desde="1600" categorias="1" />
+          <fk-barra app="fungirak" modo="portal" categorias="1" />
           <button className="icon-btn hamburger" onClick={() => setDrawer(true)} aria-label={ui.menu} aria-expanded={drawer}>
             <Menu />
           </button>
