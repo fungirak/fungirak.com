@@ -77,15 +77,26 @@ async function app(a, llave) {
 export async function POST(req) {
   const ip = ipDe(req), ahora = Date.now();
   const l = (intentos.get(ip) || []).filter((t) => ahora - t < 15 * 60e3);
-  if (l.length >= 20) return Response.json({ error: "Demasiados pedidos. Esperá unos minutos." }, { status: 429 });
+  if (l.length >= 45) return Response.json({ error: "Demasiados pedidos. Esperá unos minutos." }, { status: 429 });
   l.push(ahora); intentos.set(ip, l); if (intentos.size > 2000) intentos.clear();
   const llave = req.headers.get("x-admin-key") || "";
   if (llave.length < 16 || llave.length > 200) return Response.json({ error: "Contraseña incorrecta." }, { status: 401 });
   // primero se prueba contra el correo central: si la contraseña no sirve, no se manda a ninguna app
   const correo = await pedir(CORREO, llave);
   if (!correo.ok && (correo.codigo === 401 || correo.codigo === 429)) return Response.json({ error: correo.codigo === 429 ? "Demasiados intentos. Esperá 15 minutos." : "Contraseña incorrecta." }, { status: correo.codigo });
+  // El panel pide por partes para mostrar cada sección apenas llega: «base» (correo, cuenta y planes), «apps» (números en vivo)
+  // y «todas» (las métricas del mail diario). Sin «parte» devuelve todo junto, como antes.
+  const parte = new URL(req.url).searchParams.get("parte") || "";
+  const o = (r) => (r.ok ? r.d : { error: r.error });
+  const H = { headers: { "Cache-Control": "no-store" } }, generado = new Date().toISOString();
+  if (parte === "apps") return Response.json({ apps: await Promise.all(APPS.map((a) => app(a, llave))), generado }, H);
+  if (parte === "todas") return Response.json({ todas: o(await pedir(TODAS, llave, 50000)), generado }, H);
+  if (parte === "base") {
+    const [planes, cuenta] = await Promise.all([pedir(`${CUENTA}?que=planes`, llave), pedir(`${CUENTA}?que=resumen`, llave)]);
+    await registrar(req, "panel.entrada", {});
+    return Response.json({ correo: o(correo), planes: o(planes), cuenta: o(cuenta), generado }, H);
+  }
   const [apps, todas, planes, cuenta] = await Promise.all([Promise.all(APPS.map((a) => app(a, llave))), pedir(TODAS, llave, 50000), pedir(`${CUENTA}?que=planes`, llave), pedir(`${CUENTA}?que=resumen`, llave)]);
   await registrar(req, "panel.entrada", {});
-  const o = (r) => (r.ok ? r.d : { error: r.error });
-  return Response.json({ apps, correo: o(correo), todas: o(todas), planes: o(planes), cuenta: o(cuenta), generado: new Date().toISOString() }, { headers: { "Cache-Control": "no-store" } });
+  return Response.json({ apps, correo: o(correo), todas: o(todas), planes: o(planes), cuenta: o(cuenta), generado }, H);
 }
