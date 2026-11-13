@@ -1,4 +1,4 @@
-import { llavePanel, sesionPanel } from "@/lib/panel-acceso";
+import { accesoPanel } from "@/lib/panel-acceso";
 import { registrar } from "@/lib/auditoria";
 import { APPS_PANEL } from "@/lib/panel-apps";
 
@@ -8,7 +8,7 @@ import { APPS_PANEL } from "@/lib/panel-apps";
 export const maxDuration = 30;
 const CENTRALES = { cuenta: "https://cuenta.fungirak.com", correo: "https://correo.fungirak.com" };
 const RUTAS_APP = [/^\/api\/moderacion(\?[\w=&%.-]*)?$/, /^\/api\/admin\/(personas|errores|uso)(\?[\w=&%.@-]*)?$/, /^\/api\/auditoria(\?[\w=&%.-]*)?$/];
-const RUTAS_CENTRAL = { cuenta: [/^\/api\/admin(\?[\w=&%.@-]*)?$/], correo: [/^\/api\/admin(\/todas)?(\?[\w=&%.-]*)?$/] };
+const RUTAS_CENTRAL = { cuenta: [/^\/api\/admin(\?[\w=&%.@-]*)?$/], correo: [/^\/api\/admin(\/todas)?(\?[\w=&%.-]*)?$/, /^\/api\/studio$/] };
 const intentos = new Map();
 const ipDe = (req) => (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "?";
 
@@ -26,10 +26,10 @@ export async function POST(req) {
   const permitidas = CENTRALES[b.app] ? RUTAS_CENTRAL[b.app] : RUTAS_APP;
   if (!base || !permitidas.some((r) => r.test(ruta))) return Response.json({ error: "Ese pedido no está permitido." }, { status: 400 });
 
-  const sesion = await sesionPanel();
-  if (metodo !== "GET" && !sesion) return Response.json({ error: "Para hacer cambios entrá con tu Cuenta FUNGIRAK (dos pasos)." }, { status: 403 });
-  const llave = await llavePanel(req);
-  if (llave.length < 16) return Response.json({ error: "Entrá de nuevo al panel." }, { status: 401 });
+  const acc = await accesoPanel(req);
+  if (acc.error) return Response.json({ error: acc.error }, { status: acc.status });
+  if (metodo !== "GET" && !acc.sesion) return Response.json({ error: "Para hacer cambios entrá con tu Cuenta FUNGIRAK (dos pasos)." }, { status: 403 });
+  const llave = acc.llave, sesion = acc.sesion ? "cuenta" : null;
 
   try {
     const r = await fetch(`${base}${ruta}`, {

@@ -54,3 +54,21 @@ export async function verificarPase(token) {
   }
   return null;
 }
+
+// Modo viejo (clave pegada): antes de usarla contra cualquier app se valida contra el correo central, con tope de 5 fallos
+// cada 15 minutos por conexión. Las válidas se recuerdan 5 minutos (solo una huella, nunca la clave).
+const okClaves = new Map(), fallos = new Map();
+export async function accesoPanel(req) {
+  if (await sesionPanel()) return { llave: process.env.FUNGIRAK_ADMIN_KEY || "", sesion: true };
+  const llave = req.headers.get("x-admin-key") || "";
+  if (llave.length < 16 || llave.length > 200) return { error: "Entrá de nuevo al panel.", status: 401 };
+  const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "?", ahora = Date.now();
+  const f = (fallos.get(ip) || []).filter((t) => ahora - t < 15 * 60e3);
+  if (f.length >= 5) return { error: "Demasiados intentos. Esperá 15 minutos.", status: 429 };
+  const h = createHmac("sha256", "panel-clave").update(llave).digest("base64url");
+  if ((okClaves.get(h) || 0) > ahora) return { llave, sesion: false };
+  const r = await fetch("https://correo.fungirak.com/api/admin", { headers: { "x-admin-key": llave }, cache: "no-store", signal: AbortSignal.timeout(9000) }).catch(() => null);
+  if (!r?.ok) { f.push(ahora); fallos.set(ip, f); if (fallos.size > 2000) fallos.clear(); return { error: "Contraseña incorrecta.", status: 401 }; }
+  okClaves.set(h, ahora + 5 * 60e3); if (okClaves.size > 50) okClaves.clear();
+  return { llave, sesion: false };
+}
