@@ -15,7 +15,7 @@ export default function Metricas({ llave, filas, base }) {
   const [emb, setEmb] = useState(null), [ret, setRet] = useState(null), [prov, setProv] = useState(null);
   useEffect(() => {
     pedir(llave, "cuenta", "/api/admin?que=embudo").then((r) => setEmb(r.ok ? r.d.filas || [] : []));
-    pedir(llave, "cuenta", "/api/admin?que=retencion").then((r) => setRet(r.ok ? r.d.filas || [] : []));
+    pedir(llave, "cuenta", "/api/admin?que=retencion").then((r) => { const ahora = Date.now(); setRet(r.ok ? (r.d.filas || []).map((x) => ({ ...x, edad: (ahora - new Date(x.semana).getTime()) / 864e5 })) : []); });
     pedir(llave, "cuenta", "/api/admin?que=provincias").then((r) => setProv(r.ok ? r.d.filas || [] : []));
   }, [llave]);
   // 3: crecimiento — últimos 7 días contra los 7 anteriores, con la serie diaria de cada app (las que la tienen)
@@ -41,7 +41,7 @@ export default function Metricas({ llave, filas, base }) {
       <section className="pn-card"><h2>Retención por camada <small className="pn-nota">· de los que se anotaron cada semana, cuántos volvieron</small></h2>
         {!ret ? <p className="pn-nota">Cargando…</p> : !ret.length ? <p className="pn-nota">Sin altas en las últimas 10 semanas.</p> :
           <div className="pn-tabla-caja"><table className="pn-tabla pn-calor"><thead><tr><th>Semana</th><th>Altas</th><th>Volvieron a los 7 días</th><th>A los 30 días</th></tr></thead>
-            <tbody>{ret.map((r) => { const c = (n) => ({ background: `color-mix(in srgb, var(--ac) ${pct(n, r.altas)}%, transparent)` }); const edad = (Date.now() - new Date(r.semana).getTime()) / 864e5;
+            <tbody>{ret.map((r) => { const c = (n) => ({ background: `color-mix(in srgb, var(--ac) ${pct(n, r.altas)}%, transparent)` }); const edad = r.edad;
               const celda = (n, d) => (edad < d + 7 ? <td className="pn-nota" title="Todavía no pasó el tiempo">—</td> : <td style={c(n)}>{pct(n, r.altas)}%</td>);
               return <tr key={r.semana}><td style={{ textAlign: "left" }}>{r.semana}</td><td>{num(r.altas)}</td>{celda(r.v7, 7)}{celda(r.v30, 30)}</tr>; })}</tbody></table></div>}
       </section>
