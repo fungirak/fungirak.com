@@ -56,7 +56,10 @@ export default function Panel() {
   const [sec, setSec] = useState("resumen");
   const [n, setN] = useState(0);
   useEffect(() => { try { setLlave(sessionStorage.getItem(K) || ""); const h = location.hash.slice(1); if (SECCIONES.some(([x]) => x === h)) setSec(h); } catch {} setListo(true); }, []); // eslint-disable-line react-hooks/set-state-in-effect -- estado de esta pestaña
-  const base = useParte(llave, "base", n), apps = useParte(llave, "apps", n), todas = useParte(llave, "todas", n);
+  const base = useParte(llave, "base", n);
+  // las otras partes recién se piden cuando la clave ya fue aceptada: una clave mal escrita cuenta como un solo intento fallido
+  const ok = llave && (base.d || (base.cargando && n > 0)) ? llave : "";
+  const apps = useParte(ok, "apps", n), todas = useParte(ok, "todas", n);
   // si la contraseña no sirve, vuelve a la pantalla de acceso
   useEffect(() => { if (base.codigo === 401) { try { sessionStorage.removeItem(K); } catch {} setLlave(""); } }, [base.codigo]); // eslint-disable-line react-hooks/set-state-in-effect -- contraseña rechazada
   const ir = (s) => { setSec(s); try { history.replaceState(null, "", `#${s}`); } catch {} window.scrollTo({ top: 0 }); };
@@ -214,14 +217,14 @@ function Apps({ filas, cargando, errTodas, grupos }) {
     {errTodas && <p className="pn-alerta">Las métricas del mail diario no llegaron ({errTodas}): se muestran solo las apps con panel en vivo.</p>}
     <div className="pn-card pn-tabla-caja">
       <table className="pn-tabla">
-        <thead><tr><th>App</th><th className="n">Cuentas</th><th className="n">Nuevas 7 d</th><th className="n">Activas 7 d</th><th className="pn-solo-ancho">Últimos días</th><th>Estado</th><th /></tr></thead>
+        <thead><tr><th>App</th><th className="n">Cuentas</th><th className="n pn-solo-ancho">Nuevas 7 d</th><th className="n pn-solo-ancho">Activas 7 d</th><th className="pn-solo-ancho">Últimos días</th><th>Estado</th><th /></tr></thead>
         <tbody>
           {cargando && !filas.length ? Array.from({ length: 8 }, (_, i) => <tr key={i}>{[40, 14, 14, 14, 22, 16, 10].map((w, k) => <td key={k}><Sk w={`${w * 2}%`} /></td>)}</tr>) :
             !pagina.length ? <tr><td colSpan={7} className="pn-vacio">No hay apps con ese filtro.</td></tr> :
             pagina.map((f) => { const m = motivo(f.a); const ab = abierta === f.id; return (<Fragment key={f.id}>
               <tr className={`pn-fila${ab ? " ab" : ""}`} onClick={() => setAbierta(ab ? "" : f.id)}>
                 <td><span className="pn-app-n"><span className="pn-em">{f.emoji || "•"}</span><span><b>{f.nombre}</b><small>{f.grupo}{f.pend > 0 && <em className="pn-cnt">{f.pend} para revisar</em>}</small></span></span></td>
-                <td className="n">{num(f.cuentas)}</td><td className="n">{num(f.nuevas)}</td><td className="n">{f.a?.ok ? num(f.activas) : "—"}</td>
+                <td className="n">{num(f.cuentas)}</td><td className="n pn-solo-ancho">{num(f.nuevas)}</td><td className="n pn-solo-ancho">{f.a?.ok ? num(f.activas) : "—"}</td>
                 <td className="pn-solo-ancho"><Spark v={serie(f.a)} /></td>
                 <td><Estado1 f={f} /></td>
                 <td className="pn-flecha">{ab ? "▴" : "▾"}</td>
@@ -452,7 +455,7 @@ input.pn-in{flex:1 1 220px}.pn-in:focus{outline:2px solid color-mix(in srgb,var(
 .pn-tabla th{position:sticky;top:0;background:var(--c);text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--s);font-weight:700;padding:11px 14px;border-bottom:1px solid var(--l);white-space:nowrap}
 .pn-tabla td{padding:11px 14px;border-bottom:1px solid var(--l);vertical-align:middle}.pn-tabla tbody tr:last-child td{border-bottom:0}
 .pn-tabla .n{text-align:right;font-variant-numeric:tabular-nums}.pn-fila{cursor:pointer}.pn-fila:hover td,.pn-fila.ab td{background:var(--f)}
-.pn-app-n{display:flex;align-items:center;gap:10px}.pn-app-n b{display:block}.pn-app-n small{display:flex;gap:6px;align-items:center;color:var(--s);font-size:12px}.pn-app-n .pn-cnt{margin-left:0;font-size:10.5px}
+.pn-app-n{display:flex;align-items:center;gap:10px}.pn-app-n b{display:block}.pn-app-n small{display:flex;gap:6px;align-items:center;color:var(--s);font-size:12px}.pn-app-n .pn-cnt{margin-left:0;font-size:10.5px;white-space:nowrap}
 .pn-em{width:34px;height:34px;border-radius:10px;background:var(--f);display:grid;place-items:center;font-size:18px;flex:none}
 .pn-flecha{color:var(--s);width:24px}.pn-nw{white-space:nowrap}
 .pn-detalle td{background:var(--f);padding:14px 16px 18px}

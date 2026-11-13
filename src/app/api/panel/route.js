@@ -77,7 +77,7 @@ async function app(a, llave) {
 export async function POST(req) {
   const ip = ipDe(req), ahora = Date.now();
   const l = (intentos.get(ip) || []).filter((t) => ahora - t < 15 * 60e3);
-  if (l.length >= 45) return Response.json({ error: "Demasiados pedidos. Esperá unos minutos." }, { status: 429 });
+  if (l.length >= 30) return Response.json({ error: "Demasiados pedidos. Esperá unos minutos." }, { status: 429 });
   l.push(ahora); intentos.set(ip, l); if (intentos.size > 2000) intentos.clear();
   const llave = req.headers.get("x-admin-key") || "";
   if (llave.length < 16 || llave.length > 200) return Response.json({ error: "Contraseña incorrecta." }, { status: 401 });
