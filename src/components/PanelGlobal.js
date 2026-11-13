@@ -11,7 +11,7 @@ import Metricas from "./panel/Metricas";
 import Operacion from "./panel/Operacion";
 import Reglas from "./panel/Reglas";
 import { APPS_PANEL, panelDe } from "@/lib/panel-apps";
-import { pedir } from "./panel/api";
+import { Info, pedir } from "./panel/api";
 
 const K = "panel.llave";
 const num = (n) => (n === null || n === undefined || Number.isNaN(Number(n)) ? "—" : Number(n).toLocaleString("es-AR"));
@@ -169,8 +169,8 @@ function Acceso({ onEntrar, error }) {
 
 // ---------- piezas ----------
 const Sk = ({ h = 16, w = "100%", r = 8 }) => <span className="pn-sk" style={{ height: h, width: w, borderRadius: r }} />;
-function Kpi({ t, v, s, cargando, tono }) {
-  return <div className={`pn-card pn-kpi${tono ? ` ${tono}` : ""}`}><span className="pn-kt">{t}</span>{cargando ? <><Sk h={30} w="60%" /><Sk h={12} w="40%" /></> : <><b>{v}</b>{s && <small>{s}</small>}</>}</div>;
+function Kpi({ t, v, s, cargando, tono, info }) {
+  return <div className={`pn-card pn-kpi${tono ? ` ${tono}` : ""}`}><span className="pn-kt">{t}{info && <Info t={info} />}</span>{cargando ? <><Sk h={30} w="60%" /><Sk h={12} w="40%" /></> : <><b>{v}</b>{s && <small>{s}</small>}</>}</div>;
 }
 function Spark({ v, alto = 32 }) {
   if (!v || v.length < 2) return <span className="pn-spark-vacio" />;
@@ -220,24 +220,24 @@ function Resumen({ filas, base, apps, todas, ir }) {
     ...(pl && !pl.cobro?.activo ? [{ n: "i", t: "Cobro con Mercado Pago sin activar", d: "Los planes salen de pruebas, regalos y premios.", ir: "ingresos" }] : []),
   ];
   return (<>
-    <section className="pn-card"><h2>Alertas de hoy {!carg && !base.cargando && <small className="pn-nota">· {alertas.filter((x) => x.n !== "i").length ? `${alertas.filter((x) => x.n !== "i").length} para mirar` : "todo en orden"}</small>}</h2>
+    <section className="pn-card"><h2>Alertas de hoy<Info t="Lo que conviene mirar hoy, de lo más grave (rojo) a lo informativo (gris). Tocá una para ir a donde se resuelve." /> {!carg && !base.cargando && <small className="pn-nota">· {alertas.filter((x) => x.n !== "i").length ? `${alertas.filter((x) => x.n !== "i").length} para mirar` : "todo en orden"}</small>}</h2>
       {(carg || base.cargando) && !alertas.length ? <><Sk h={40} r={12} /><Sk h={40} r={12} /></> : !alertas.length ? <p className="pn-ok-msg">Todo en orden: las apps responden, los sitios están en línea y no hay nada para revisar.</p> :
         <ul className="pn-alerta-l">{alertas.map((x, i) => <li key={i} className={x.n === "r" ? "r" : x.n === "a" ? "a" : ""} onClick={() => ir(x.ir)}><div><b>{x.t}</b><small>{x.d}</small></div></li>)}</ul>}
     </section>
     <div className="pn-grid4">
-      <Kpi t="Cuentas en todas las apps" v={num(tot("cuentas"))} cargando={carg && !filas.length} />
-      <Kpi t="Cuentas nuevas · 7 días" v={num(tot("nuevas"))} cargando={carg && !filas.length} />
-      <Kpi t="Personas activas · 7 días" v={num(tot("activas"))} cargando={apps.cargando} />
-      <Kpi t="Para revisar" v={num(tot("pend"))} s="denuncias y contenido oculto" cargando={apps.cargando} tono={tot("pend") > 0 ? "aviso" : ""} />
+      <Kpi t="Cuentas en todas las apps" v={num(tot("cuentas"))} cargando={carg && !filas.length} info="La suma de las cuentas de cada app. Una persona que usa 3 apps cuenta 3 veces." />
+      <Kpi t="Cuentas nuevas · 7 días" v={num(tot("nuevas"))} cargando={carg && !filas.length} info="Cuentas creadas en los últimos 7 días, sumando todas las apps." />
+      <Kpi t="Personas activas · 7 días" v={num(tot("activas"))} cargando={apps.cargando} info="Personas que entraron o hicieron algo en los últimos 7 días (solo las apps que lo miden)." />
+      <Kpi t="Para revisar" v={num(tot("pend"))} s="denuncias y contenido oculto" cargando={apps.cargando} tono={tot("pend") > 0 ? "aviso" : ""} info="Publicaciones, comentarios o mensajes que alguien denunció o que el filtro ocultó. Se resuelven en Moderación." />
     </div>
     <div className="pn-dos">
-      <section className="pn-card"><h2>Apps con más cuentas</h2>
+      <section className="pn-card"><h2>Apps con más cuentas<Info t="Las 8 apps con más cuentas creadas en total." /></h2>
         {carg && !top.length ? Array.from({ length: 6 }, (_, i) => <div key={i} className="pn-rank"><Sk w="40%" /><Sk h={8} /></div>) :
           top.map((f) => <div key={f.id} className="pn-rank"><p><span>{f.emoji} {f.nombre}</span><b>{num(f.cuentas)}</b></p><div><i style={{ width: `${pct(f.cuentas, max)}%` }} /></div></div>)}
         <button type="button" className="pn-link" onClick={() => ir("apps")}>Ver todas las apps →</button>
       </section>
       <section className="pn-card">
-        <h2>Mails de hoy</h2>
+        <h2>Mails de hoy<Info t="Cuántos mails salieron hoy contra el tope gratis de cada servicio. Si se pasa el 80 %, los de marketing esperan a mañana." /></h2>
         {base.cargando ? <><Sk h={10} /><Sk h={10} w="80%" /></> : u ? <>
           <div className="pn-mini-barra"><span>Resend</span><div><i style={{ width: `${pct(u.resend_dia, tp.resend.dia)}%` }} /></div><b>{num(u.resend_dia)}/{num(tp.resend.dia)}</b></div>
           <div className="pn-mini-barra"><span>Gmail</span><div><i style={{ width: `${pct(u.gmail_dia, tp.gmail.dia)}%` }} /></div><b>{num(u.gmail_dia)}/{num(tp.gmail.dia)}</b></div>
@@ -269,7 +269,7 @@ function Apps({ filas, cargando, errTodas, grupos }) {
     {errTodas && <p className="pn-alerta">Las métricas del mail diario no llegaron ({errTodas}): se muestran solo las apps con panel en vivo.</p>}
     <div className="pn-card pn-tabla-caja">
       <table className="pn-tabla">
-        <thead><tr><th>App</th><th className="n">Cuentas</th><th className="n pn-solo-ancho">Nuevas 7 d</th><th className="n pn-solo-ancho">Activas 7 d</th><th className="pn-solo-ancho">Últimos días</th><th>Estado</th><th /></tr></thead>
+        <thead><tr><th>App</th><th className="n">Cuentas</th><th className="n pn-solo-ancho">Nuevas 7 d</th><th className="n pn-solo-ancho">Activas 7 d</th><th className="pn-solo-ancho">Últimos días</th><th>Estado<Info t="En vivo: el panel lee sus números ahora. Diario: solo los del mail diario. Sin acceso / Sin panel / Lenta: tocá la fila para ver qué pasa y qué hacer." /></th><th /></tr></thead>
         <tbody>
           {cargando && !filas.length ? Array.from({ length: 8 }, (_, i) => <tr key={i}>{[40, 14, 14, 14, 22, 16, 10].map((w, k) => <td key={k}><Sk w={`${w * 2}%`} /></td>)}</tr>) :
             !pagina.length ? <tr><td colSpan={7} className="pn-vacio">No hay apps con ese filtro.</td></tr> :
@@ -312,7 +312,7 @@ function Ingresos({ pl, cargando }) {
       <Kpi t="En prueba gratis" v={num(pl.prueba)} />
       <Kpi t="Grupos vigentes" v={num(pl.vigentes)} s={`${num(pl.miembros)} miembros · ${num(pl.grupos)} creados`} />
       <Kpi t="Llegaron invitados" v={num(pl.invitados)} s={`${num(pl.premiados)} con premio`} />
-      <Kpi t="Arrepentimientos por resolver" v={num((pl.arrep || []).filter((x) => x.estado === "recibido").length)} tono={(pl.arrep || []).some((x) => x.estado === "recibido") ? "aviso" : ""} />
+      <Kpi info="Pedidos de baja de una compra dentro de los 10 días (botón de arrepentimiento, obligatorio por ley). Se devuelven desde el panel de la cuenta." t="Arrepentimientos por resolver" v={num((pl.arrep || []).filter((x) => x.estado === "recibido").length)} tono={(pl.arrep || []).some((x) => x.estado === "recibido") ? "aviso" : ""} />
     </div>
     {pl.motivos?.length > 0 && <p className="pn-nota">Días de plan dados: {pl.motivos.map((m) => `${m.motivo} ${num(m.veces)} veces (${num(m.dias)} días)`).join(" · ")}</p>}
     <section className="pn-card pn-tabla-caja"><h2 className="pn-h-tabla">Últimos pagos</h2>
@@ -333,9 +333,9 @@ function Cuentas({ cu, cargando }) {
       <Kpi t="Cuentas FUNGIRAK" v={num(cu.total)} s={`${num(cu.dia)} hoy · ${num(cu.semana)} en 7 días`} />
       <Kpi t="Activas · 24 h" v={num(cu.activas)} />
       <Kpi t="Con mail confirmado" v={num(cu.con_mail)} s={cu.total ? `${pct(cu.con_mail, cu.total)}% del total` : ""} />
-      <Kpi t="Con dos pasos" v={num(cu.dos_pasos)} s={`${num(cu.con_llave)} con llave de acceso`} />
+      <Kpi info="Cuentas que activaron el código de una app de verificación además de la contraseña." t="Con dos pasos" v={num(cu.dos_pasos)} s={`${num(cu.con_llave)} con llave de acceso`} />
       <Kpi t="De 13 a 17 años" v={num(cu.menores)} />
-      <Kpi t="Suspendidas" v={num(cu.suspendidas)} tono={cu.suspendidas > 0 ? "aviso" : ""} />
+      <Kpi info="Cuentas que suspendiste: no pueden entrar a ninguna app hasta que las reactives (en Personas)." t="Suspendidas" v={num(cu.suspendidas)} tono={cu.suspendidas > 0 ? "aviso" : ""} />
     </div>
     {usos.length > 0 && <section className="pn-card"><h2>Entran con la cuenta FUNGIRAK</h2>
       {usos.map((x) => <div key={x.nombre} className="pn-rank"><p><span>{x.nombre}</span><b>{num(x.personas)} <small>({num(x.semana)} esta semana)</small></b></p><div><i style={{ width: `${pct(x.personas, max)}%` }} /></div></div>)}</section>}
@@ -437,9 +437,9 @@ function AuditoriaGlobal({ llave, toast }) {
     {cargando && !d && <div className="pn-grid3">{Array.from({ length: 3 }, (_, i) => <Kpi key={i} t=" " cargando />)}</div>}
     {d && <>
       <div className="pn-grid3">
-        <Kpi t="Cadenas sanas" v={`${num(sanas)} / ${num(d.apps.filter((a) => a.cadena).length)}`} tono={malas.length ? "aviso" : "bien"} s={malas.length ? `Con problemas: ${malas.map((a) => a.nombre).join(", ")}` : "Nadie cambió ni borró eventos recientes"} />
+        <Kpi info="Cada app encadena sus registros con una huella: si alguien cambiara o borrara uno, la cadena se rompe y se ve acá." t="Cadenas sanas" v={`${num(sanas)} / ${num(d.apps.filter((a) => a.cadena).length)}`} tono={malas.length ? "aviso" : "bien"} s={malas.length ? `Con problemas: ${malas.map((a) => a.nombre).join(", ")}` : "Nadie cambió ni borró eventos recientes"} />
         <Kpi t="Eventos" v={num(d.eventos.length)} s={`de ${num(d.apps.length)} apps`} />
-        <Kpi t="Apps sin respuesta" v={num(sinDato.length)} tono={sinDato.length ? "aviso" : ""} s={sinDato.slice(0, 4).map((a) => a.nombre).join(", ")} />
+        <Kpi info="Apps que no contestaron la consulta de auditoría (dormidas, lentas o sin esa función)." t="Apps sin respuesta" v={num(sinDato.length)} tono={sinDato.length ? "aviso" : ""} s={sinDato.slice(0, 4).map((a) => a.nombre).join(", ")} />
       </div>
       <details className="pn-card pn-det"><summary>Estado por app</summary>
         <table className="pn-tabla"><thead><tr><th>App</th><th className="n">Eventos</th><th>Cadena</th></tr></thead>

@@ -3,7 +3,7 @@
 // acciones (restaurar o borrar). En lote: elegís varias cosas, o «todo lo de esta cuenta», y se resuelven juntas.
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { APPS_PANEL } from "@/lib/panel-apps";
-import { fechaHora, num, pedir, pedirATodas, useConfirmar } from "./api";
+import { Info, fechaHora, num, pedir, pedirATodas, useConfirmar } from "./api";
 
 const TIPOS = { pub: "Publicación", com: "Comentario", msg: "Mensaje", prop: "Propuesta" };
 const CLAVES = [["publicaciones", "pub"], ["comentarios", "com"], ["mensajes", "msg"], ["propuestas", "prop"]];
@@ -49,10 +49,10 @@ export default function Bandeja({ llave, toast }) {
       <select className="pn-in" value={app} onChange={(e) => setApp(e.target.value)} aria-label="App"><option value="">Todas las apps</option>{apps.map((a) => <option key={a.id} value={a.id}>{a.nombre}</option>)}</select>
       <div className="pn-seg">{[["", "Todo"], ...Object.entries(TIPOS)].map(([v, t]) => <button key={t} type="button" className={tipo === v ? "on" : ""} onClick={() => setTipo(v)}>{t}</button>)}</div>
       <input className="pn-in" type="search" placeholder="Buscar texto o usuario" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Buscar" />
-      <button type="button" className="pn-b pn-b2" onClick={cargar} disabled={cargando}>{cargando ? "Revisando las apps…" : "Actualizar"}</button>
+      <button type="button" className="pn-b pn-b2" onClick={cargar} disabled={cargando}>{cargando ? "Revisando las apps…" : "Actualizar"}</button><Info t="Todo lo denunciado u oculto de todas las apps. Restaurar: vuelve a verse y se descartan las denuncias. Borrar: se saca de la app (se guarda 180 días). Tildá varias para resolverlas juntas." />
     </div>
     {fallas.length > 0 && <p className="pn-alerta chica">No respondieron: {fallas.join(", ")}.</p>}
-    {sospechosos.length > 0 && <section className="pn-card"><h2>⚠️ Posibles cuentas de spam <small className="pn-nota">· 3 o más cosas denunciadas, o en 2 o más apps</small></h2>
+    {sospechosos.length > 0 && <section className="pn-card"><h2>⚠️ Posibles cuentas de spam<Info t="Se detectan solas: una cuenta con 3 o más cosas denunciadas u ocultas, o denunciada en 2 o más apps. No se castiga a nadie sin que vos lo confirmes." /> <small className="pn-nota">· 3 o más cosas denunciadas, o en 2 o más apps</small></h2>
       <div style={{ display: "grid", gap: 8 }}>{sospechosos.map((g) => <div key={g.apodo} className="pn-item"><div className="pn-meta"><b style={{ color: "var(--t)" }}>@{g.apodo}</b><span>{g.items.length} cosas</span><span>{num(g.denuncias)} denuncias</span><span>en {[...g.apps].join(", ")}</span></div>
         <div className="pn-acc"><button type="button" className="pn-b pn-b-rojo" onClick={() => resolver(g.items, "borrar")}>Borrar todo ({g.items.length})</button><span className="pn-nota">Para frenarla en todas las apps: Personas → @{g.apodo} → Suspender.</span></div></div>)}</div>
     </section>}

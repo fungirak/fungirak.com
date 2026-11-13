@@ -4,7 +4,7 @@
 // app (tarda hasta 1 minuto en tomar el cambio). Nunca frena entrar, salir ni recuperar la cuenta.
 import { useEffect, useState } from "react";
 import { APPS_PANEL } from "@/lib/panel-apps";
-import { fechaHora, num, pedir, useConfirmar } from "./api";
+import { Info, fechaHora, num, pedir, useConfirmar } from "./api";
 
 const host = (u) => new URL(u).host;
 const INTERRUPTORES = [["solo_lectura", "Solo lectura"], ["registro_cerrado", "Registro cerrado"], ["publicaciones", "Publicaciones"], ["comentarios", "Comentarios"], ["mensajes", "Mensajes"]];
@@ -43,7 +43,7 @@ export default function Reglas({ llave, toast }) {
   return (<div style={{ display: "grid", gap: 12 }}>
     {ventana}
     {activas.length > 0 && <p className="pn-alerta">Hay reglas activas en: {activas.map((r) => apps.find((a) => host(a.url) === r.host)?.nombre || r.host).join(", ")}.</p>}
-    <section className="pn-card pn-tabla-caja"><h2 className="pn-h-tabla">Interruptores por app <small className="pn-nota">· ⏸ = pausar esa parte · se aplican en menos de 1 minuto</small></h2>
+    <section className="pn-card pn-tabla-caja"><h2 className="pn-h-tabla">Interruptores por app<Info t="Solo lectura: se puede entrar y mirar, pero nadie publica ni cambia nada. Registro cerrado: no se crean cuentas nuevas. ⏸: pausa esa parte. Huellas: conexiones bloqueadas. Nunca frena entrar, salir ni recuperar la cuenta." /> <small className="pn-nota">· ⏸ = pausar esa parte · se aplican en menos de 1 minuto</small></h2>
       {!reglas ? <p className="pn-nota" style={{ padding: 16 }}>Cargando…</p> :
         <table className="pn-tabla"><thead><tr><th>App</th>{INTERRUPTORES.map(([k, t]) => <th key={k} style={{ textAlign: "center" }} title={k === "solo_lectura" || k === "registro_cerrado" ? t : `Pausar ${t.toLowerCase()}`}>{k === "solo_lectura" || k === "registro_cerrado" ? t : `⏸ ${t}`}</th>)}<th className="n">Huellas</th></tr></thead>
           <tbody>{apps.map((a) => { const h = host(a.url), r = de(h); return (
@@ -53,7 +53,7 @@ export default function Reglas({ llave, toast }) {
               <td className="n">{r.huellas?.length ? <details><summary>{r.huellas.length}</summary>{r.huellas.map((hu) => <div key={hu} className="pn-meta" style={{ justifyContent: "flex-end" }}><code>{hu.slice(0, 10)}…</code><button type="button" className="pn-link" onClick={() => quitarHuella(a, hu)}>quitar</button></div>)}</details> : "—"}</td>
             </tr>); })}</tbody></table>}
     </section>
-    <section className="pn-card"><h2>Palabras prohibidas <small className="pn-nota">· para todas las apps, una por línea</small></h2>
+    <section className="pn-card"><h2>Palabras prohibidas<Info t="Si un texto tiene alguna de estas palabras, no se publica y la persona ve un aviso amable. No importan mayúsculas ni tildes. Vale para todas las apps." /> <small className="pn-nota">· para todas las apps, una por línea</small></h2>
       <p className="pn-nota" style={{ marginBottom: 8 }}>Se suman a los filtros propios de cada app (insultos, enlaces, teléfonos). No importa mayúsculas ni tildes.</p>
       <textarea className="pn-in" rows={6} value={palabras} onChange={(e) => setPalabras(e.target.value)} placeholder={"casino online\nseguidores baratos"} />
       <div style={{ marginTop: 10 }}><button type="button" className="pn-b" onClick={guardarPalabras}>Guardar palabras</button></div>

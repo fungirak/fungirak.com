@@ -3,7 +3,7 @@
 // con error y el estado de cada dominio.
 import { useEffect, useState } from "react";
 import { APPS_PANEL } from "@/lib/panel-apps";
-import { cab, fechaHora, num, pedir, useConfirmar } from "./api";
+import { Info, cab, fechaHora, num, pedir, useConfirmar } from "./api";
 
 export default function Operacion({ llave, toast, cola }) {
   const [conf, ventana] = useConfirmar();
@@ -47,7 +47,7 @@ export default function Operacion({ llave, toast, cola }) {
 
   return (<div style={{ display: "grid", gap: 12 }}>
     {ventana}
-    <section className="pn-card"><h2>🚀 Publicaciones y límites</h2>
+    <section className="pn-card"><h2>🚀 Publicaciones y límites<Info t="Cuántos deploys se usaron en las últimas 24 h (el plan gratis de Vercel da 100), el último de cada app y los que fallaron." /></h2>
       {!ver ? <p className="pn-nota">Cargando…</p> : ver.sinToken ? <div className="pn-alerta chica">Para ver los deploys y el límite diario hace falta un token de solo lectura de Vercel (cuenta-work): en vercel.com → Settings → Tokens, creá uno y cargalo en el Vercel de fungirak.com como <code>VERCEL_TOKEN_TRABAJO</code>.</div>
         : ver.error ? <p className="pn-err">{ver.error}</p> : <>
         <div className="pn-mini-barra" style={{ gridTemplateColumns: "150px 1fr auto" }}><span>Deploys en 24 h</span><div><i style={{ width: `${Math.min(100, ver.usados)}%`, background: ver.usados > 85 ? "var(--r)" : undefined }} /></div><b>{num(ver.usados)} / {num(ver.tope)}</b></div>
@@ -58,7 +58,7 @@ export default function Operacion({ llave, toast, cola }) {
       </>}
       <p className="pn-nota" style={{ marginTop: 10 }}>Límites del plan gratis: 100 deploys por día en Vercel, el cupo de mails está en <b>Correo</b>.</p>
     </section>
-    <section className="pn-card"><h2>📣 Cartel en todas las apps</h2>
+    <section className="pn-card"><h2>📣 Cartel en todas las apps<Info t="Una franja arriba de cada sitio de FUNGIRAK con tu texto (mantenimiento, novedad). La persona la puede cerrar. Tarda hasta 1 minuto en aparecer." /></h2>
       {anuncio === undefined ? <p className="pn-nota">Cargando…</p> : anuncio
         ? <div className="pn-item"><p><b>Publicado:</b> {anuncio.texto}</p><div className="pn-meta"><span className="pn-chip">{anuncio.nivel}</span><span>hasta {fechaHora(anuncio.hasta)}</span></div><div className="pn-acc"><button type="button" className="pn-b pn-b-peligro" onClick={quitar}>Sacar el cartel</button></div></div>
         : <p className="pn-nota" style={{ marginBottom: 10 }}>No hay ningún cartel publicado.</p>}
@@ -73,7 +73,7 @@ export default function Operacion({ llave, toast, cola }) {
       </form>
     </section>
 
-    <section className="pn-card"><h2>✉️ Novedades por mail</h2>
+    <section className="pn-card"><h2>✉️ Novedades por mail<Info t="Anuncia una app a quienes usan otras apps de FUNGIRAK y aceptaron novedades. Respeta las bajas y el cupo diario. Probá siempre primero con «Mandarme una prueba»." /></h2>
       <p className="pn-nota" style={{ marginBottom: 10 }}>Anunciá una app a la gente de las otras apps de FUNGIRAK que aceptó recibir novedades (quien ya la usa no lo recibe). Probá primero con «Mandarme una prueba».</p>
       <div style={{ display: "grid", gap: 10 }}>
         <label className="pn-campo">App que anunciás<select className="pn-in" value={nov.app} onChange={(e) => { setNov({ ...nov, app: e.target.value }); setConteo(null); }}><option value="">Elegí…</option>{nombres.map((n) => <option key={n}>{n}</option>)}</select></label>
@@ -84,12 +84,12 @@ export default function Operacion({ llave, toast, cola }) {
       </div>
     </section>
 
-    <section className="pn-card"><h2>🔁 Mails con error</h2>
+    <section className="pn-card"><h2>🔁 Mails con error<Info t="Mails que fallaron 3 veces en los últimos 7 días. Reintentar los vuelve a la cola." /></h2>
       <p className="pn-nota" style={{ marginBottom: 10 }}>{errores ? `${num(errores)} mails quedaron con error en los últimos 7 días.` : "No hay mails con error en los últimos 7 días."}</p>
       <button type="button" className="pn-b pn-b2" onClick={reintentar} disabled={!errores}>Reintentar todos</button>
     </section>
 
-    <section className="pn-card"><h2>🌐 Dominios</h2>
+    <section className="pn-card"><h2>🌐 Dominios<Info t="Para cada subdominio: a dónde apunta el DNS y si responde por HTTPS. Si dice «No resuelve», falta el registro en Namecheap." /></h2>
       <button type="button" className="pn-b pn-b2" onClick={revisarDom} disabled={revisando}>{revisando ? "Revisando cada dominio…" : dom ? "Revisar de nuevo" : "Revisar todos los dominios"}</button>
       {dom?.error && <p className="pn-err">{dom.error}</p>}
       {dom?.dominios && <div className="pn-tabla-caja" style={{ marginTop: 12 }}><table className="pn-tabla"><thead><tr><th>Dominio</th><th>DNS</th><th>HTTPS</th><th className="n">Tiempo</th></tr></thead>

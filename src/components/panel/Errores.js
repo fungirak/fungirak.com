@@ -3,7 +3,7 @@
 // por cantidad. Se marcan como resueltos (se borran de la lista de esa app).
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { APPS_PANEL } from "@/lib/panel-apps";
-import { fechaHora, num, pedir, pedirATodas, useConfirmar } from "./api";
+import { Info, fechaHora, num, pedir, pedirATodas, useConfirmar } from "./api";
 
 export default function Errores({ llave, toast }) {
   const [filas, setFilas] = useState(null), [cargando, setCargando] = useState(false), [app, setApp] = useState(""), [orden, setOrden] = useState("veces");
@@ -30,7 +30,7 @@ export default function Errores({ llave, toast }) {
     <div className="pn-barra-filtros">
       <select className="pn-in" value={app} onChange={(e) => setApp(e.target.value)} aria-label="App"><option value="">Todas las apps</option>{porApp.map((x) => <option key={x.app.id} value={x.app.id}>{x.app.nombre} ({x.n})</option>)}</select>
       <div className="pn-seg">{[["veces", "Más repetidos"], ["ultima", "Más recientes"]].map(([v, t]) => <button key={v} type="button" className={orden === v ? "on" : ""} onClick={() => setOrden(v)}>{t}</button>)}</div>
-      <button type="button" className="pn-b pn-b2" onClick={cargar} disabled={cargando}>{cargando ? "Revisando…" : "Actualizar"}</button>
+      <button type="button" className="pn-b pn-b2" onClick={cargar} disabled={cargando}>{cargando ? "Revisando…" : "Actualizar"}</button><Info t="Errores que les aparecieron a las personas en el navegador, agrupados. «Veces» es cuántas veces pasó. Resuelto lo saca de la lista; si vuelve a pasar, aparece de nuevo." />
     </div>
     {!filas ? <div className="pn-card"><p className="pn-nota">Revisando los errores de {APPS_PANEL.length} apps…</p></div> : !lista.length ? <p className="pn-ok-msg">Sin errores registrados.</p> :
       <div className="pn-card pn-tabla-caja"><table className="pn-tabla"><thead><tr><th>Error</th><th>App</th><th className="n">Veces</th><th className="pn-solo-ancho">Última vez</th><th /></tr></thead>

@@ -26,6 +26,17 @@ export async function pedirATodas(llave, apps, ruta) {
   return out;
 }
 
+// ⓘ: qué es o qué hace algo. En la compu aparece al pasar el mouse; en el celu, al tocarlo (en un globo abajo, sin salirse).
+export function Info({ t }) {
+  const [ab, setAb] = useState(false);
+  return (
+    <span className={`pn-i${ab ? " ab" : ""}`} onMouseLeave={() => setAb(false)}>
+      <button type="button" aria-label="Qué es esto" aria-expanded={ab} onClick={(e) => { e.stopPropagation(); e.preventDefault(); setAb((a) => !a); }} onBlur={() => setAb(false)}>i</button>
+      <span role="tooltip">{t}</span>
+    </span>
+  );
+}
+
 // Confirmación propia (nunca confirm() del navegador). Uso: const [conf, ventana] = useConfirmar(); … {ventana} … await conf({ t, d, peligro, motivo })
 export function useConfirmar() {
   const [st, setSt] = useState(null);
@@ -73,5 +84,12 @@ export const CSS_EXTRA = `
 .pn-sw{width:38px;height:22px;border-radius:99px;border:0;background:var(--l);position:relative;cursor:pointer;padding:0;vertical-align:middle}
 .pn-sw i{position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .pn-sw.on{background:var(--am)}.pn-sw.on.rojo{background:var(--r)}.pn-sw.on i{transform:translateX(16px)}.pn-sw:disabled{opacity:.5;cursor:default}
+.pn-i{position:relative;display:inline-flex;vertical-align:middle;margin-left:6px}
+.pn-i>button{width:17px;height:17px;border-radius:50%;border:1.5px solid currentColor;background:none;color:var(--s);font:700 11px/1 Georgia,serif;font-style:italic;cursor:help;padding:0;display:grid;place-items:center;opacity:.75}
+.pn-i>button:hover,.pn-i>button:focus-visible,.pn-i.ab>button{opacity:1;color:var(--ac)}
+.pn-i>span{display:none;position:absolute;z-index:80;left:50%;top:calc(100% + 8px);transform:translateX(-50%);width:270px;padding:10px 12px;border-radius:10px;background:var(--t);color:var(--c);font:500 12.5px/1.45 inherit;font-family:inherit;text-transform:none;letter-spacing:0;text-align:left;white-space:normal;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+@media (hover:hover){.pn-i:hover>span,.pn-i>button:focus-visible+span{display:block}}
+.pn-i.ab>span{display:block}
+@media (max-width:860px){.pn-i>span{position:fixed;left:14px;right:14px;top:auto;bottom:88px;transform:none;width:auto;font-size:13.5px}.pn-i>button{width:20px;height:20px;font-size:12px}}
 textarea.pn-in{width:100%;min-height:80px;resize:vertical;font:inherit}
 `;

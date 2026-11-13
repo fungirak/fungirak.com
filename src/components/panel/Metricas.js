@@ -2,7 +2,7 @@
 // Métricas para decidir (funciones 1, 2, 3, 4, 5 y 9): embudo de la cuenta, retención por camada, qué app crece o cae,
 // de dónde son las personas, ingresos por mes y velocidad de cada sitio.
 import { useEffect, useState } from "react";
-import { num, pct, pedir } from "./api";
+import { Info, num, pct, pedir } from "./api";
 
 const EV = { visita: "Vieron la entrada", crear: "Empezaron a crear cuenta", creada: "Crearon la cuenta", entrar: "Entraron", autorizar: "Vincularon una app", app: "Usaron una app" };
 function Barras({ filas, max: m, clase = "", sufijo = "" }) {
@@ -30,15 +30,15 @@ export default function Metricas({ llave, filas, base }) {
   return (
     <div style={{ display: "grid", gap: 12 }}>
       <div className="pn-dos">
-        <section className="pn-card"><h2>Embudo de la cuenta · 30 días</h2>
+        <section className="pn-card"><h2>Embudo de la cuenta · 30 días<Info t="Cuántas personas pasaron por cada paso: vieron la entrada, empezaron a crear cuenta, la crearon y la usaron en una app. Donde cae mucho, hay algo para mejorar." /></h2>
           {!emb ? <p className="pn-nota">Cargando…</p> : !embTot.length ? <p className="pn-nota">Sin datos todavía.</p> : <Barras filas={embTot.map(([k, v]) => [EV[k] || k, v])} />}
         </section>
-        <section className="pn-card"><h2>Quién crece y quién cae · 7 días contra los 7 anteriores</h2>
+        <section className="pn-card"><h2>Quién crece y quién cae<Info t="Actividad de los últimos 7 días contra los 7 anteriores, en las apps que tienen serie diaria. Verde sube, rojo baja." /> <small className="pn-nota">· 7 días contra los 7 anteriores</small></h2>
           {!crec.length ? <p className="pn-nota">Todavía no hay series diarias suficientes.</p> :
             <div className="pn-barras">{crec.map(({ f, ahora, dif }) => <div key={f.id} className="pn-fila-b"><span>{f.emoji} {f.nombre}</span><div><i className={dif < 0 ? "r" : ""} style={{ width: `${Math.min(100, Math.abs(dif))}%` }} /></div><b style={{ color: dif < 0 ? "var(--r)" : "var(--ac)" }}>{dif > 0 ? "+" : ""}{dif}%<small className="pn-nota"> ({num(ahora)})</small></b></div>)}</div>}
         </section>
       </div>
-      <section className="pn-card"><h2>Retención por camada <small className="pn-nota">· de los que se anotaron cada semana, cuántos volvieron</small></h2>
+      <section className="pn-card"><h2>Retención por camada<Info t="De los que se anotaron cada semana, qué porcentaje volvió después de 7 y de 30 días. «—» quiere decir que todavía no pasó ese tiempo." /> <small className="pn-nota">· de los que se anotaron cada semana, cuántos volvieron</small></h2>
         {!ret ? <p className="pn-nota">Cargando…</p> : !ret.length ? <p className="pn-nota">Sin altas en las últimas 10 semanas.</p> :
           <div className="pn-tabla-caja"><table className="pn-tabla pn-calor"><thead><tr><th>Semana</th><th>Altas</th><th>Volvieron a los 7 días</th><th>A los 30 días</th></tr></thead>
             <tbody>{ret.map((r) => { const c = (n) => ({ background: `color-mix(in srgb, var(--ac) ${pct(n, r.altas)}%, transparent)` }); const edad = r.edad;
@@ -46,15 +46,15 @@ export default function Metricas({ llave, filas, base }) {
               return <tr key={r.semana}><td style={{ textAlign: "left" }}>{r.semana}</td><td>{num(r.altas)}</td>{celda(r.v7, 7)}{celda(r.v30, 30)}</tr>; })}</tbody></table></div>}
       </section>
       <div className="pn-dos">
-        <section className="pn-card"><h2>De dónde son · cuentas FUNGIRAK</h2>
+        <section className="pn-card"><h2>De dónde son<Info t="Provincia que eligió cada cuenta FUNGIRAK. «Sin decir» son las que no la cargaron." /></h2>
           {!prov ? <p className="pn-nota">Cargando…</p> : <Barras filas={prov.slice(0, 15).map((p) => [p.provincia === "?" ? "Sin decir" : p.provincia, p.n])} clase="b" />}
         </section>
-        <section className="pn-card"><h2>Ingresos</h2>
+        <section className="pn-card"><h2>Ingresos<Info t="Pagos aprobados con Mercado Pago, por mes y por plan." /></h2>
           {!meses.length ? <p className="pn-nota">Todavía no hay pagos aprobados.</p> : <><p className="pn-nota" style={{ marginBottom: 8 }}>Por mes</p><Barras filas={meses.map(([k, v]) => [k, Math.round(v)])} sufijo=" $" />
             <p className="pn-nota" style={{ margin: "12px 0 8px" }}>Por plan</p><Barras filas={porPlan.map(([k, v]) => [k, Math.round(v)])} clase="b" sufijo=" $" /></>}
         </section>
       </div>
-      <section className="pn-card"><h2>Velocidad de respuesta de cada sitio <small className="pn-nota">· los más lentos arriba</small></h2>
+      <section className="pn-card"><h2>Velocidad de cada sitio<Info t="Lo que tarda cada sitio en responder, medido por el vigía del correo. Más de 1.000 ms ya se nota lento." /> <small className="pn-nota">· los más lentos arriba</small></h2>
         {!vel.length ? <p className="pn-nota">Sin datos del vigía.</p> : <Barras filas={vel.map((s) => [s.nombre, s.ms])} clase={""} sufijo=" ms" />}
       </section>
     </div>

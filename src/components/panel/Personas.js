@@ -4,7 +4,7 @@
 // en cada app: cerrar sus sesiones o limpiar su perfil. Todo con confirmación y motivo (queda en la auditoría).
 import { useEffect, useState } from "react";
 import { APPS_PANEL } from "@/lib/panel-apps";
-import { fecha, fechaHora, num, pedir, pedirATodas, useConfirmar } from "./api";
+import { Info, fecha, fechaHora, num, pedir, pedirATodas, useConfirmar } from "./api";
 
 export default function Personas({ llave, toast }) {
   const [q, setQ] = useState(""), [lista, setLista] = useState(null), [err, setErr] = useState("");
@@ -60,7 +60,7 @@ export default function Personas({ llave, toast }) {
     </div>
     {err && <p className="pn-alerta">{err}</p>}
     <div className="pn-cols">
-      <section className="pn-card"><h2>{q ? "Resultados" : "Últimas cuentas"}</h2>
+      <section className="pn-card"><h2>{q ? "Resultados" : "Últimas cuentas"}<Info t="Cuentas FUNGIRAK (la cuenta única que sirve para todas las apps). Buscá por usuario." /></h2>
         {!lista ? <p className="pn-nota">Cargando…</p> : !lista.length ? <p className="pn-nota">No hay cuentas con ese usuario.</p> :
           <ul className="pn-lista-p">{lista.map((p) => <li key={p.id}><button type="button" className={sel?.id === p.id ? "on" : ""} onClick={() => setSel(p)}>
             <span><b>@{p.usuario}</b> {p.bloqueado && <span className="pn-chip mal">Suspendida</span>}</span>
@@ -73,7 +73,7 @@ export default function Personas({ llave, toast }) {
             {[["Nombre", sel.nombre || "—"], ["Alta", fechaHora(sel.creado)], ["Última vez", fechaHora(sel.visto)], ["Mail", sel.email_ok ? "Confirmado" : "Sin confirmar"],
               ["Dos pasos", sel.dos_pasos ? "Sí" : "No"], ["Edad", sel.edad || "—"], ["Apps vinculadas", num(sel.apps)], ["Llegó por", sel.origen || "—"]].map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}
           </dl>
-          <div className="pn-acc" style={{ marginTop: 14 }}>
+          <div className="pn-acc" style={{ marginTop: 14 }}><Info t="Suspender: no entra a ninguna app. Cerrar sesiones: la saca de todos lados pero puede volver a entrar. Días de plan: regala días de un plan pago. Exportar: baja todo lo que la cuenta guarda de esa persona. Baja: solo si la persona lo pidió; se borra en 5 días. Todo queda en la auditoría." />
             {sel.bloqueado
               ? <button type="button" className="pn-b" onClick={() => hacer(`Reactivar @${sel.usuario}`, "Vuelve a poder entrar.", { id: sel.id, accion: "reactivar" })}>Reactivar</button>
               : <button type="button" className="pn-b pn-b-rojo" onClick={() => hacer(`Suspender @${sel.usuario}`, "No puede entrar y se cierran sus sesiones en la cuenta y en todas las apps.", { id: sel.id, accion: "suspender" }, { peligro: true, boton: "Suspender" })}>Suspender</button>}
@@ -83,14 +83,14 @@ export default function Personas({ llave, toast }) {
             <button type="button" className="pn-b pn-b2" onClick={exportar}>Exportar sus datos</button>
             <button type="button" className="pn-b pn-b-peligro" onClick={() => hacer(`Pedir la baja de @${sel.usuario}`, "Solo si la persona lo pidió (Ley 25.326). Se borra en 5 días; si entra antes, se cancela. Le llega un mail.", { id: sel.id, accion: "baja" }, { peligro: true, boton: "Pedir la baja" })}>Baja (pedido legal)</button>
           </div>
-          <h2 style={{ marginTop: 20 }}>En qué apps tiene perfil</h2>
+          <h2 style={{ marginTop: 20 }}>En qué apps tiene perfil<Info t="Las apps donde existe un perfil con el mismo usuario. Limpiar perfil saca foto, nombre y bio (se guarda 180 días por si hay que mostrarlo a una autoridad)." /></h2>
           {!enApps ? <p className="pn-nota">Buscando en {APPS_PANEL.length} apps…</p> : !enApps.length ? <p className="pn-nota">No tiene perfil con este usuario en las apps con panel.</p> :
             <div style={{ display: "grid", gap: 10 }}>{enApps.map(({ app, datos }) => <div key={app.id} className="pn-item">
               <p><b>{app.emoji} {app.nombre}</b></p>
               <div className="pn-meta">{["publicaciones", "comentarios", "denuncias_recibidas", "sesiones_abiertas", "la_bloquearon"].filter((k) => datos[k] !== undefined).map((k) => <span key={k}>{k.replace(/_/g, " ")}: <b>{num(datos[k])}</b></span>)}</div>
               <div className="pn-acc"><button type="button" className="pn-b pn-b2" onClick={() => enApp(app, "cerrar_sesiones")}>Cerrar sesiones acá</button><button type="button" className="pn-b pn-b-peligro" onClick={() => enApp(app, "limpiar")}>Limpiar perfil</button></div>
             </div>)}</div>}
-          <h2 style={{ marginTop: 20 }}>Historial en la cuenta</h2>
+          <h2 style={{ marginTop: 20 }}>Historial en la cuenta<Info t="Lo que hizo con su cuenta FUNGIRAK: entradas, cambios, vínculos con apps. Nunca se guarda la IP." /></h2>
           {!hist ? <p className="pn-nota">Cargando…</p> : !hist.length ? <p className="pn-nota">Sin eventos.</p> :
             <div className="pn-tabla-caja"><table className="pn-tabla"><thead><tr><th>Cuándo</th><th>Evento</th><th>App</th><th className="pn-solo-ancho">Desde</th></tr></thead>
               <tbody>{hist.slice(0, 50).map((h, i) => <tr key={i}><td className="pn-nw">{fechaHora(h.creado)}</td><td><code className="pn-ev">{h.evento}</code></td><td>{h.cliente || "—"}</td><td className="pn-solo-ancho">{[h.dispositivo, h.pais].filter(Boolean).join(" · ") || "—"}</td></tr>)}</tbody></table></div>}
