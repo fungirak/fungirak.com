@@ -5,6 +5,8 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 
 const K = "panel.llave";
+const SESION = "__sesion__"; // entró con la Cuenta FUNGIRAK: la llave la pone el servidor, el navegador no manda ninguna
+const cab = (llave, extra = {}) => (llave === SESION ? extra : { "x-admin-key": llave, ...extra });
 const num = (n) => (n === null || n === undefined || Number.isNaN(Number(n)) ? "—" : Number(n).toLocaleString("es-AR"));
 const pct = (a, b) => (b ? Math.min(100, Math.round((a / b) * 100)) : 0);
 const pesos = (n) => (n === null || n === undefined ? "—" : Number(n).toLocaleString("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }));
@@ -30,7 +32,7 @@ function useParte(llave, parte, n) {
     if (!llave) return;
     let vivo = true;
     setSt((s) => ({ ...s, cargando: true, err: "" })); // eslint-disable-line react-hooks/set-state-in-effect -- arranca la carga
-    fetch(`/api/panel?parte=${parte}`, { method: "POST", headers: { "x-admin-key": llave }, cache: "no-store" })
+    fetch(`/api/panel?parte=${parte}`, { method: "POST", headers: cab(llave), cache: "no-store" })
       .then(async (r) => { const j = await r.json().catch(() => ({})); if (!vivo) return; if (!r.ok) setSt({ d: null, err: j.error || "No se pudo.", cargando: false, codigo: r.status }); else setSt({ d: j, err: "", cargando: false }); })
       .catch(() => vivo && setSt({ d: null, err: "Sin conexión.", cargando: false }));
     return () => { vivo = false; };
@@ -55,15 +57,21 @@ export default function Panel() {
   const [listo, setListo] = useState(false);
   const [sec, setSec] = useState("resumen");
   const [n, setN] = useState(0);
-  useEffect(() => { try { setLlave(sessionStorage.getItem(K) || ""); const h = location.hash.slice(1); if (SECCIONES.some(([x]) => x === h)) setSec(h); } catch {} setListo(true); }, []); // eslint-disable-line react-hooks/set-state-in-effect -- estado de esta pestaña
+  const [errAcceso, setErrAcceso] = useState("");
+  useEffect(() => {
+    try { const h = location.hash.slice(1); if (SECCIONES.some(([x]) => x === h)) setSec(h); if (new URLSearchParams(location.search).get("error") === "pase") setErrAcceso("No se pudo abrir el panel con tu cuenta. Probá de nuevo."); } catch {} // eslint-disable-line react-hooks/set-state-in-effect -- estado de esta pestaña
+    // primero la sesión con la Cuenta FUNGIRAK; si no hay, la clave de esta pestaña (modo viejo)
+    fetch("/api/panel/entrar?yo=1", { cache: "no-store" }).then((r) => r.json()).catch(() => ({}))
+      .then((j) => { if (j.admin && j.listo) setLlave(SESION); else { try { setLlave(sessionStorage.getItem(K) || ""); } catch {} } setListo(true); });
+  }, []);
   const base = useParte(llave, "base", n);
   // las otras partes recién se piden cuando la clave ya fue aceptada: una clave mal escrita cuenta como un solo intento fallido
   const ok = llave && (base.d || (base.cargando && n > 0)) ? llave : "";
   const apps = useParte(ok, "apps", n), todas = useParte(ok, "todas", n);
   // si la contraseña no sirve, vuelve a la pantalla de acceso
-  useEffect(() => { if (base.codigo === 401) { try { sessionStorage.removeItem(K); } catch {} setLlave(""); } }, [base.codigo]); // eslint-disable-line react-hooks/set-state-in-effect -- contraseña rechazada
+  useEffect(() => { if (base.codigo === 401) { try { sessionStorage.removeItem(K); } catch {} if (llave === SESION) fetch("/api/panel/entrar", { method: "DELETE" }).catch(() => {}); setLlave(""); } }, [base.codigo, llave]); // eslint-disable-line react-hooks/set-state-in-effect -- contraseña rechazada
   const ir = (s) => { setSec(s); try { history.replaceState(null, "", `#${s}`); } catch {} window.scrollTo({ top: 0 }); };
-  const salir = () => { try { sessionStorage.removeItem(K); } catch {} setLlave(""); };
+  const salir = () => { try { sessionStorage.removeItem(K); } catch {} fetch("/api/panel/entrar", { method: "DELETE" }).catch(() => {}); setLlave(""); };
 
   // filas unificadas: las métricas del mail diario («todas») + los números en vivo («apps»)
   const filas = useMemo(() => {
@@ -75,7 +83,7 @@ export default function Panel() {
   }, [apps.d, todas.d]);
 
   if (!listo) return <div className="pn" />;
-  if (!llave) return <Acceso onEntrar={(v) => { try { sessionStorage.setItem(K, v); } catch {} setLlave(v); }} error={base.err} />;
+  if (!llave) return <Acceso onEntrar={(v) => { try { sessionStorage.setItem(K, v); } catch {} setLlave(v); }} error={errAcceso || base.err} />;
   const cargandoAlgo = base.cargando || apps.cargando || todas.cargando;
   // barra de 0 a 100: cada parte que llega suma; mientras falta alguna, avanza de a poco para que se note que sigue trabajando
   const listas = [base, apps, todas].filter((p) => !p.cargando && (p.d || p.err)).length;
@@ -120,12 +128,18 @@ function Acceso({ onEntrar, error }) {
   return (
     <div className="pn pn-acceso">
       <style>{CSS}</style>
-      <form className="pn-card pn-login" onSubmit={(e) => { e.preventDefault(); onEntrar(String(new FormData(e.currentTarget).get("k") || "")); }}>
+      <div className="pn-card pn-login">
         <h1>Acceso</h1>
-        <label>Clave<input name="k" type="password" autoComplete="current-password" required minLength={16} autoFocus /></label>
-        <button className="pn-b">Entrar</button>
+        <a className="pn-b" href="/api/panel/entrar">Entrar con mi Cuenta FUNGIRAK</a>
+        <p className="pn-nota">Te pide tu código de dos pasos.</p>
+        <details className="pn-otra"><summary>Entrar con clave</summary>
+          <form onSubmit={(e) => { e.preventDefault(); onEntrar(String(new FormData(e.currentTarget).get("k") || "")); }}>
+            <label>Clave<input name="k" type="password" autoComplete="current-password" required minLength={16} /></label>
+            <button className="pn-b pn-b2">Entrar</button>
+          </form>
+        </details>
         {error && <p className="pn-err" role="alert">{error}</p>}
-      </form>
+      </div>
     </div>
   );
 }
@@ -327,12 +341,12 @@ function Estado({ c, cargando }) {
 function MuroRevision({ llave, filas }) {
   const [l, setL] = useState(null), [err, setErr] = useState("");
   const cargar = useCallback(async () => {
-    try { const r = await fetch("/api/panel/muro", { headers: { "x-admin-key": llave }, cache: "no-store" }); const j = await r.json(); if (!r.ok) throw new Error(j.error); setL(j.pendientes || []); setErr(""); }
+    try { const r = await fetch("/api/panel/muro", { headers: cab(llave), cache: "no-store" }); const j = await r.json(); if (!r.ok) throw new Error(j.error); setL(j.pendientes || []); setErr(""); }
     catch (e) { setErr(e.message || "No se pudo cargar."); }
   }, [llave]);
   useEffect(() => { cargar(); }, [cargar]); // eslint-disable-line react-hooks/set-state-in-effect -- carga al entrar
   const hacer = async (id, accion) => {
-    try { const r = await fetch("/api/panel/muro", { method: "POST", headers: { "x-admin-key": llave, "Content-Type": "application/json" }, body: JSON.stringify({ id, accion }) }); if (!r.ok) throw new Error((await r.json()).error); setL((x) => x.filter((m) => m.id !== id)); }
+    try { const r = await fetch("/api/panel/muro", { method: "POST", headers: cab(llave, { "Content-Type": "application/json" }), body: JSON.stringify({ id, accion }) }); if (!r.ok) throw new Error((await r.json()).error); setL((x) => x.filter((m) => m.id !== id)); }
     catch (e) { setErr(e.message || "No se pudo."); }
   };
   const conPend = filas.filter((f) => f.pend > 0);
@@ -358,7 +372,7 @@ function AuditoriaGlobal({ llave }) {
   const [dias, setDias] = useState(7), [app, setApp] = useState(""), [txt, setTxt] = useState(""), [p, setP] = useState(1);
   const cargar = async (dd = dias) => {
     setCargando(true); setErr("");
-    try { const r = await fetch(`/api/panel/auditoria?dias=${dd}`, { method: "POST", headers: { "x-admin-key": llave }, cache: "no-store" }); const j = await r.json(); if (!r.ok) throw new Error(j.error || "No se pudo."); setD(j); setP(1); }
+    try { const r = await fetch(`/api/panel/auditoria?dias=${dd}`, { method: "POST", headers: cab(llave), cache: "no-store" }); const j = await r.json(); if (!r.ok) throw new Error(j.error || "No se pudo."); setD(j); setP(1); }
     catch (e) { setErr(e.message); }
     setCargando(false);
   };
@@ -490,6 +504,7 @@ input.pn-in{flex:1 1 220px}.pn-in:focus{outline:2px solid color-mix(in srgb,var(
 .pn-login{width:min(360px,100%);display:grid;gap:14px;padding:26px}.pn-login h1{margin:0;font-size:20px}
 .pn-login label{display:grid;gap:6px;font-weight:600;font-size:13.5px}.pn-login input{padding:11px 12px;border-radius:10px;border:1px solid var(--l);background:var(--f);color:var(--t);font:inherit}
 .pn-login .pn-b{justify-content:center;padding:11px}
+.pn-otra summary{cursor:pointer;color:var(--s);font-size:13px}.pn-otra form{display:grid;gap:10px;margin-top:10px}
 @media (max-width:860px){
   .pn-app{grid-template-columns:1fr}.pn-side{display:none}.pn-movil{display:inline-flex}
   .pn-main{padding:18px 14px 96px}

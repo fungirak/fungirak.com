@@ -1,3 +1,4 @@
+import { llavePanel } from "@/lib/panel-acceso";
 import { eventos as eventosPropios, verificarCadena as cadenaPropia, registrar } from "@/lib/auditoria";
 // Auditoría global del estudio (fungirak.com/panel → «Auditoría»): junta los últimos eventos de todas las apps y el estado de
 // la cadena de huellas de cada una (sana = nadie cambió ni borró filas recientes). La contraseña maestra llega en cada pedido
@@ -51,7 +52,7 @@ export async function POST(req) {
   const l = (intentos.get(ip) || []).filter((t) => ahora - t < 15 * 60e3);
   if (l.length >= 20) return Response.json({ error: "Demasiados pedidos. Esperá unos minutos." }, { status: 429 });
   l.push(ahora); intentos.set(ip, l); if (intentos.size > 2000) intentos.clear();
-  const llave = req.headers.get("x-admin-key") || "";
+  const llave = await llavePanel(req);
   if (llave.length < 16 || llave.length > 200) return Response.json({ error: "Contraseña incorrecta." }, { status: 401 });
   const correo = await pedir(CORREO, llave);
   if (!correo.ok && (correo.codigo === 401 || correo.codigo === 429)) return Response.json({ error: "Contraseña incorrecta." }, { status: 401 });

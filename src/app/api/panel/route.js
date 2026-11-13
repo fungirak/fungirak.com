@@ -1,3 +1,4 @@
+import { llavePanel } from "@/lib/panel-acceso";
 import { registrar } from "@/lib/auditoria";
 // Panel global del estudio (fungirak.com/panel): junta los números de todas las apps con backend en una sola vista.
 // No guarda ninguna clave: la contraseña maestra viene en cada pedido (x-admin-key) y se reenvía solo a la lista fija de abajo.
@@ -79,7 +80,7 @@ export async function POST(req) {
   const l = (intentos.get(ip) || []).filter((t) => ahora - t < 15 * 60e3);
   if (l.length >= 30) return Response.json({ error: "Demasiados pedidos. Esperá unos minutos." }, { status: 429 });
   l.push(ahora); intentos.set(ip, l); if (intentos.size > 2000) intentos.clear();
-  const llave = req.headers.get("x-admin-key") || "";
+  const llave = await llavePanel(req);
   if (llave.length < 16 || llave.length > 200) return Response.json({ error: "Contraseña incorrecta." }, { status: 401 });
   // primero se prueba contra el correo central: si la contraseña no sirve, no se manda a ninguna app
   const correo = await pedir(CORREO, llave);

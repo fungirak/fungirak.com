@@ -2,6 +2,7 @@
 // aprueba o se borra acá. La contraseña maestra se valida contra el correo central, igual que el panel (no se guarda acá).
 import { sql } from "@/lib/db";
 import { registrar } from "@/lib/auditoria";
+import { llavePanel } from "@/lib/panel-acceso";
 
 const CORREO = "https://correo.fungirak.com/api/admin";
 const intentos = new Map();
@@ -12,7 +13,7 @@ async function autorizado(req) {
   const l = (intentos.get(ip) || []).filter((t) => ahora - t < 15 * 60e3);
   if (l.length >= 40) return { error: "Demasiados pedidos. Esperá unos minutos.", status: 429 };
   l.push(ahora); intentos.set(ip, l); if (intentos.size > 2000) intentos.clear();
-  const llave = req.headers.get("x-admin-key") || "";
+  const llave = await llavePanel(req);
   if (llave.length < 16 || llave.length > 200) return { error: "Contraseña incorrecta.", status: 401 };
   try {
     const r = await fetch(CORREO, { headers: { "x-admin-key": llave }, cache: "no-store", signal: AbortSignal.timeout(9000) });
