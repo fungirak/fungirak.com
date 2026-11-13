@@ -69,5 +69,9 @@ export const CSS_EXTRA = `
 .pn-calor td{text-align:center;font-variant-numeric:tabular-nums}.pn-alerta-l{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .pn-alerta-l li{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border-radius:12px;background:var(--f);border-left:4px solid var(--s);cursor:pointer}
 .pn-alerta-l li.r{border-left-color:var(--r)}.pn-alerta-l li.a{border-left-color:var(--am)}.pn-alerta-l li.v{border-left-color:var(--ac)}.pn-alerta-l b{display:block}.pn-alerta-l small{color:var(--s)}
+
+.pn-sw{width:38px;height:22px;border-radius:99px;border:0;background:var(--l);position:relative;cursor:pointer;padding:0;vertical-align:middle}
+.pn-sw i{position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.pn-sw.on{background:var(--am)}.pn-sw.on.rojo{background:var(--r)}.pn-sw.on i{transform:translateX(16px)}.pn-sw:disabled{opacity:.5;cursor:default}
 textarea.pn-in{width:100%;min-height:80px;resize:vertical;font:inherit}
 `;

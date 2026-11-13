@@ -9,6 +9,9 @@ import Bandeja from "./panel/Bandeja";
 import Errores from "./panel/Errores";
 import Metricas from "./panel/Metricas";
 import Operacion from "./panel/Operacion";
+import Reglas from "./panel/Reglas";
+import { APPS_PANEL } from "@/lib/panel-apps";
+import { pedir } from "./panel/api";
 
 const K = "panel.llave";
 const num = (n) => (n === null || n === undefined || Number.isNaN(Number(n)) ? "—" : Number(n).toLocaleString("es-AR"));
@@ -51,6 +54,7 @@ const SECCIONES = [
   ["moderacion", "Moderación", "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"],
   ["errores", "Errores", "M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"],
   ["metricas", "Métricas", "M3 3v18h18M7 15l4-4 3 3 5-6"],
+  ["reglas", "Reglas", "M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"],
   ["ingresos", "Ingresos", "M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"],
   ["cuentas", "Cuenta FK", "M12 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM4 22a8 8 0 0 1 16 0"],
   ["correo", "Correo", "M4 4h16v16H4zM4 6l8 7 8-7"],
@@ -131,8 +135,9 @@ export default function Panel() {
         {sec === "moderacion" && <><Bandeja llave={llave} toast={toast} /><MuroRevision llave={llave} filas={filas} /></>}
         {sec === "errores" && <Errores llave={llave} toast={toast} />}
         {sec === "metricas" && <Metricas llave={llave} filas={filas} base={base} />}
+        {sec === "reglas" && <Reglas llave={llave} toast={toast} />}
         {sec === "operacion" && <Operacion llave={llave} toast={toast} cola={base.d?.correo?.cola} />}
-        {sec === "auditoria" && <AuditoriaGlobal llave={llave} />}
+        {sec === "auditoria" && <AuditoriaGlobal llave={llave} toast={toast} />}
         {sec === "estado" && <Estado c={base.d?.correo} cargando={base.cargando} />}
       </main>
       <nav className="pn-tabs" aria-label="Secciones">{SECCIONES.map(([id, t, d]) => <button key={id} type="button" className={sec === id ? "on" : ""} onClick={() => ir(id)}><Ico d={d} s={20} /><span>{t}</span></button>)}</nav>
@@ -394,7 +399,7 @@ function MuroRevision({ llave, filas }) {
 }
 
 // Auditoría global: la cadena de huellas de cada app y los últimos eventos de todas juntas, con filtros y paginación.
-function AuditoriaGlobal({ llave }) {
+function AuditoriaGlobal({ llave, toast }) {
   const [d, setD] = useState(null), [err, setErr] = useState(""), [cargando, setCargando] = useState(false);
   const [dias, setDias] = useState(7), [app, setApp] = useState(""), [txt, setTxt] = useState(""), [p, setP] = useState(1);
   const cargar = async (dd = dias) => {
@@ -409,6 +414,16 @@ function AuditoriaGlobal({ llave }) {
   const malas = (d?.apps || []).filter((a) => a.cadena && !a.cadena.sana), sinDato = (d?.apps || []).filter((a) => a.error);
   const sanas = (d?.apps || []).filter((a) => a.cadena?.sana).length;
   const POR_A = 25;
+  // 20: bloquear la conexión de un evento en esa app (su huella; nunca la IP). Lo aplica el proxy.js de la app.
+  const bloquear = async (e) => {
+    const a = APPS_PANEL.find((x) => x.id === e.app); if (!a) return;
+    const h = new URL(a.url).host;
+    const r = await pedir(llave, "cuenta", "/api/admin?que=reglas"); if (!r.ok) return toast(r.d.error || "No se pudo.");
+    const act = (r.d.apps || []).find((x) => x.host === h) || { solo_lectura: false, registro_cerrado: false, apagado: {}, huellas: [] };
+    if (act.huellas.includes(e.ip)) return toast("Esa conexión ya está bloqueada.");
+    const w = await pedir(llave, "cuenta", "/api/admin", "POST", { accion: "reglas", host: h, solo_lectura: act.solo_lectura, registro_cerrado: act.registro_cerrado, apagado: act.apagado, huellas: [...act.huellas, e.ip] });
+    toast(w.ok ? `Conexión bloqueada en ${a.nombre}: no puede publicar ni cambiar nada desde ahí.` : w.d.error || "No se pudo.");
+  };
   return (<>
     <div className="pn-barra-filtros">
       <div className="pn-seg">{[1, 7, 30, 90, 365].map((n) => <button key={n} type="button" className={dias === n ? "on" : ""} onClick={() => { setDias(n); if (d) cargar(n); }}>{n === 1 ? "24 h" : n === 365 ? "1 año" : `${n} días`}</button>)}</div>
@@ -437,7 +452,7 @@ function AuditoriaGlobal({ llave }) {
           <tbody>{!lista.length ? <tr><td colSpan={6} className="pn-vacio">No hay eventos con ese filtro.</td></tr> : lista.slice((p - 1) * POR_A, p * POR_A).map((e) => <tr key={`${e.app}-${e.id}`}>
             <td className="pn-nw">{fechaHora(e.creado)}</td><td>{nombre[e.app] || e.app}</td><td><code className="pn-ev">{e.evento}</code></td>
             <td>{e.apodo ? `@${e.apodo}` : "—"}</td><td className="pn-solo-ancho">{[e.dispositivo, e.region || e.pais].filter(Boolean).join(" · ") || "—"}</td>
-            <td className="pn-solo-ancho"><code className="pn-det-cod">{JSON.stringify(e.detalle || {}).slice(0, 90)}</code></td></tr>)}</tbody></table>
+            <td className="pn-solo-ancho"><code className="pn-det-cod">{JSON.stringify(e.detalle || {}).slice(0, 90)}</code>{/^[a-f0-9]{24}$/.test(e.ip || "") && APPS_PANEL.some((x) => x.id === e.app) && <button type="button" className="pn-link" style={{ display: "block", marginTop: 4 }} onClick={() => bloquear(e)}>Bloquear esta conexión</button>}</td></tr>)}</tbody></table>
       </div>
       <Paginas p={p} total={lista.length} por={POR_A} set={setP} />
       <p className="pn-nota">Generado {fechaHora(d.generado)}. Las IP nunca se guardan: solo una huella.</p>

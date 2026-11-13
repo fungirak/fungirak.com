@@ -38,6 +38,10 @@ export default function Bandeja({ llave, toast }) {
   const deCuenta = (x) => (items || []).filter((y) => y.app.id === x.app.id && y.apodo === x.apodo);
   const elegidos = (items || []).filter((x) => sel.has(x.clave));
   const apps = [...new Map((items || []).map((x) => [x.app.id, x.app])).values()];
+  // 23: reglas automáticas de detección — una cuenta con 3 o más cosas denunciadas u ocultas, o denunciada en 2 o más apps,
+  // aparece arriba como posible spam, con la acción en lote lista.
+  const sospechosos = Object.values((items || []).filter((x) => x.apodo).reduce((m, x) => { const k = x.apodo; (m[k] ||= { apodo: k, items: [], apps: new Set(), denuncias: 0 }); m[k].items.push(x); m[k].apps.add(x.app.nombre); m[k].denuncias += x.denuncias || 0; return m; }, {}))
+    .filter((g) => g.items.length >= 3 || g.apps.size >= 2).sort((a, b) => b.items.length - a.items.length);
 
   return (<>
     {ventana}
@@ -48,6 +52,10 @@ export default function Bandeja({ llave, toast }) {
       <button type="button" className="pn-b pn-b2" onClick={cargar} disabled={cargando}>{cargando ? "Revisando las apps…" : "Actualizar"}</button>
     </div>
     {fallas.length > 0 && <p className="pn-alerta chica">No respondieron: {fallas.join(", ")}.</p>}
+    {sospechosos.length > 0 && <section className="pn-card"><h2>⚠️ Posibles cuentas de spam <small className="pn-nota">· 3 o más cosas denunciadas, o en 2 o más apps</small></h2>
+      <div style={{ display: "grid", gap: 8 }}>{sospechosos.map((g) => <div key={g.apodo} className="pn-item"><div className="pn-meta"><b style={{ color: "var(--t)" }}>@{g.apodo}</b><span>{g.items.length} cosas</span><span>{num(g.denuncias)} denuncias</span><span>en {[...g.apps].join(", ")}</span></div>
+        <div className="pn-acc"><button type="button" className="pn-b pn-b-rojo" onClick={() => resolver(g.items, "borrar")}>Borrar todo ({g.items.length})</button><span className="pn-nota">Para frenarla en todas las apps: Personas → @{g.apodo} → Suspender.</span></div></div>)}</div>
+    </section>}
     {elegidos.length > 0 && <div className="pn-card pn-acc" style={{ position: "sticky", top: 8, zIndex: 5 }}>
       <b>{elegidos.length} elegidas</b>
       <button type="button" className="pn-b pn-b-rojo" onClick={() => resolver(elegidos, "borrar")}>Borrar</button>
