@@ -43,9 +43,9 @@ export default function Reglas({ llave, toast }) {
   return (<div style={{ display: "grid", gap: 12 }}>
     {ventana}
     {activas.length > 0 && <p className="pn-alerta">Hay reglas activas en: {activas.map((r) => apps.find((a) => host(a.url) === r.host)?.nombre || r.host).join(", ")}.</p>}
-    <section className="pn-card pn-tabla-caja"><h2 className="pn-h-tabla">Interruptores por app <small className="pn-nota">· se aplican en menos de 1 minuto</small></h2>
+    <section className="pn-card pn-tabla-caja"><h2 className="pn-h-tabla">Interruptores por app <small className="pn-nota">· ⏸ = pausar esa parte · se aplican en menos de 1 minuto</small></h2>
       {!reglas ? <p className="pn-nota" style={{ padding: 16 }}>Cargando…</p> :
-        <table className="pn-tabla"><thead><tr><th>App</th>{INTERRUPTORES.map(([k, t]) => <th key={k} style={{ textAlign: "center" }}>{k === "solo_lectura" || k === "registro_cerrado" ? t : `${t} pausadas`}</th>)}<th className="n">Huellas</th></tr></thead>
+        <table className="pn-tabla"><thead><tr><th>App</th>{INTERRUPTORES.map(([k, t]) => <th key={k} style={{ textAlign: "center" }} title={k === "solo_lectura" || k === "registro_cerrado" ? t : `Pausar ${t.toLowerCase()}`}>{k === "solo_lectura" || k === "registro_cerrado" ? t : `⏸ ${t}`}</th>)}<th className="n">Huellas</th></tr></thead>
           <tbody>{apps.map((a) => { const h = host(a.url), r = de(h); return (
             <tr key={a.id} style={{ opacity: guardando === h ? 0.5 : 1 }}>
               <td className="pn-nw"><b>{a.emoji} {a.nombre}</b>{r.cambiado && <small className="pn-nota" style={{ display: "block" }}>cambiado {fechaHora(r.cambiado)}</small>}</td>
