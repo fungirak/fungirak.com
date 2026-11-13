@@ -472,7 +472,7 @@ const CSS = `
 .pn *{box-sizing:border-box}
 .pn-progreso{position:fixed;left:0;right:0;top:0;height:3px;z-index:50;opacity:0;transition:opacity .4s .3s;pointer-events:none}.pn-progreso.on{opacity:1;transition-delay:0s}
 .pn-progreso i{display:block;height:100%;background:linear-gradient(90deg,#00a957,#1690a8 55%,#7346e8);border-radius:0 3px 3px 0;transition:width .5s ease;box-shadow:0 0 10px rgba(22,144,168,.6)}
-.pn-app{display:grid;grid-template-columns:232px minmax(0,1fr)}
+.pn-app{display:grid;grid-template-columns:232px minmax(0,1fr);overflow-x:clip}
 .pn-side{position:sticky;top:0;height:100vh;padding:18px 12px;border-right:1px solid var(--l);background:var(--c);display:flex;flex-direction:column;gap:14px}
 .pn-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;padding:4px 10px 10px;letter-spacing:-.01em}
 .pn-dot{width:12px;height:12px;border-radius:4px;background:linear-gradient(135deg,#00a957,#1690a8 55%,#7346e8)}
@@ -552,7 +552,7 @@ input.pn-in{flex:1 1 220px}.pn-in:focus{outline:2px solid color-mix(in srgb,var(
 .pn-login .pn-b{justify-content:center;padding:11px}
 .pn-otra summary{cursor:pointer;color:var(--s);font-size:13px}.pn-otra form{display:grid;gap:10px;margin-top:10px}
 @media (max-width:860px){
-  .pn-app{grid-template-columns:1fr}.pn-side{display:none}.pn-movil{display:inline-flex}
+  .pn-app{grid-template-columns:minmax(0,1fr)}.pn-side{display:none}.pn-movil{display:inline-flex}
   .pn-main{padding:18px 14px 96px}
   .pn-tabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--c);border-top:1px solid var(--l);overflow-x:auto;padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
   .pn-tabs button{flex:1 0 70px;display:grid;justify-items:center;gap:3px;border:0;background:none;color:var(--s);font:600 11px inherit;font-family:inherit;padding:6px 4px;border-radius:10px;cursor:pointer}
