@@ -481,7 +481,7 @@ const CSS = `
 .pn-side nav button:hover{background:var(--f);color:var(--t)}.pn-side nav button.on{background:var(--ac2);color:var(--ac)}
 .pn-salir{margin-top:auto}.pn-salir:hover{color:var(--r)}
 .pn-cnt{margin-left:auto;font-style:normal;font-size:11px;font-weight:800;min-width:20px;padding:2px 7px;border-radius:99px;background:var(--r);color:#fff;text-align:center}
-.pn-main{padding:24px clamp(16px,3vw,36px) 100px;min-width:0;display:grid;gap:18px;align-content:start;max-width:1280px}
+.pn-main{padding:24px clamp(16px,3vw,36px) 100px;min-width:0;display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-content:start;max-width:1280px}
 .pn-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
 .pn-top h1{margin:0;font-size:26px;letter-spacing:-.02em}.pn-sub{margin:2px 0 0;color:var(--s);font-size:13px}
 .pn-vivo::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ac);margin-right:6px;animation:pn-lat 1s infinite alternate}
