@@ -18,7 +18,7 @@ export default function Bandeja({ llave, toast }) {
     const out = [];
     for (const r of rs) if (r.ok) for (const [k, t] of CLAVES) for (const x of r.d[k] || []) out.push({ ...x, tipo: t, app: r.app, clave: `${r.app.id}:${t}:${x.id}` });
     out.sort((a, b) => (b.oculto === true) - (a.oculto === true) || (b.denuncias || 0) - (a.denuncias || 0) || new Date(b.creado) - new Date(a.creado));
-    setItems(out); setFallas(rs.filter((r) => !r.ok).map((r) => r.app.nombre)); setSel(new Set()); setCargando(false);
+    setItems(out); setFallas(rs.filter((r) => !r.ok && r.status !== 404).map((r) => r.app.nombre)); // 404 = esa app no tiene publicaciones ni comentarios: no es una falla setSel(new Set()); setCargando(false);
   }, [llave]);
   useEffect(() => { cargar(); }, [cargar]); // eslint-disable-line react-hooks/set-state-in-effect -- carga al entrar
 

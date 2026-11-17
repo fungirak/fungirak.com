@@ -285,9 +285,9 @@ function Apps({ filas, cargando, errTodas, grupos }) {
                 {m && <p className="pn-alerta chica"><b>{m.t}:</b> {m.d}</p>}
                 {f.a?.nota && <p className="pn-nota">{f.a.nota}</p>}
                 {f.metricas.length > 0 ? <ul className="pn-metricas">{f.metricas.map(([k, v]) => <li key={k}><span>{k}</span><b>{String(v)}</b></li>)}</ul> : <p className="pn-nota">Sin métricas del mail diario.</p>}
-                <p className="pn-acc">{(() => { const pd = panelDe(f.a?.url || f.url); return pd ? <a className="pn-b" href={pd.url} target="_blank" rel="noopener noreferrer">Abrir su panel ↗</a> : null; })()}
+                <p className="pn-acc">{(() => { const pd = panelDe(f.a?.url || f.url); return pd ? <><a className="pn-b" href={pd.url} target="_blank" rel="noopener noreferrer">Abrir su panel ↗</a>{pd.directo && <a className="pn-b pn-b2" href={pd.url.replace("/api/fungirak/admin", f.id === "fabrica" ? "/dueno" : "/admin")} target="_blank" rel="noopener noreferrer" title="Su panel propio, con la clave (sirve si todavía no activaste la verificación en dos pasos)">Entrar con clave ↗</a>}</> : null; })()}
                   <a className="pn-b pn-b2" href={f.url || f.a?.url} target="_blank" rel="noopener noreferrer">Abrir el sitio ↗</a>
-                  <span className="pn-nota">{panelDe(f.a?.url || f.url)?.directo ? "Entrás directo con tu cuenta (si ya hiciste el paso de dos pasos hoy en este navegador)." : panelDe(f.a?.url || f.url) ? "" : "Esta app no tiene panel propio: todo lo suyo está acá."}</span></p>
+                  <span className="pn-nota">{panelDe(f.a?.url || f.url)?.directo ? "«Abrir su panel» entra directo con tu cuenta y la verificación en dos pasos; «Entrar con clave» abre su panel propio con la clave." : panelDe(f.a?.url || f.url) ? "" : "Esta app no tiene panel propio: todo lo suyo está acá."}</span></p>
               </td></tr>}
             </Fragment>); })}
         </tbody>
