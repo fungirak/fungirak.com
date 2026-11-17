@@ -247,6 +247,25 @@ function Resumen({ filas, base, apps, todas, ir }) {
   </>);
 }
 
+// Métricas dobles del mail diario («Activos ayer / 7 días: 0 / 0») → una por línea («Activos ayer: 0», «Activos 7 días: 0»).
+const mayus = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+function partir([k, v]) {
+  const vs = String(v).split(" / ");
+  if (vs.length < 2) return [[k, v]];
+  const enParen = /^(.*?)\(([^)]*\/[^)]*)\)\s*$/.exec(k); // «Mensajes (24 h / 7 días)»
+  if (enParen) { const ps = enParen[2].split("/").map((x) => x.trim()); if (ps.length === vs.length) return ps.map((x, i) => [`${enParen[1].trim()} (${x})`, vs[i]]); }
+  const ks = k.split(" / ").map((x) => x.trim());
+  if (ks.length !== vs.length) return [[k, v]];
+  const cola = /\s*(\([^)]*\))\s*$/.exec(ks[ks.length - 1])?.[1] || ""; // «(24 h)» del último vale para todos
+  const primera = ks[0].split(" ")[0];
+  return ks.map((x, i) => {
+    let t = x;
+    if (i > 0 && /^\d/.test(t)) t = `${primera} ${t}`; // «7 días» → «Activos 7 días»
+    if (cola && !t.includes("(")) t = `${t} ${cola}`;
+    return [mayus(t), vs[i]];
+  });
+}
+
 const POR = 12;
 function Apps({ filas, cargando, errTodas, grupos }) {
   const [q, setQ] = useState(""), [g, setG] = useState(""), [solo, setSolo] = useState(""), [orden, setOrden] = useState("cuentas"), [p, setP] = useState(1), [abierta, setAbierta] = useState("");
@@ -284,7 +303,7 @@ function Apps({ filas, cargando, errTodas, grupos }) {
               {ab && <tr className="pn-detalle"><td colSpan={7}>
                 {m && <p className="pn-alerta chica"><b>{m.t}:</b> {m.d}</p>}
                 {f.a?.nota && <p className="pn-nota">{f.a.nota}</p>}
-                {f.metricas.length > 0 ? <ul className="pn-metricas">{f.metricas.map(([k, v]) => <li key={k}><span>{k}</span><b>{String(v)}</b></li>)}</ul> : <p className="pn-nota">Sin métricas del mail diario.</p>}
+                {f.metricas.length > 0 ? <ul className="pn-metricas">{f.metricas.flatMap(partir).map(([k, v]) => <li key={k}><span>{k}</span><b>{String(v)}</b></li>)}</ul> : <p className="pn-nota">Sin métricas del mail diario.</p>}
                 <p className="pn-acc">{(() => { const pd = panelDe(f.a?.url || f.url); return pd ? <><a className="pn-b" href={pd.url} target="_blank" rel="noopener noreferrer">Abrir su panel ↗</a>{pd.directo && <a className="pn-b pn-b2" href={pd.url.replace("/api/fungirak/admin", f.id === "fabrica" ? "/dueno" : "/admin")} target="_blank" rel="noopener noreferrer" title="Su panel propio, con la clave (sirve si todavía no activaste la verificación en dos pasos)">Entrar con clave ↗</a>}</> : null; })()}
                   <a className="pn-b pn-b2" href={f.url || f.a?.url} target="_blank" rel="noopener noreferrer">Abrir el sitio ↗</a>
                   <span className="pn-nota">{panelDe(f.a?.url || f.url)?.directo ? "«Abrir su panel» entra directo con tu cuenta y la verificación en dos pasos; «Entrar con clave» abre su panel propio con la clave." : panelDe(f.a?.url || f.url) ? "" : "Esta app no tiene panel propio: todo lo suyo está acá."}</span></p>
