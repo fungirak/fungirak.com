@@ -67,7 +67,7 @@ async function app(a, llave) {
     const r = await pedir(`${a.url}/api/admin?view=overview`, llave);
     if (!r.ok) return { ...a, ok: false, error: r.error, codigo: r.codigo };
     const o = r.d;
-    return { ...a, ok: true, cuentas: o.players, nuevas7: null, nuevasHoy: o.new_today, activas7: o.active_7d, pendientes: (o.reports_open || 0) + (o.msg_reports_7d || 0), extra: o };
+    return { ...a, ok: true, cuentas: o.players, nuevas7: null, nuevasHoy: o.new_today, activas7: o.active_7d, pendientes: (o.reports_open || 0) + (o.msg_reports_open ?? o.msg_reports_7d ?? 0), extra: o };
   }
   if (a.tipo === "molde") {
     const r = await pedir(`${a.url}/api/admin/uso`, llave);
