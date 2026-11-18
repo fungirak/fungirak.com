@@ -276,7 +276,19 @@ label.act{background:rgba(60,242,160,.14)}.ico{width:20px;text-align:center;font
     document.body.appendChild(h); document.documentElement.style.overflow = "hidden"; addEventListener("keydown", tecla);
   }
   window.fkDescargar = { abrir, apps: APPS };
-  if (instalada()) lanzador(); // abriste FUNGIRAK Studio desde el escritorio o el inicio
+  // El lanzador sale SOLO al abrir la app (no en cada página): una vez por sesión, en el inicio, sin parámetros de un flujo
+  // (login con Google, ?volver=, ?code=, errores) y sin venir de otra página de este mismo sitio. Antes salía en cada
+  // redirección del login y había que cerrarlo una y otra vez.
+  const esArranque = () => {
+    try { if (sessionStorage.getItem("fk.lanzado")) return false; } catch {}
+    const u = new URL(location.href);
+    if (u.pathname !== "/" || [...u.searchParams.keys()].some((k) => k !== "studio" && !k.startsWith("utm_"))) return false;
+    try { if (document.referrer && new URL(document.referrer).origin === location.origin) return false; } catch {}
+    if (/accounts\.google\.|appleid\.apple\./.test(document.referrer)) return false;
+    try { sessionStorage.setItem("fk.lanzado", "1"); } catch {}
+    return true;
+  };
+  if (instalada() && esArranque()) lanzador(); // abriste FUNGIRAK Studio desde el escritorio o el inicio
   // (compatibilidad) la fila vieja de fk.js volvía acá con ?fklisto=N: se anota para la ventana del progreso y se cierra
   { const p = new URLSearchParams(location.search);
     if (p.has("fklisto")) {
