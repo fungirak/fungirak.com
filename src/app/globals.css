@@ -2724,3 +2724,6 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
 /* Menú del celu: si los botones no entran en la pantalla, el panel se desliza (antes los de abajo quedaban cortados) */
 .drawer { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
 .drawer nav { align-content: safe center; }
+.drawer-chips { display: grid; grid-template-columns: repeat(3, minmax(0, auto)); justify-content: center; gap: 6px; margin-top: 12px; }
+.drawer-chips .chip { min-width: 0; justify-content: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-inline: clamp(8px, 2.6vw, 14px); font-size: clamp(.74rem, 3.3vw, .9rem); }
+.drawer-chips .chip.on { background: var(--green, #22c55e); color: #06120c; border-color: transparent; }

@@ -119,10 +119,11 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
               <span>👋</span> {ui.nav.hablemos}
             </button>
           </nav>
-          <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
+          {/* Idioma, modo músico y tema: siempre en una sola línea (textos cortos; el modo músico se resalta cuando está prendido) */}
+          <div className="drawer-chips">
             <button className="chip" onClick={() => setLang(lang === "es" ? "en" : "es")}>{lang === "es" ? "🌎 English" : "🧉 Español"}</button>
-            <button className="chip" aria-pressed={sonido} onClick={() => setSonido(!sonido)}>🎹 {sonido ? ui.sonido.on : ui.sonido.off}</button>
-            <button className="chip" onClick={() => setTema(tema === "dark" ? "light" : "dark")}>{tema === "dark" ? "☀️ " + ui.tema.claro : "🌙 " + ui.tema.oscuro}</button>
+            <button className={`chip${sonido ? " on" : ""}`} aria-pressed={sonido} aria-label={sonido ? ui.sonido.on : ui.sonido.off} onClick={() => setSonido(!sonido)}>🎹 {lang === "en" ? "Musician" : "Modo músico"}</button>
+            <button className="chip" onClick={() => setTema(tema === "dark" ? "light" : "dark")}>{tema === "dark" ? "☀️ " + (lang === "en" ? "Light" : "Claro") : "🌙 " + (lang === "en" ? "Dark" : "Oscuro")}</button>
           </div>
         </div>
       )}
