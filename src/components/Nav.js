@@ -87,7 +87,7 @@ export default function Nav({ abrir, tema, setTema, sonido, setSonido, sellos, v
 
       {drawer && (
         <div className="drawer" role="dialog" aria-modal="true" aria-label={ui.menu}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div className="drawer-cab" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div className="brand">
               <img src="/img/hongo.svg" alt="" width={34} height={34} />
               <span>fungirak<small>{visitante?.nombre ? `${ui.hola}, ${visitante.nombre}!` : "Studio"}</small></span>
