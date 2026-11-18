@@ -189,7 +189,7 @@
     const a = catalogo.find((x) => x.id === barra.app); if (!a) return;
     const entrar = barra.getAttribute("entrar") || "/api/fungirak/entrar";
     const h = document.createElement("div"); h.id = "fk-seguir";
-    conTema(h).attachShadow({ mode: "open" }).innerHTML = `<style>:host{all:initial;position:fixed;right:16px;bottom:16px;z-index:2147483000;font:500 14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+    conTema(h).attachShadow({ mode: "open" }).innerHTML = `<style>:host{all:initial;position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483000;font:500 14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
       .c{width:min(340px,calc(100vw - 32px));background:#fff;color:#15171c;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.28);padding:16px;animation:e .3s ease}
       :host([oscuro]) .c{background:#1b1e24;color:#eef0f3}@keyframes e{from{transform:translateY(16px);opacity:0}}
       .f{display:flex;align-items:center;gap:12px}.av{width:44px;height:44px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,#3CF2A0,#22E6FF);color:#06120c;font-weight:800;flex:none}
