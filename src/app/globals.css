@@ -2716,3 +2716,7 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
 .hamburger { display: inline-grid; }
 /* con «Iniciar sesión» y «Crear cuenta» siempre a la vista, las secciones pasan al ☰ antes (siguen todas ahí) */
 @media (max-width: 1500px) { .nav-links { display: none; } .nav { justify-content: space-between; } }
+
+/* Muro vacío: los ejemplos se ven atenuados y no se pueden tocar */
+.huellas.ejemplo article, .ideas.ejemplo .idea { opacity: .6; pointer-events: none; }
+.huellas.ejemplo .aviso, .ideas.ejemplo .aviso { grid-column: 1 / -1; opacity: 1; }

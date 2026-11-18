@@ -188,7 +188,18 @@ export default function Comunidad({ muro, setMuro, sellar }) {
           <div className="muro-col">
             <h3 className="display">👣 {es ? "Dejá tu huella" : "Leave your mark"}</h3>
             <Formulario tipo="huella" max={180} placeholder={es ? "¿Qué me querés decir?" : "What would you like to tell me?"} boton={es ? "Dejar huella" : "Leave mark"} onPublicado={(it) => setMuro((m) => ({ ...m, huellas: [it, ...m.huellas] }))} onSello={() => sellar("huella")} />
-            {huellas.length === 0 && !muro.cargando && <p className="aviso">{es ? "Todavía no hay huellas. ¡Estrená el muro!" : "No marks yet. Be the first!"}</p>}
+            {huellas.length === 0 && !muro.cargando && (
+              // Muro vacío: dos huellas de ejemplo (marcadas como tales, no se hacen pasar por visitantes) para que se vea qué va acá.
+              <div className="huellas ejemplo" aria-label={es ? "Así se ve una huella (ejemplo)" : "What a mark looks like (example)"}>
+                {[["🍄", es ? "Me encantó el pasaporte de sellos, ya llevo cuatro." : "Loved the stamp passport, four so far."], ["🌱", es ? "Saludos desde Paraná. Muy linda la Escuela del Mate." : "Greetings from Paraná. Lovely Mate school."]].map(([e, t], i) => (
+                  <article key={i} className="huella" style={{ "--rot": `${i ? 2 : -2}deg` }}>
+                    <span className="huella-emoji">{e}</span><p>{t}</p>
+                    <footer><span className="pill">{es ? "Ejemplo" : "Example"}</span></footer>
+                  </article>
+                ))}
+                <p className="aviso">{es ? "Todavía no hay huellas: ¡dejá la primera!" : "No marks yet: leave the first one!"}</p>
+              </div>
+            )}
             <div className="huellas">
               {huellas.map((h, i) => (
                 <article key={h.id} className="huella" style={{ animationDelay: `${Math.min(i, 12) * 0.04}s`, "--rot": `${((h.id * 37) % 7) - 3}deg` }}>
@@ -206,7 +217,12 @@ export default function Comunidad({ muro, setMuro, sellar }) {
           <div className="muro-col">
             <h3 className="display">💡 {es ? "Pedime un sitio" : "Pitch me a site"}</h3>
             <Formulario tipo="idea" max={280} placeholder={es ? "Me gustaría que hagas un sitio de…" : "I'd love you to build a site about…"} boton={es ? "Proponer" : "Pitch it"} onPublicado={(it) => setMuro((m) => ({ ...m, ideas: [...m.ideas, it] }))} onSello={() => sellar("idea")} />
-            {ideas.length === 0 && <p className="aviso">{es ? "Ninguna idea todavía. ¿Qué sitio te falta en el mundo?" : "No ideas yet. What site is the world missing?"}</p>}
+            {ideas.length === 0 && (
+              <div className="ideas ejemplo">
+                <div className="idea"><span className="voto" aria-hidden="true">▲<b>0</b></span><div><p>🗺️ {es ? "Un mapa de las ferias de cada barrio, con qué día y qué venden." : "A map of each neighborhood's street markets, with days and what they sell."}</p><small><span className="pill">{es ? "Ejemplo" : "Example"}</span></small></div></div>
+                <p className="aviso">{es ? "Ninguna idea todavía. ¿Qué sitio te falta en el mundo?" : "No ideas yet. What site is the world missing?"}</p>
+              </div>
+            )}
             <ol className="ideas">
               {ideas.map((x, i) => (
                 <li key={x.id} className={`idea${i < 3 ? " top" : ""}`}>
