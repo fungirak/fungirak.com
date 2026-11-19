@@ -215,8 +215,15 @@ function BotonesApp({ p, ui }) {
   const yo = useFk();
   const b = botonesApp(p.url, yo);
   const estilo = { "--b": p.color === "#E5E5E5" ? "#1f2937" : p.color, "--bd": "rgba(0,0,0,.35)", "--fg": "#fff" };
+  // Mientras se consulta la sesión (yo === null) se reserva el lugar de los dos botones, invisibles: antes aparecía «Abrir» solo y
+  // después se sumaba «Entrar con FUNGIRAK» (o cambiaba el texto), y los botones se movían. Al llegar la respuesta, entran con un fundido.
+  if (yo === null) return (
+    <span aria-hidden="true" style={{ display: "inline-flex", gap: 8, flexWrap: "wrap", alignItems: "center", visibility: "hidden" }}>
+      <span className="btn">{ui.verSitio} <Flecha width={14} height={14} /></span><span className="btn ghost">{ui.entrarFk}</span>
+    </span>
+  );
   return (
-    <span style={{ display: "inline-flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+    <span className="botones-app" style={{ display: "inline-flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
       <a className="btn" href={b.abrir} target="_blank" rel="noopener noreferrer" style={estilo}>{yo?.sesion && b.usada === false ? ui.probarCuenta : ui.verSitio} <Flecha width={14} height={14} /></a>
       {b.entrar && <a className="btn ghost" href={b.entrar} target="_blank" rel="noopener noreferrer">{ui.entrarFk}</a>}
     </span>

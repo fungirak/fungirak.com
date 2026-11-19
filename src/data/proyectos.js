@@ -918,7 +918,7 @@ export const PROYECTOS = [
     pills: ["Web", "App instalable", "Cifrado opcional", "Comunidad"],
     stack: ["Next.js 16", "React 19", "Neon Postgres", "Web Crypto", "Web Push", "PWA"],
     color: "#9775FA",
-    lema: { es: "Escribí hoy, abrila cuando toque.", en: "Write today, open it when it's time." },
+    lema: { es: "Escribí hoy, se abre cuando toque.", en: "Write today, open it when it's time." },
     tagline: { es: "Cartas que se abren el día que elegís", en: "Letters that open on the day you choose" },
     descripcion: {
       es: "Escribile a tu yo del futuro o a alguien que querés y elegí cuándo se abre: en un año, en diez o el día que tu hijo cumpla 18. Con cápsulas de grupo para egresados, predicciones que se revisan al llegar la fecha y cifrado opcional con tu clave.",

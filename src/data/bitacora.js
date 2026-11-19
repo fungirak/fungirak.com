@@ -23,7 +23,7 @@ export const BITACORA = [
   { fecha: "2026-12-08", proyecto: "dertin", es: "Dertin: gente que vibra como vos", en: "Dertin: people on your wavelength" },
   { fecha: "2026-12-15", proyecto: "cronicas", es: "Las Crónicas de Fungi: un juego 3D de mundo abierto", en: "The Chronicles of Fungi: an open-world 3D game" },
   { fecha: "2026-12-22", proyecto: "tribus", es: "Tribus urbanas, vistas desde Santa Fe", en: "Urban tribes, seen from Santa Fe" },
-  { fecha: "2026-12-29", proyecto: "carta-al-futuro", es: "Escribí hoy, abrite cuando toque", en: "Write today, open it when it's time" },
+  { fecha: "2026-12-29", proyecto: "carta-al-futuro", es: "Escribí hoy, se abre cuando toque", en: "Write today, open it when it's time" },
   { fecha: "2027-01-05", proyecto: "hoy", es: "El pronóstico que te responde sí o no", en: "The forecast that answers yes or no" },
   { fecha: "2027-01-12", proyecto: "cv", es: "Tu currículum en 10 minutos, con ayuda de tu oficio", en: "Your résumé in 10 minutes, with help for your trade" },
   { fecha: "2027-01-19", proyecto: "preguntas", es: "Una por día para conocerse", en: "One a day to get to know each other" },

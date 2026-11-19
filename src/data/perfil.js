@@ -49,7 +49,7 @@ export const PERFIL = {
     { proyecto: "dertin", es: "Dertin: cartas nuevas para deslizar", en: "Dertin: new cards to swipe" },
     { proyecto: "cronicas", es: "Las Crónicas de Fungi: nuevos niveles en el espacio", en: "The Chronicles of Fungi: new levels in space" },
     { proyecto: "tribus", es: "Tribus urbanas: ¿de qué tribu sos?", en: "Urban tribes: which tribe are you?" },
-    { proyecto: "carta-al-futuro", es: "Carta al Futuro: escribí hoy, abrite cuando toque", en: "Letter to the Future: write today, open it when it's time" },
+    { proyecto: "carta-al-futuro", es: "Carta al Futuro: escribí hoy, se abre cuando toque", en: "Letter to the Future: write today, open it when it's time" },
     { proyecto: "hoy", es: "Hoy: el pronóstico que te responde sí o no", en: "Hoy: the forecast that answers yes or no" },
     { proyecto: "cv", es: "CV: tu currículum en 10 minutos, con ayuda de tu oficio", en: "CV: your résumé in 10 minutes, with help for your trade" },
     { proyecto: "preguntas", es: "Preguntas de a Dos: una por día para conocerse", en: "Questions for Two: one a day to get to know each other" },

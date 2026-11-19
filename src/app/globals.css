@@ -2756,3 +2756,17 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
   .modal-backdrop:not(.full) { padding-top: 84px; padding-bottom: 24px; }
   .modal-backdrop:not(.full) .modal { max-height: min(calc(100dvh - 112px), 900px); }
 }
+
+/* Botones de la card (Abrir / Entrar con FUNGIRAK): entran con un fundido en su lugar, sin moverse */
+.botones-app { animation: botones-in .25s ease both; }
+@keyframes botones-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .botones-app { animation: none; } }
+
+/* Celu: el aviso de «¡Sello nuevo!» va planchado (pastilla finita) bien arriba, sobre el fondo difuminado, y el modal deja libre
+   esa franja: antes el aviso salía encima del modal y tapaba la cruz de cerrar unos segundos. */
+@media (max-width: 520px) {
+  .toast { top: calc(8px + env(safe-area-inset-top)); gap: 8px; padding: 5px 14px 5px 5px; font-size: .82rem; line-height: 1.25; max-width: calc(100vw - 24px); }
+  .toast .ico, .toast .ico:has(.sello-tinta), .toast .ico .sello-tinta { width: 34px; height: 34px; }
+  .modal-backdrop:not(.full) { padding-top: calc(60px + env(safe-area-inset-top)); }
+  .modal-backdrop:not(.full) .modal { max-height: calc(100dvh - 60px - env(safe-area-inset-top)); }
+}
