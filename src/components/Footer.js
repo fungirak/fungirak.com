@@ -33,6 +33,13 @@ function AppTip({ p, label, href, lang, es }) {
 // En el pie, cada categoría muestra las primeras 5; el resto se ve en un modal con la lista completa por categoría (como el menú de
 // categorías de una tienda), en vez de una columna larguísima.
 const VISIBLES = 5;
+// Los que van primero en cada categoría del pie (los demás siguen en su orden de siempre).
+const PRIMERO = [
+  ["teamjoy", "dertin", "atlas", "asador", "musgui"],
+  ["cronicas"],
+  ["turnapos", "pulso", "rio", "schools", "gourmet"],
+];
+const primero = (lista, ids) => [...ids.map((id) => lista.find((p) => p.id === id)).filter(Boolean), ...lista.filter((p) => !ids.includes(p.id))];
 
 export default function Footer({ abrir, stats }) {
   const { lang, ui } = useLang();
@@ -42,7 +49,7 @@ export default function Footer({ abrir, stats }) {
     ["Apps", (p) => !JUEGOS.includes(p.id) && !SITIOS.includes(p.id)],
     [es ? "Juegos" : "Games", (p) => JUEGOS.includes(p.id)],
     [es ? "Sitios" : "Sites", (p) => SITIOS.includes(p.id)],
-  ].map(([titulo, f]) => [titulo, PROYECTOS.filter((p) => p.url && f(p))]);
+  ].map(([titulo, f], k) => [titulo, primero(PROYECTOS.filter((p) => p.url && f(p)), PRIMERO[k])]);
   const total = CATS.reduce((n, [, l]) => n + l.length, 0);
   const col = (titulo, items) => (
     <div>

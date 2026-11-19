@@ -2750,3 +2750,9 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
 }
 .ft-todo, .ft-todo li { text-align: left; }
 .ft-todo li { justify-items: start; }
+
+/* Compu: los modales arrancan debajo del nav (antes el borde de arriba quedaba pegado a él) */
+@media (min-width: 821px) {
+  .modal-backdrop:not(.full) { padding-top: 84px; padding-bottom: 24px; }
+  .modal-backdrop:not(.full) .modal { max-height: min(calc(100dvh - 112px), 900px); }
+}
