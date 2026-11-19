@@ -25,7 +25,7 @@ export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", 
   "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus", "pulso", "rio", "turnapos"];
 // El orden de cada fila de cards (1 Lo central, 2 Más del Studio, 3 Escuelas, 4 Herramientas, 5 Juegos, 6 Sitios) y el de las historias,
 // elegidos a mano por Gabriel el 29/10/2026. Lo que no esté en la lista va al final.
-export const ORDEN_FILAS = [["teamjoy", "problematica", "dertin", "libro-1", "libro-2", "ep"], ["atlas", "mitour", "atalaya", "musgui", "surco", "micoteca", "carta-al-futuro", "hoy", "preguntas", "termometro", "rinde", "que-hago-hoy", "voluntarios", "fabrica", "ecos"], ["mate", "asador", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios"], ["pasalo", "escanea", "cv"], ["cronicas", "prode", "afinados", "santafe-oculta", "trivia", "figus"], ["sinvueltas", "turnapos", "pulso", "rio", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"]];
+export const ORDEN_FILAS = [["teamjoy", "problematica", "dertin", "libro-1", "libro-2", "ep"], ["atlas", "mitour", "atalaya", "musgui", "surco", "micoteca", "carta-al-futuro", "hoy", "preguntas", "termometro", "rinde", "que-hago-hoy", "voluntarios", "santafe-oculta", "fabrica", "ecos"], ["mate", "asador", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios"], ["pasalo", "escanea", "cv"], ["cronicas", "prode", "afinados", "trivia", "figus"], ["sinvueltas", "turnapos", "pulso", "rio", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"]];
 export const ORDEN_HISTORIAS = ["teamjoy", "dertin", "cronicas", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "afinados", "santafe-oculta", "fabrica", "ecos"];
 
 export const PROYECTOS = [
@@ -833,11 +833,11 @@ export const PROYECTOS = [
   },
   {
     id: "santafe-oculta",
-    fila: 5,
+    fila: 2,
     nombre: "Santa Fe Oculta",
     url: "https://santafe-oculta.fungirak.com",
     logo: "/img/logos/santafe-oculta.png",
-    industrias: ["turismo", "juegos"],
+    industrias: ["turismo"],
     pills: ["App instalable", "Realidad aumentada", "Sonido 3D", "Cuenta FUNGIRAK"],
     stack: ["Next.js 16", "React 19", "Neon Postgres", "PWA"],
     color: "#495057",
