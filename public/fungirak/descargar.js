@@ -128,7 +128,7 @@ ${CATS.slice(1).map(([k, t]) => { const l = lista.filter((a) => a[3] === k); ret
               : `<p class="nota"><b>✅ Listo: instalaste ${hechas} de ${lista.length}${yaEstaban ? ` (y ${yaEstaban} ya las tenías)` : ""}.</b> ${movil ? "Las tenés en tu pantalla de inicio: para agruparlas, mantené apretada una y arrastrala sobre otra." : "Las encontrás en tu escritorio o en el menú de aplicaciones."}</p><div class="bs"><button class="si" data-g="fin">Listo</button></div>`;
       v.innerHTML = `<button class="x" aria-label="Cerrar">✕</button><div class="cab"><b>Instalando tus apps</b><small>${pasadas} de ${lista.length} · ${hechas} instaladas</small></div>
         <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="${lista.length}" aria-valuenow="${pasadas}"><i style="width:${Math.round((pasadas / lista.length) * 100)}%"></i></div>
-        <div class="lista">${lista.map(([id, nombre]) => `<label class="${(sig && sig[0] === id) || (!sig && id === "teamjoy" && tjPend) ? "act" : ""}"><span class="ico">${ICO[est[id]]}</span><img src="${LOGO(id)}" alt="" width="44" height="44" loading="lazy"><span><b>${esc(nombre)}</b><small>${{ pendiente: "Pendiente", abierta: "Instalando…", bloqueada: "Ventanita bloqueada", ok: "Instalada", ya: "Ya la tenías", saltada: "Salteada" }[est[id]]}</small></span><span></span></label>`).join("")}</div>
+        <div class="lista">${lista.map(([id, nombre]) => `<label class="${(sig && sig[0] === id) || (!sig && id === "teamjoy" && tjPend) ? "act" : ""}"><span class="ico">${ICO[est[id]]}</span><img src="${LOGO(id)}" alt="" width="44" height="44" decoding="async"><span><b>${esc(nombre)}</b><small>${{ pendiente: "Pendiente", abierta: "Instalando…", bloqueada: "Ventanita bloqueada", ok: "Instalada", ya: "Ya la tenías", saltada: "Salteada" }[est[id]]}</small></span><span></span></label>`).join("")}</div>
         <div class="pie">${pie}</div>`;
       v.querySelector(".x").onclick = listo;
       const g = (k, f) => { const b = v.querySelector(`[data-g=${k}]`); if (b) b.onclick = f; };
@@ -236,12 +236,14 @@ label.act{background:rgba(60,242,160,.14)}.ico{width:20px;text-align:center;font
     const marcadas = new Set(APPS.map((a) => a[0]));
     const cerrar = () => { h.remove(); removeEventListener("keydown", tecla); document.documentElement.style.overflow = ""; };
     const tecla = (e) => { if (e.key === "Escape") cerrar(); };
-    const pintar = () => {
+    let yaPintado = false; // después de la primera vez, sin animación de entrada (antes cada clic la repetía y parpadeaba)
+    const pintar = (keep = false) => {
       const vis = APPS.filter((a) => cat === "todas" || a[3] === cat);
       const elegidas = APPS.filter((a) => marcadas.has(a[0]));
       const kb = elegidas.reduce((s, a) => s + a[4], 0);
       const grupos = cat === "todas" ? CATS.slice(1).map(([k, t]) => [t, vis.filter((a) => a[3] === k)]) : [[null, vis]];
-      r.innerHTML = `<style>${CSS}</style><div class="velo"></div>
+      const y0 = r.querySelector(".lista")?.scrollTop || 0;
+      r.innerHTML = `<style>${CSS}${yaPintado ? ".velo,.v{animation:none!important}" : ""}</style><div class="velo"></div>
       <div class="v" role="dialog" aria-modal="true" aria-labelledby="t">
         <button class="x" aria-label="Cerrar">✕</button>
         <div class="cab"><b id="t">⬇ Descargar todo</b><small>Las ${APPS.length} apps de FUNGIRAK Studio, de una vez. Marcá las que quieras.</small></div>
@@ -257,8 +259,16 @@ label.act{background:rgba(60,242,160,.14)}.ico{width:20px;text-align:center;font
       </div>`;
       r.querySelector(".x").onclick = cerrar; r.querySelector(".velo").onclick = cerrar;
       r.querySelectorAll("[data-cat]").forEach((b) => (b.onclick = () => { cat = b.dataset.cat; pintar(); }));
-      r.querySelectorAll("[data-todas]").forEach((b) => (b.onclick = () => { for (const a of vis) b.dataset.todas === "1" ? marcadas.add(a[0]) : marcadas.delete(a[0]); pintar(); }));
-      r.querySelectorAll("input[data-id]").forEach((c) => (c.onchange = () => { c.checked ? marcadas.add(c.dataset.id) : marcadas.delete(c.dataset.id); const y = r.querySelector(".lista").scrollTop; pintar(); r.querySelector(".lista").scrollTop = y; }));
+      const contar = () => {
+        const el = APPS.filter((a) => marcadas.has(a[0])), n = el.length;
+        r.querySelector(".tod > span").textContent = `${n} de ${APPS.length} elegidas`;
+        r.querySelector(".tot b").textContent = mb(el.reduce((t, a) => t + a[4], 0));
+        const ir = r.querySelector("[data-ac=ir]"); ir.textContent = `Instalar ${n}`; ir.disabled = !n; r.querySelector("[data-ac=carpeta]").disabled = !n;
+      };
+      r.querySelectorAll("input[data-id]").forEach((c) => (c.onchange = () => { c.checked ? marcadas.add(c.dataset.id) : marcadas.delete(c.dataset.id); contar(); }));
+      r.querySelectorAll("[data-todas]").forEach((b) => (b.onclick = () => { for (const a of vis) b.dataset.todas === "1" ? marcadas.add(a[0]) : marcadas.delete(a[0]); r.querySelectorAll("input[data-id]").forEach((c) => (c.checked = marcadas.has(c.dataset.id))); contar(); }));
+      if (yaPintado && keep) r.querySelector(".lista").scrollTop = y0;
+      yaPintado = true;
       r.querySelector("[data-ac=cancelar]").onclick = cerrar;
       const lista = () => APPS.filter((a) => marcadas.has(a[0]));
       r.querySelector("[data-ac=ir]").onclick = () => fila(lista(), r.querySelector(".v"), cerrar, sistema);
