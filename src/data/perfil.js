@@ -67,6 +67,9 @@ export const PERFIL = {
     { proyecto: "prode", es: "Prode: pronósticos con amigos, sin apuestas", en: "Prode: football predictions with friends, no betting" },
     { proyecto: "afinados", es: "Afinados: cantá afinado con el celu como profe", en: "Afinados: sing in tune with your phone as a coach" },
     { proyecto: "santafe-oculta", es: "Santa Fe Oculta: la ciudad contada en el lugar", en: "Santa Fe Oculta: the city told on the spot" },
+    { proyecto: "pulso", es: "Pulso: cómo está la Argentina, en datos del INDEC", en: "Pulso: how Argentina is doing, in INDEC data" },
+    { proyecto: "rio", es: "Nivel del Paraná: el río hoy, en Santa Fe", en: "Paraná Level: the river today, in Santa Fe" },
+    { proyecto: "turnapos", es: "Turnapos: quién te atiende por IAPOS y qué te cubre", en: "Turnapos: who sees you through IAPOS and what is covered" },
   ],
 };
 
@@ -187,7 +190,7 @@ export const EXPERIENCIA = [
     desde: { es: "Actualidad", en: "Present" },
     logo: "/img/hongo.svg",
     items: [
-      { icono: "🧪", es: "MiTour, ECOS, Atlas Fit Pro, las escuelas del Mate y del Asador, Micoteca, Musgui, Surco, Sin Vueltas, Fábrica, Dertin, el juego Las Crónicas de Fungi, las guías de Santa Fe, Tribus urbanas y sitios homenaje a Experimento Negro, banda de rock de mi ciudad, y a El Peyote Asesino, de Montevideo.", en: "MiTour, ECOS, Atlas Fit Pro, the Mate and Barbecue schools, Micoteca, Musgui, Surco, Sin Vueltas, Fábrica, Dertin, the game The Chronicles of Fungi, the Santa Fe guides, Urban tribes and tribute sites to Experimento Negro, a rock band from my city, and to El Peyote Asesino, from Montevideo." },
+      { icono: "🧪", es: "MiTour, ECOS, Atlas Fit Pro, las escuelas del Mate y del Asador, Micoteca, Musgui, Surco, Sin Vueltas, Turnapos, Pulso, Nivel del Paraná, Fábrica, Dertin, el juego Las Crónicas de Fungi, las guías de Santa Fe, Tribus urbanas y sitios homenaje a Experimento Negro, banda de rock de mi ciudad, y a El Peyote Asesino, de Montevideo.", en: "MiTour, ECOS, Atlas Fit Pro, the Mate and Barbecue schools, Micoteca, Musgui, Surco, Sin Vueltas, Turnapos, Pulso, Paraná Level, Fábrica, Dertin, the game The Chronicles of Fungi, the Santa Fe guides, Urban tribes and tribute sites to Experimento Negro, a rock band from my city, and to El Peyote Asesino, from Montevideo." },
     ],
   },
 ];
@@ -261,7 +264,7 @@ export const TIMELINE = [
       { icono: "☀️", es: "Para todos los días: Hoy, Preguntas de a Dos, Termómetro, Rinde, Qué Hago Hoy y Una Mano. Y las herramientas Pásalo, Escaneá y CV.", en: "For every day: Hoy, Preguntas de a Dos, Termómetro, Rinde, Qué Hago Hoy and Una Mano. Plus the Pásalo, Escaneá and CV tools." },
       { icono: "🎮", es: "Juegos: Prode, Afinados, Santa Fe Oculta, La Gran Trivia y Figus.", en: "Games: Prode, Afinados, Santa Fe Oculta, La Gran Trivia and Figus." },
       { icono: "🏭", es: "La Fábrica de sitios, ECOS y una sola cuenta FUNGIRAK para todas las apps.", en: "The site Factory, ECOS and a single FUNGIRAK account for every app." },
-      { icono: "🌐", es: "Sitios: Sin Vueltas, las guías de Santa Fe, Tribus urbanas y los homenajes a Experimento Negro, El Peyote Asesino y Loquero.", en: "Sites: Sin Vueltas, the Santa Fe guides, Urban tribes and the tributes to Experimento Negro, El Peyote Asesino and Loquero." },
+      { icono: "🌐", es: "Sitios: Sin Vueltas, Turnapos, Pulso, Nivel del Paraná, las guías de Santa Fe, Tribus urbanas y los homenajes a Experimento Negro, El Peyote Asesino y Loquero.", en: "Sites: Sin Vueltas, Turnapos, Pulso, Paraná Level, the Santa Fe guides, Urban tribes and the tributes to Experimento Negro, El Peyote Asesino and Loquero." },
     ] },
   { año: "→", icono: "✨", es: "Lo que viene: dos libros, un EP y lo que construyamos juntos.", en: "What's next: two books, an EP and whatever we build together." },
 ];

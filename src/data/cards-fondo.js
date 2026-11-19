@@ -47,6 +47,9 @@ export const FONDO = {
   peyote: ["#86EC2C", ["flor", "nota", "sol", "chispa"]],
   loquero: ["#74C0FC", ["nota", "corazon", "documento", "estrella"]],
   tribus: ["#FF2D7A", ["nota", "personas", "rayo", "estrella"]],
+  pulso: ["#3FA9F5", ["moneda", "lupa", "documento", "calendario"]],
+  rio: ["#2B8AD8", ["ola", "gota", "pez", "reloj"]],
+  turnapos: ["#1C9C7A", ["persona", "corazon", "calendario", "lupa"]],
 };
 
 const SURTIDOS = ["#FF5B3A", "#3B82F6", "#FFC800", "#8B5CF6"];

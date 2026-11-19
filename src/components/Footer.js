@@ -2,7 +2,9 @@
 import { useLang, tx } from "@/lib/i18n";
 import { LINKS } from "@/data/perfil";
 import { PROYECTOS, ORDEN_FILAS } from "@/data/proyectos";
+import { useState } from "react";
 import Sello from "./Sello";
+import Modal from "./Modal";
 import { Socials } from "./Hero";
 
 // la columna de proyectos se separa en Apps, Juegos y Sitios (como la franja de los sitios)
@@ -28,9 +30,20 @@ function AppTip({ p, label, href, lang, es }) {
   );
 }
 
+// En el pie, cada categoría muestra las primeras 5; el resto se ve en un modal con la lista completa por categoría (como el menú de
+// categorías de una tienda), en vez de una columna larguísima.
+const VISIBLES = 5;
+
 export default function Footer({ abrir, stats }) {
   const { lang, ui } = useLang();
   const es = lang === "es";
+  const [todo, setTodo] = useState(false);
+  const CATS = [
+    ["Apps", (p) => !JUEGOS.includes(p.id) && !SITIOS.includes(p.id)],
+    [es ? "Juegos" : "Games", (p) => JUEGOS.includes(p.id)],
+    [es ? "Sitios" : "Sites", (p) => SITIOS.includes(p.id)],
+  ].map(([titulo, f]) => [titulo, PROYECTOS.filter((p) => p.url && f(p))]);
+  const total = CATS.reduce((n, [, l]) => n + l.length, 0);
   const col = (titulo, items) => (
     <div>
       <h3>{titulo}</h3>
@@ -81,11 +94,12 @@ export default function Footer({ abrir, stats }) {
           [`${ui.terminal} (Ctrl+K)`, "terminal"],
         ])}
         <div className="footer-cats">
-          {[
-            ["Apps", (p) => !JUEGOS.includes(p.id) && !SITIOS.includes(p.id)],
-            [es ? "Juegos" : "Games", (p) => JUEGOS.includes(p.id)],
-            [es ? "Sitios" : "Sites", (p) => SITIOS.includes(p.id)],
-          ].map(([titulo, f]) => <div key={titulo}>{col(titulo, PROYECTOS.filter((p) => p.url && f(p)).map((p) => [tx(p.nombre, lang), null, p.url, p]))}</div>)}
+          {CATS.map(([titulo, lista]) => (
+            <div key={titulo}>
+              {col(titulo, lista.slice(0, VISIBLES).map((p) => [tx(p.nombre, lang), null, p.url, p]))}
+              {lista.length > VISIBLES && <button type="button" className="ft-vermas" onClick={() => setTodo(true)}>{es ? `Ver las ${lista.length}` : `See all ${lista.length}`} <span aria-hidden="true">→</span></button>}
+            </div>
+          ))}
         </div>
         {col(es ? "Contacto" : "Contact", [
           [ui.nav.hablemos, "hablemos"],
@@ -111,6 +125,18 @@ export default function Footer({ abrir, stats }) {
           <span className="pill">💬 {stats?.mensajes || 0} <span className="solo-desk">{ui.mensajes}</span><span className="solo-m">{es ? "charlas" : "chats"}</span></span>
         </span>
       </div>
+      {todo && (
+        <Modal onClose={() => setTodo(false)} wide eyebrow="FUNGIRAK Studio" titulo={es ? `Todo el Studio · ${total}` : `The whole Studio · ${total}`} bajada={es ? "Apps, juegos y sitios, ordenados por categoría." : "Apps, games and sites, sorted by category."}>
+          <div className="modal-body"><div className="ft-todo">
+            {CATS.map(([titulo, lista]) => (
+              <section key={titulo}>
+                <h3>{titulo} <small>{lista.length}</small></h3>
+                <ul>{lista.map((p) => <li key={p.id}><a href={p.url} target="_blank" rel="noopener noreferrer">{tx(p.nombre, lang)} <span aria-hidden="true">↗</span></a>{p.tagline && <small>{tx(p.tagline, lang)}</small>}</li>)}</ul>
+              </section>
+            ))}
+          </div></div>
+        </Modal>
+      )}
     </footer>
   );
 }

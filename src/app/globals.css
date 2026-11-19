@@ -2729,3 +2729,24 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
 .drawer-chips .chip.on { background: var(--green, #22c55e); color: #06120c; border-color: transparent; }
 /* El encabezado del menú (logo y ✕) queda fijo arriba mientras la lista se desliza por debajo */
 .drawer-cab { position: sticky; top: -18px; z-index: 3; margin: -18px -20px 0; padding: 18px 20px 12px; box-shadow: 0 10px 18px -12px rgb(0 0 0 / .55); background: var(--bg, #0a0d1f); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+
+/* Pie: «Ver las N» abre el modal con todo el Studio por categoría */
+.footer .ft-vermas { margin-top: 10px; background: none; border: 1px solid var(--border, rgba(127,127,127,.3)); border-radius: 999px; padding: 6px 12px; font-size: 0.82rem; font-weight: 700; color: var(--accent); cursor: pointer; }
+.footer .ft-vermas:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.ft-todo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 28px; }
+.ft-todo h3 { font-family: var(--font-display); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin: 0 0 10px; display: flex; gap: 8px; align-items: baseline; }
+.ft-todo h3 small { color: var(--text-2); letter-spacing: 0; }
+.ft-todo ul { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 9px; }
+.ft-todo li { display: grid; gap: 1px; }
+.ft-todo li a { color: var(--text); font-weight: 600; font-size: 0.95rem; text-decoration: none; }
+.ft-todo li a:hover { color: var(--accent); }
+.ft-todo li small { color: var(--text-2); font-size: 0.8rem; line-height: 1.35; }
+@media (max-width: 760px) { .ft-todo { grid-template-columns: 1fr; } .ft-todo section + section { border-top: 1px solid var(--border, rgba(127,127,127,.25)); padding-top: 14px; } }
+
+/* Flechas de las filas de cards: traslúcidas (vidrio), así no tapan la primera/última card; enteras al pasar el mouse */
+@media (hover: hover) and (pointer: fine) {
+  .riel-flecha { background: color-mix(in srgb, var(--surface) 55%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); opacity: .72; transition: opacity .2s, transform .15s, background .2s; }
+  .riel-flecha:hover:not(:disabled), .riel:hover .riel-flecha:not(:disabled):hover { opacity: 1; background: color-mix(in srgb, var(--surface) 92%, transparent); }
+}
+.ft-todo, .ft-todo li { text-align: left; }
+.ft-todo li { justify-items: start; }

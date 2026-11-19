@@ -41,4 +41,7 @@ export const BITACORA = [
   { fecha: "2027-04-13", proyecto: "prode", es: "Pronósticos con amigos, sin apuestas", en: "Football predictions with friends, no betting" },
   { fecha: "2027-04-20", proyecto: "afinados", es: "Cantá afinado con el celu como profe", en: "Sing in tune with your phone as a coach" },
   { fecha: "2027-04-27", proyecto: "santafe-oculta", es: "La ciudad contada en el lugar", en: "The city told on the spot" },
+  { fecha: "2027-05-04", proyecto: "turnapos", es: "Quién te atiende por IAPOS y qué te cubre", en: "Who sees you through IAPOS and what is covered" },
+  { fecha: "2027-05-11", proyecto: "pulso", es: "Cómo está la Argentina, en datos del INDEC", en: "How Argentina is doing, in INDEC data" },
+  { fecha: "2027-05-18", proyecto: "rio", es: "El río Paraná hoy, en Santa Fe", en: "The Paraná river today, in Santa Fe" },
 ];

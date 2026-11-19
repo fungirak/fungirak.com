@@ -22,10 +22,10 @@ export const INDUSTRIAS = [
 
 // Orden de las filas 2 y 3, el mismo de la franja «Más de FUNGIRAK Studio» de los sitios (apps; después el juego y los sitios)
 export const ORDEN = ["dertin", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "ecos", "sinvueltas", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "afinados", "santafe-oculta", "fabrica",
-  "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"];
+  "cronicas", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus", "pulso", "rio", "turnapos"];
 // El orden de cada fila de cards (1 Lo central, 2 Más del Studio, 3 Escuelas, 4 Herramientas, 5 Juegos, 6 Sitios) y el de las historias,
 // elegidos a mano por Gabriel el 29/10/2026. Lo que no esté en la lista va al final.
-export const ORDEN_FILAS = [["teamjoy", "problematica", "dertin", "libro-1", "libro-2", "ep"], ["atlas", "mitour", "atalaya", "musgui", "surco", "micoteca", "carta-al-futuro", "hoy", "preguntas", "termometro", "rinde", "que-hago-hoy", "voluntarios", "fabrica", "ecos"], ["mate", "asador", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios"], ["pasalo", "escanea", "cv"], ["cronicas", "prode", "afinados", "santafe-oculta", "trivia", "figus"], ["sinvueltas", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"]];
+export const ORDEN_FILAS = [["teamjoy", "problematica", "dertin", "libro-1", "libro-2", "ep"], ["atlas", "mitour", "atalaya", "musgui", "surco", "micoteca", "carta-al-futuro", "hoy", "preguntas", "termometro", "rinde", "que-hago-hoy", "voluntarios", "fabrica", "ecos"], ["mate", "asador", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios"], ["pasalo", "escanea", "cv"], ["cronicas", "prode", "afinados", "santafe-oculta", "trivia", "figus"], ["sinvueltas", "turnapos", "pulso", "rio", "gourmet", "schools", "telos", "negro", "peyote", "loquero", "tribus"]];
 export const ORDEN_HISTORIAS = ["teamjoy", "dertin", "cronicas", "atlas", "mitour", "atalaya", "musgui", "mate", "asador", "surco", "micoteca", "carta-al-futuro", "hoy", "cv", "preguntas", "escanea", "pasalo", "termometro", "rinde", "que-hago-hoy", "escuela-del-pescador", "escuela-de-mascotas", "primeros-auxilios", "trivia", "figus", "voluntarios", "prode", "afinados", "santafe-oculta", "fabrica", "ecos"];
 
 export const PROYECTOS = [
@@ -193,6 +193,57 @@ export const PROYECTOS = [
     destacados: {
       es: ["Insignias, logros y camino por unidades", "Entrenador por voz y radio integrada", "Se instala y funciona sin conexión"],
       en: ["Badges, achievements and a unit-based path", "Voice coach and built-in radio", "Installs and works offline"],
+    },
+  },
+  {
+    id: "pulso",
+    fila: 6,
+    nombre: "Pulso",
+    url: "https://pulso.fungirak.com",
+    logo: "/img/logos/pulso.png",
+    industrias: ["gobierno", "finanzas"],
+    pills: ["Web", "Responsive", "Datos abiertos"],
+    stack: ["Next.js", "Vercel"],
+    color: "#3FA9F5",
+    lema: { es: "Cómo está la Argentina, en datos.", en: "How Argentina is doing, in data." },
+    tagline: { es: "Los datos oficiales del INDEC, explicados fácil", en: "Official INDEC data, made easy" },
+    descripcion: {
+      es: "Inflación, precios del pan y la leche, salarios, canasta básica, pobreza, desocupación, actividad, exportaciones, población y provincias: los datos del INDEC explicados fácil y actualizados todos los días.",
+      en: "Inflation, the price of bread and milk, wages, the basic basket, poverty, unemployment, activity, exports, population and provinces: INDEC data made easy and updated every day.",
+    },
+  },
+  {
+    id: "rio",
+    fila: 6,
+    nombre: "Nivel del Paraná",
+    url: "https://rio.fungirak.com",
+    logo: "/img/logos/rio.png",
+    industrias: ["naturaleza", "turismo"],
+    pills: ["Web", "Responsive", "Datos oficiales"],
+    stack: ["Web", "Vercel"],
+    color: "#0B62B8",
+    lema: { es: "El río hoy, en Santa Fe.", en: "The river today, in Santa Fe." },
+    tagline: { es: "La altura del río Paraná en Santa Fe, en vivo", en: "The Paraná river level in Santa Fe, live" },
+    descripcion: {
+      es: "La altura del Paraná en Santa Fe con el dato oficial de Prefectura y el INA, actualizado cada 2 horas: pronóstico de la crecida, niveles de alerta y evacuación, crecidas históricas y hasta dónde llega el agua en tu cuadra.",
+      en: "The Paraná river level in Santa Fe with official data from the Coast Guard and INA, updated every 2 hours: flood forecast, alert and evacuation levels, historic floods and how far the water reaches on your block.",
+    },
+  },
+  {
+    id: "turnapos",
+    fila: 6,
+    nombre: "Turnapos",
+    url: "https://turnapos.fungirak.com",
+    logo: "/img/logos/turnapos.png",
+    industrias: ["salud", "gobierno"],
+    pills: ["Web", "Responsive", "Sin registro"],
+    stack: ["Next.js", "Vercel"],
+    color: "#0F6E56",
+    lema: { es: "¿Quién me atiende y qué me cubre?", en: "Who sees me and what does it cover?" },
+    tagline: { es: "La cartilla de IAPOS, fácil y cerca tuyo (no oficial)", en: "The IAPOS directory, easy and nearby (unofficial)" },
+    descripcion: {
+      es: "Marcás en el cuerpo qué necesitás (un dolor, un estudio o un control) y te muestra qué especialista te atiende por IAPOS cerca tuyo, qué te cubre y cómo pedir turno por teléfono o WhatsApp. Sitio ciudadano, no oficial, gratis y sin registro.",
+      en: "Tap on the body what you need (a pain, a test or a check-up) and it shows which IAPOS specialist sees you nearby, what is covered and how to book by phone or WhatsApp. An unofficial citizen site, free and without sign-up.",
     },
   },
   {
