@@ -2770,3 +2770,43 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
   .modal-backdrop:not(.full) { padding-top: calc(60px + env(safe-area-inset-top)); }
   .modal-backdrop:not(.full) .modal { max-height: calc(100dvh - 60px - env(safe-area-inset-top)); }
 }
+
+/* ── Intro: «la tele que se prende» (components/Intro.js) ── */
+:root[data-intro-vista="1"] .intro { display: none; }
+.intro { position: fixed; inset: 0; z-index: 3000; background: #050607; color: #7CFFB2; overflow: hidden; cursor: pointer; font-family: ui-monospace, "Cascadia Mono", "SFMono-Regular", Menlo, Consolas, monospace; transition: opacity .7s ease, filter .7s ease; }
+.intro.fase-fin { opacity: 0; filter: blur(6px) brightness(1.6); pointer-events: none; }
+.intro-estatica { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; opacity: 0; transition: opacity .3s; }
+.fase-encendiendo .intro-estatica { opacity: .22; }
+.fase-escaneando .intro-estatica, .fase-cierre .intro-estatica { opacity: .1; }
+.intro::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgb(0 0 0 / .28) 0 1px, transparent 1px 3px), radial-gradient(120% 100% at 50% 50%, transparent 55%, rgb(0 0 0 / .75)); }
+/* encendido del tubo: un punto que se abre en una línea y después en la pantalla entera */
+.intro-tubo { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; border-radius: 50%; background: #e9fff3; box-shadow: 0 0 30px 8px #9fffcf; transform: translate(-50%, -50%) scale(0); }
+.fase-encendiendo .intro-tubo { animation: intro-tubo .6s cubic-bezier(.2,.8,.2,1) forwards; }
+@keyframes intro-tubo { 0% { transform: translate(-50%, -50%) scale(0); } 25% { transform: translate(-50%, -50%) scale(1); } 60% { width: 100vw; height: 3px; border-radius: 0; } 100% { width: 100vw; height: 100vh; border-radius: 0; background: #0b1a12; box-shadow: none; opacity: .0; } }
+/* pantalla apagada: la lucecita de standby */
+.intro-prender { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 10px; background: none; border: 0; color: #c9d3cf; font: inherit; cursor: pointer; padding: 24px; }
+.intro-prender b { font-size: 1rem; letter-spacing: .14em; text-transform: uppercase; animation: intro-titila 1.6s ease-in-out infinite; }
+.intro-prender small { font-size: .72rem; letter-spacing: .2em; opacity: .5; }
+.intro-led { width: 10px; height: 10px; border-radius: 50%; background: #ff3b30; box-shadow: 0 0 12px 3px rgb(255 59 48 / .6); animation: intro-titila 1.6s ease-in-out infinite; }
+@keyframes intro-titila { 50% { opacity: .35; } }
+/* el escáner bajando y los datos */
+.intro-pantalla { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; padding: 24px; text-shadow: 0 0 6px rgb(124 255 178 / .55); }
+.intro-linea { position: absolute; left: 0; right: 0; top: 0; height: 3px; background: #d4ffe6; box-shadow: 0 0 18px 6px rgb(124 255 178 / .55); animation: intro-barre 1.35s linear forwards; }
+@keyframes intro-barre { from { top: 0; } to { top: 100%; opacity: .2; } }
+.intro-datos { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; width: min(640px, 100%); font-size: clamp(.82rem, 2.6vw, 1.02rem); }
+.intro-datos li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: intro-tipea .45s steps(28, end) both; border-right: 2px solid transparent; }
+.intro-datos li:last-child { border-right-color: #7CFFB2; animation: intro-tipea .45s steps(28, end) both, intro-cursor .6s step-end infinite; }
+@keyframes intro-tipea { from { max-width: 0; } to { max-width: 100%; } }
+@keyframes intro-cursor { 50% { border-right-color: transparent; } }
+.intro-final { margin-top: 26px; display: grid; justify-items: center; gap: 6px; text-align: center; position: relative; animation: intro-aparece .45s cubic-bezier(.2,1.3,.4,1) both; }
+.intro-final b { font-size: clamp(1.6rem, 6vw, 2.6rem); color: #eafff2; letter-spacing: .02em; }
+.intro-final small { font-size: .85rem; letter-spacing: .12em; text-transform: uppercase; opacity: .8; }
+.intro-foto { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 3px #7CFFB2, 0 0 30px rgb(124 255 178 / .5); animation: intro-sintoniza .9s steps(8, end) both; }
+.intro-inicial { display: grid; place-items: center; background: #0f2a1c; color: #7CFFB2; font-size: 2.2rem; font-weight: 800; }
+@keyframes intro-sintoniza { from { clip-path: inset(0 0 100% 0); filter: blur(4px) contrast(1.8); } to { clip-path: inset(0 0 0 0); filter: none; } }
+.intro-sello { position: absolute; right: -86px; top: 6px; display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; border: 3px solid #ff5470; color: #ff5470; font-weight: 800; font-size: .62rem; line-height: 1.1; letter-spacing: .08em; text-align: center; text-shadow: none; transform: rotate(-14deg) scale(1); animation: intro-estampa .35s cubic-bezier(.2,1.6,.4,1) .15s both; }
+@keyframes intro-estampa { from { transform: rotate(-14deg) scale(2.4); opacity: 0; } }
+@keyframes intro-aparece { from { opacity: 0; transform: scale(.94); } }
+@media (max-width: 560px) { .intro-sello { right: auto; left: calc(50% + 46px); top: -10px; width: 58px; height: 58px; } }
+.intro-mudo { position: absolute; right: 14px; top: calc(12px + env(safe-area-inset-top)); z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgb(124 255 178 / .35); background: rgb(0 0 0 / .4); color: #fff; font-size: 1rem; cursor: pointer; }
+.intro-saltear { position: absolute; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; opacity: .45; }

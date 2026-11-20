@@ -21,6 +21,7 @@ import Juego from "./modals/Juego";
 import { Pasaporte, Terminal, Quiz, GitHub, Instagram, YouTube } from "./modals/Extras";
 import CuentaModal from "./modals/CuentaModal";
 import SelloTinta from "./SelloTinta";
+import Intro from "./Intro";
 
 const leer = (k, def) => {
   try {
@@ -88,7 +89,9 @@ export default function Site() {
     let historia = null;
     try { historia = new URLSearchParams(location.search).get("historia"); } catch {}
     if (historia !== null) { setPayload(historia || null); setModal("historias"); return; } // fungirak.com/?historia=mate (desde Instagram)
-    if (!v || (ig && !v.busca)) id = setTimeout(() => setModal((m) => m || "bienvenida"), ig ? 700 : 1600);
+    // si está la intro («la tele que se prende»), la bienvenida espera a que termine
+    const bienvenida = () => { id = setTimeout(() => setModal((m) => m || "bienvenida"), ig ? 700 : 1600); };
+    if (!v || (ig && !v.busca)) { if (window.__fkIntroActiva) window.addEventListener("fk-intro-fin", bienvenida, { once: true }); else bienvenida(); }
     return () => clearTimeout(id);
   }, []);
 
@@ -317,6 +320,7 @@ export default function Site() {
 
   return (
     <LangCtx.Provider value={ctx}>
+      <Intro />
       <Nav abrir={abrir} tema={tema} setTema={setTema} sonido={sonido} setSonido={setSonido} sellos={sellos} visitante={visitante} />
       <Hero abrir={abrir} sellos={sellos} onSound={onSound} aplausos={stats?.aplausos} visitante={visitante} marco={muro.huellas.slice(0, 16).map((h) => h.emoji)} />
       <ComoTrabajo abrir={abrir} />
