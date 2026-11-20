@@ -2810,3 +2810,5 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
 @media (max-width: 560px) { .intro-sello { right: auto; left: calc(50% + 46px); top: -10px; width: 58px; height: 58px; } }
 .intro-mudo { position: absolute; right: 14px; top: calc(12px + env(safe-area-inset-top)); z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgb(124 255 178 / .35); background: rgb(0 0 0 / .4); color: #fff; font-size: 1rem; cursor: pointer; }
 .intro-saltear { position: absolute; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; opacity: .45; }
+/* Mientras está la intro, el aviso de cookies (y otros carteles de la cuenta) esperan: aparecen apenas termina */
+body:has(.intro:not(.fase-fin)) :is(fk-cookies, #fk-seguir, #fk-cartel) { display: none !important; }
