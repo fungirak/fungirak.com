@@ -2812,3 +2812,7 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
 .intro-saltear { position: absolute; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; opacity: .45; }
 /* Mientras está la intro, el aviso de cookies (y otros carteles de la cuenta) esperan: aparecen apenas termina */
 body:has(.intro:not(.fase-fin)) :is(fk-cookies, #fk-seguir, #fk-cartel) { display: none !important; }
+/* Tele apagada: «Tocá para encender» y «FUNGIRAK · canal 1» siempre en una línea (en el celu el «1» caía abajo) */
+.intro-prender { width: max-content; max-width: calc(100vw - 32px); }
+.intro-prender b, .intro-prender small { white-space: nowrap; }
+@media (max-width: 400px) { .intro-prender b { font-size: .88rem; letter-spacing: .1em; } }
