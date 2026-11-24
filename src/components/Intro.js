@@ -98,7 +98,7 @@ export default function Intro() {
     const a = crearAudio(); ac.current = a;
     if (a && a.state === "running" && !m) { encender(); return; }
     setFase("apagada");
-    const t = setTimeout(() => encender(), 2500);
+    const t = setTimeout(() => encender(), 4000);
     return () => clearTimeout(t);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -168,14 +168,14 @@ export default function Intro() {
     }
     if (cerrado.current) return;
     setFase("escaneando");
-    const DUR = 1300, paso = DUR / (L.length + 1);
+    const DUR = 3000, paso = DUR / (L.length + 1);
     snd.current?.barrido(DUR / 1000);
     for (let i = 0; i < L.length; i++) { await new Promise((r) => setTimeout(r, paso)); if (cerrado.current) return; setLineas((x) => [...x, L[i]]); snd.current?.bip(i); }
     if (logueado && u.foto) snd.current?.fax();
     await new Promise((r) => setTimeout(r, paso));
     setFase((f) => (f === "escaneando" ? "cierre" : f));
     if (logueado) { snd.current?.sello(); try { navigator.vibrate?.(30); } catch {} } else snd.current?.acceso();
-    await new Promise((r) => setTimeout(r, 900));
+    await new Promise((r) => setTimeout(r, 2200));
     terminar(false);
   }
 

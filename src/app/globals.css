@@ -2791,11 +2791,11 @@ html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-green)
 @keyframes intro-titila { 50% { opacity: .35; } }
 /* el escáner bajando y los datos */
 .intro-pantalla { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; padding: 24px; text-shadow: 0 0 6px rgb(124 255 178 / .55); }
-.intro-linea { position: absolute; left: 0; right: 0; top: 0; height: 3px; background: #d4ffe6; box-shadow: 0 0 18px 6px rgb(124 255 178 / .55); animation: intro-barre 1.35s linear forwards; }
+.intro-linea { position: absolute; left: 0; right: 0; top: 0; height: 3px; background: #d4ffe6; box-shadow: 0 0 18px 6px rgb(124 255 178 / .55); animation: intro-barre 3.1s linear forwards; }
 @keyframes intro-barre { from { top: 0; } to { top: 100%; opacity: .2; } }
 .intro-datos { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; width: min(640px, 100%); font-size: clamp(.82rem, 2.6vw, 1.02rem); }
-.intro-datos li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: intro-tipea .45s steps(28, end) both; border-right: 2px solid transparent; }
-.intro-datos li:last-child { border-right-color: #7CFFB2; animation: intro-tipea .45s steps(28, end) both, intro-cursor .6s step-end infinite; }
+.intro-datos li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: intro-tipea .7s steps(28, end) both; border-right: 2px solid transparent; }
+.intro-datos li:last-child { border-right-color: #7CFFB2; animation: intro-tipea .7s steps(28, end) both, intro-cursor .6s step-end infinite; }
 @keyframes intro-tipea { from { max-width: 0; } to { max-width: 100%; } }
 @keyframes intro-cursor { 50% { border-right-color: transparent; } }
 .intro-final { margin-top: 26px; display: grid; justify-items: center; gap: 6px; text-align: center; position: relative; animation: intro-aparece .45s cubic-bezier(.2,1.3,.4,1) both; }
