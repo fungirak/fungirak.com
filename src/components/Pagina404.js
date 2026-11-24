@@ -17,7 +17,7 @@ export default function Pagina404({ icono, figura, titulo, texto, acciones = [],
       <div className="p404-acc">
         {acciones.map((a, i) => <Link key={a.href} href={a.href} className={i === 0 ? `${clase} p404-late` : clase2}>{a.t}</Link>)}
       </div>
-      <p className="p404-ayuda">¿Llegaste desde un enlace que no anda? <a href="mailto:fungirak@gmail.com?subject=Enlace%20roto">Avisanos</a> y lo arreglamos.</p>
+      <p className="p404-ayuda">¿Llegaste desde un enlace que no anda? <a href="mailto:gabriel@fungirak.com?subject=Enlace%20roto">Avisanos</a> y lo arreglamos.</p>
     </section>
   );
 }

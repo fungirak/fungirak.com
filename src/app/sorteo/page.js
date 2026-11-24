@@ -32,7 +32,7 @@ export default async function Concurso() {
         {st.proximo && <Participar min={IDEA_MIN} max={IDEA_MAX} />}
 
         <h2>1. Organizador</h2>
-        <p>FUNGIRAK Studio, de Gabriel Lazzarini, con domicilio en Santo Tomé, Santa Fe, Argentina (en adelante, “el Organizador”). Contacto: fungirak@gmail.com.</p>
+        <p>FUNGIRAK Studio, de Gabriel Lazzarini, con domicilio en Santo Tomé, Santa Fe, Argentina (en adelante, “el Organizador”). Contacto: gabriel@fungirak.com.</p>
 
         <h2>2. Qué es</h2>
         <p>Un concurso de ideas, gratuito y sin obligación de comprar ni contratar nada. Cada dos meses, la mejor idea para un sitio web gana el diseño y desarrollo de ese sitio. <b>No interviene el azar</b>: gana la idea que el Organizador elige según los criterios publicados en el punto 5.</p>
@@ -78,7 +78,7 @@ export default async function Concurso() {
         <p>Quien participa conserva sus derechos sobre su idea. Al mandarla, autoriza al Organizador a leerla y evaluarla y, si gana, a mostrar el sitio que resulte como parte de su portfolio. Las ideas que no ganan no se publican.</p>
 
         <h2>12. Datos personales</h2>
-        <p>El email, el nombre y la idea se usan sólo para el concurso y la ruleta, no se venden ni se comparten, se borran a los 26 meses y se pueden borrar antes escribiendo a fungirak@gmail.com (Ley 25.326). Detalle en <a href="https://cuenta.fungirak.com/legal/sitios">cuenta.fungirak.com/legal/sitios</a>.</p>
+        <p>El email, el nombre y la idea se usan sólo para el concurso y la ruleta, no se venden ni se comparten, se borran a los 26 meses y se pueden borrar antes escribiendo a gabriel@fungirak.com (Ley 25.326). Detalle en <a href="https://cuenta.fungirak.com/legal/sitios">cuenta.fungirak.com/legal/sitios</a>.</p>
 
         <h2>13. Cambio desde el sorteo anterior</h2>
         <p>Hasta el 29 de octubre de 2026 el premio se sorteaba. Desde el 30 de octubre gana la mejor idea. Quienes tenían un número de participación del sorteo reciben un aviso por email y siguen participando mandando su idea con el mismo email.</p>

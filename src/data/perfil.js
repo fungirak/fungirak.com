@@ -1,7 +1,7 @@
 // Datos de Gabriel. Solo información pública y confirmada por él.
 
 export const LINKS = {
-  email: "fungirak@gmail.com",
+  email: "gabriel@fungirak.com",
   whatsapp: "5493425251952",
   whatsappVisible: "+54 9 342 525-1952",
   linkedin: "https://www.linkedin.com/in/gabriel-lazzarini",
