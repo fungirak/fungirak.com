@@ -138,7 +138,6 @@ export default function Intro() {
     let visitas = 1, ultima = 0;
     try { const v = JSON.parse(localStorage.getItem("fgk-intro-visitas") || "{}"); visitas = (v.n || 0) + 1; ultima = v.t || 0; localStorage.setItem("fgk-intro-visitas", JSON.stringify({ n: visitas, t: Date.now() })); } catch {}
     const reloj = ahora.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
-    const oscuro = document.documentElement.dataset.theme === "dark";
     const logueado = !!u?.sesion;
     let L;
     if (logueado) {
@@ -160,7 +159,6 @@ export default function Intro() {
         `> ${reloj} · ${saludo(h)}`,
         lugar() && `> 📍 ${lugar()} (por tu reloj)`,
         `> ${aparato()}`,
-        `> ${oscuro ? "🌙 Modo oscuro" : "☀️ Modo claro"} · idioma ${(navigator.language || "es").startsWith("es") ? "español" : navigator.language}`,
         origen() && `> ${origen()}`,
         visitas > 1 ? `> Visita n.º ${visitas} · la última fue ${hace(Date.now() - ultima)}${sellos ? ` · ${sellos} sellos` : ""}` : "> Primera visita registrada en este aparato",
       ].filter(Boolean);
