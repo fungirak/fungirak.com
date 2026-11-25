@@ -117,6 +117,8 @@ export default function Footer({ abrir, stats }) {
           ["Cookies", "cookies"],
           [es ? "Política de privacidad" : "Privacy policy", "privacidad"],
           [es ? "Términos y privacidad completos" : "Terms and full privacy policy", null, "https://cuenta.fungirak.com/legal/sitios"],
+          [es ? "Botón de arrepentimiento" : "Cancel a purchase", null, "https://cuenta.fungirak.com/arrepentimiento"],
+          [es ? "Botón de baja" : "Cancel a subscription", null, "https://cuenta.fungirak.com/?seccion=plan"],
         ])}
       </div>
 
